@@ -4,6 +4,10 @@ import { AnimatePresence } from "framer-motion"
 import SplashScreen from "../pages/Splashscreen"
 import Home from "../pages/Home"
 
+import Navbar from "../components/Navbar"
+import Hero from "../components/Hero"
+
+
 function App() {
 
   const [loading, setLoading] = useState(true)
@@ -23,7 +27,20 @@ function App() {
       {loading ? (
         <SplashScreen key="splash" />
       ) : (
-        <Home key="home" />
+        <div
+          key = "home"
+          style = {{
+            minHeight: "100vh",
+            background: "linear-gradient(to bottom right, #020617, #050816)",
+            overflow: "hidden",
+            fontFamily: "Inter, sans-serif",
+          }}
+        >
+
+          <Navbar/>
+          <Hero/>
+        </div>
+        
       )}
     </AnimatePresence>
   )

@@ -86,7 +86,7 @@ function SplashScreen() {
                     fontFamily: "Inter, sans-serif",
                 }}
             >
-                Cosy
+                The Cosy Company
             </motion.h1>
 
             <motion.p
