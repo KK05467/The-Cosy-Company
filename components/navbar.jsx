@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import { Link } from "react-router-dom"
 
 function Navbar() {
 
@@ -17,11 +18,13 @@ function Navbar() {
       style={{
         width: "100%",
         padding: "26px 80px",
+        boxSizing: "border-box",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         position: "fixed",
         top: 0,
+        left: 0,
         zIndex: 1000,
         background: "rgba(2, 6, 23, 0.55)",
         backdropFilter: "blur(22px)",
@@ -31,45 +34,54 @@ function Navbar() {
     >
 
       {/* LOGO */}
-      <div
+      <Link
+        to="/"
         style={{
-          display: "flex",
-          flexDirection: "column",
-          cursor: "pointer",
+          textDecoration: "none",
         }}
       >
 
-        <h1
+        <div
           style={{
-            color: "white",
-            fontSize: "42px",
-            fontWeight: "700",
-            margin: 0,
-            lineHeight: 1,
+            display: "flex",
+            flexDirection: "column",
+            cursor: "pointer",
           }}
         >
-          Cosy
-        </h1>
 
-        <p
-          style={{
-            color: "#3b82f6",
-            fontSize: "11px",
-            letterSpacing: "5px",
-            marginTop: "6px",
-            fontWeight: "500",
-          }}
-        >
-          TRAVEL TOGETHER
-        </p>
+          <h1
+            style={{
+              color: "white",
+              fontSize: "42px",
+              fontWeight: "700",
+              margin: 0,
+              lineHeight: 1,
+            }}
+          >
+            Cosy
+          </h1>
 
-      </div>
+          <p
+            style={{
+              color: "#3b82f6",
+              fontSize: "11px",
+              letterSpacing: "5px",
+              marginTop: "6px",
+              fontWeight: "500",
+            }}
+          >
+            TRAVEL TOGETHER
+          </p>
+
+        </div>
+
+      </Link>
 
       {/* NAV LINKS */}
       <div
         style={{
           display: "flex",
-          gap: "42px",
+          gap: "36px",
           alignItems: "center",
         }}
       >
@@ -110,29 +122,38 @@ function Navbar() {
       >
 
         {/* LOGIN BUTTON */}
-        <motion.button
-          whileHover={{
-            y: -3,
-            backgroundColor: "rgba(255, 255, 255, 0.08)",
-          }}
-          whileTap={{ scale: 0.96 }}
-          transition={{
-            duration: 0.25,
-          }}
+        <Link
+          to="/login"
           style={{
-            padding: "14px 30px",
-            borderRadius: "16px",
-            background: "rgba(255, 255, 255, 0.04)",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
-            backdropFilter: "blur(20px)",
-            color: "#e2e8f0",
-            fontSize: "15px",
-            fontWeight: "500",
-            cursor: "pointer",
+            textDecoration: "none",
           }}
         >
-          Log in
-        </motion.button>
+
+          <motion.button
+            whileHover={{
+              y: -3,
+              backgroundColor: "rgba(255, 255, 255, 0.08)",
+            }}
+            whileTap={{ scale: 0.96 }}
+            transition={{
+              duration: 0.25,
+            }}
+            style={{
+              padding: "14px 30px",
+              borderRadius: "16px",
+              background: "rgba(255, 255, 255, 0.04)",
+              border: "1px solid rgba(255, 255, 255, 0.08)",
+              backdropFilter: "blur(20px)",
+              color: "#e2e8f0",
+              fontSize: "15px",
+              fontWeight: "500",
+              cursor: "pointer",
+            }}
+          >
+            Log in
+          </motion.button>
+
+        </Link>
 
         {/* SIGNUP BUTTON */}
         <motion.button
@@ -157,6 +178,7 @@ function Navbar() {
             boxShadow: "0 0 40px rgba(37, 99, 235, 0.35)",
             position: "relative",
             overflow: "hidden",
+            flexShrink: 0,
           }}
         >
 

@@ -1,57 +1,27 @@
-import { motion } from "framer-motion"
+import Navbar from "../components/Navbar"
+import Hero from "../components/Hero"
+import Stats from "../components/Stats"
+import Features from "../components/Features"
+import Testimonial from "../components/Testimonial"
 
 function Home() {
 
   return (
 
-    <motion.div
-      initial={{
-        opacity: 0,
-        scale: 0.98,
-      }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-      }}
-      transition={{
-        duration: 1,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      style={{
-        height: "100vh",
-        background:
-          "linear-gradient(to bottom right, #020617, #111827)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        color: "white",
-      }}
-    >
+    <div>
 
-      <div style={{ textAlign: "center" }}>
+      <Navbar />
 
-        <h1
-          style={{
-            fontSize: "64px",
-            marginBottom: "20px",
-            fontWeight: "700",
-          }}
-        >
-          Welcome to Cosy
-        </h1>
+      <Hero />
 
-        <p
-          style={{
-            color: "#94a3b8",
-            fontSize: "18px",
-          }}
-        >
-          Premium Smart Ride Pooling Platform
-        </p>
+      <Stats />
 
-      </div>
+      <Features />
 
-    </motion.div>
+      <Testimonial />
+
+    </div>
+
   )
 }
 

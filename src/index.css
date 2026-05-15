@@ -1,7 +1,17 @@
-@import "tailwindcss";
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-body {
-  background: #fcfdfe;
-  color: rgb(67, 8, 232);
+html,
+body,
+#root{
+  width: 100%;
+  overflow-x: hidden;
+  background: #020617;
+}
+
+body{
   font-family: Inter, sans-serif;
 }

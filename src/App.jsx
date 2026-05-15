@@ -1,16 +1,91 @@
+// import { useEffect, useState } from "react"
+// import { AnimatePresence } from "framer-motion"
+
+// import SplashScreen from "../pages/Splashscreen"
+
+// import Navbar from "../components/Navbar"
+// import Hero from "../components/Hero"
+// import Stats from "../components/Stats"
+// import Features from "../components/Features"
+// import Testimonial from "../components/Testimonial"
+
+// function App() {
+
+//   const [loading, setLoading] = useState(true)
+
+//   useEffect(() => {
+
+//     const timer = setTimeout(() => {
+//       setLoading(false)
+//     }, 2000)
+
+//     return () => clearTimeout(timer)
+
+//   }, [])
+
+//   return (
+
+//     <AnimatePresence mode="wait">
+
+//       {loading ? (
+
+//         <SplashScreen key="splash" />
+
+//       ) : (
+
+//         <div
+//           key="home"
+//           style={{
+//             minHeight: "100vh",
+//             width: "100%",
+//             overflowX: "hidden",
+//             background:
+//               "linear-gradient(to bottom right, #020617, #050816)",
+//             fontFamily: "Inter, sans-serif",
+//             position: "relative",
+//           }}
+//         >
+
+//           <Navbar />
+
+//           <Hero />
+
+//           <Stats />
+
+//           <Features />
+
+//           <Testimonial />
+
+//         </div>
+
+//       )}
+
+//     </AnimatePresence>
+
+//   )
+// }
+
+// export default App
 import { useEffect, useState } from "react"
+
+import {
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom"
+
 import { AnimatePresence } from "framer-motion"
 
 import SplashScreen from "../pages/Splashscreen"
+
 import Home from "../pages/Home"
-
-import Navbar from "../components/Navbar"
-import Hero from "../components/Hero"
-
+import Login from "../pages/Login"
 
 function App() {
 
   const [loading, setLoading] = useState(true)
+
+  const location = useLocation()
 
   useEffect(() => {
 
@@ -22,27 +97,48 @@ function App() {
 
   }, [])
 
+  if (loading) {
+    return <SplashScreen />
+  }
+
   return (
-    <AnimatePresence mode="wait">
-      {loading ? (
-        <SplashScreen key="splash" />
-      ) : (
-        <div
-          key = "home"
-          style = {{
-            minHeight: "100vh",
-            background: "linear-gradient(to bottom right, #020617, #050816)",
-            overflow: "hidden",
-            fontFamily: "Inter, sans-serif",
-          }}
+
+    <div
+      style={{
+        minHeight: "100vh",
+        width: "100%",
+        overflowX: "hidden",
+        background:
+          "linear-gradient(to bottom right, #020617, #050816)",
+        fontFamily: "Inter, sans-serif",
+      }}
+    >
+
+      <AnimatePresence mode="wait">
+
+        <Routes
+          location={location}
+          key={location.pathname}
         >
 
-          <Navbar/>
-          <Hero/>
-        </div>
-        
-      )}
-    </AnimatePresence>
+          {/* HOME */}
+          <Route
+            path="/"
+            element={<Home />}
+          />
+
+          {/* LOGIN */}
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+
+        </Routes>
+
+      </AnimatePresence>
+
+    </div>
+
   )
 }
 
