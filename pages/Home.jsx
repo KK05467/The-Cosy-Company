@@ -4,21 +4,24 @@ import Stats from "../components/Stats"
 import Features from "../components/Features"
 import Testimonial from "../components/Testimonial"
 
-function Home() {
+function Home({ darkMode, setDarkMode }) {
 
   return (
 
     <div>
 
-      <Navbar />
+      <Navbar
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+      />
 
-      <Hero />
+      <Hero darkMode={darkMode} />
 
-      <Stats />
+      <Stats darkMode={darkMode} />
 
-      <Features />
+      <Features darkMode={darkMode} />
 
-      <Testimonial />
+      <Testimonial darkMode={darkMode} />
 
     </div>
 

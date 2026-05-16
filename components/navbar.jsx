@@ -1,7 +1,9 @@
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
 
-function Navbar() {
+import { FaMoon, FaSun } from "react-icons/fa"
+
+function Navbar({ darkMode, setDarkMode }) {
 
   const navLinks = [
     "Home",
@@ -26,9 +28,13 @@ function Navbar() {
         top: 0,
         left: 0,
         zIndex: 1000,
-        background: "rgba(2, 6, 23, 0.55)",
+        background: darkMode
+          ? "rgba(2, 6, 23, 0.55)"
+          : "rgba(255,255,255,0.7)",
         backdropFilter: "blur(22px)",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+        borderBottom: darkMode
+          ? "1px solid rgba(255,255,255,0.05)"
+          : "1px solid rgba(15,23,42,0.08)",
         boxShadow: "0 10px 40px rgba(0, 0, 0, 0.18)",
       }}
     >
@@ -51,7 +57,7 @@ function Navbar() {
 
           <h1
             style={{
-              color: "white",
+              color: darkMode ? "white" : "#0f172a",
               fontSize: "42px",
               fontWeight: "700",
               margin: 0,
@@ -98,7 +104,7 @@ function Navbar() {
               duration: 0.25,
             }}
             style={{
-              color: "white",
+              color: darkMode ? "white" : "#0f172a",
               fontSize: "16px",
               fontWeight: "500",
               cursor: "pointer",
@@ -121,6 +127,39 @@ function Navbar() {
         }}
       >
 
+        {/* THEME TOGGLE */}
+        <motion.button
+          whileHover={{
+            y: -3,
+          }}
+          whileTap={{
+            scale: 0.95,
+          }}
+          onClick={() => setDarkMode(!darkMode)}
+          style={{
+            width: "56px",
+            height: "56px",
+            borderRadius: "18px",
+            border: darkMode
+              ? "1px solid rgba(255,255,255,0.08)"
+              : "1px solid rgba(15,23,42,0.08)",
+            background: darkMode
+              ? "rgba(255,255,255,0.05)"
+              : "rgba(255,255,255,0.75)",
+            color: darkMode ? "white" : "#0f172a",
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "18px",
+            backdropFilter: "blur(20px)",
+          }}
+        >
+
+          {darkMode ? <FaSun /> : <FaMoon />}
+
+        </motion.button>
+
         {/* LOGIN BUTTON */}
         <Link
           to="/login"
@@ -132,19 +171,24 @@ function Navbar() {
           <motion.button
             whileHover={{
               y: -3,
-              backgroundColor: "rgba(255, 255, 255, 0.08)",
             }}
-            whileTap={{ scale: 0.96 }}
+            whileTap={{
+              scale: 0.96,
+            }}
             transition={{
               duration: 0.25,
             }}
             style={{
               padding: "14px 30px",
               borderRadius: "16px",
-              background: "rgba(255, 255, 255, 0.04)",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
+              background: darkMode
+                ? "rgba(255,255,255,0.04)"
+                : "rgba(255,255,255,0.75)",
+              border: darkMode
+                ? "1px solid rgba(255,255,255,0.08)"
+                : "1px solid rgba(15,23,42,0.08)",
               backdropFilter: "blur(20px)",
-              color: "#e2e8f0",
+              color: darkMode ? "#e2e8f0" : "#0f172a",
               fontSize: "15px",
               fontWeight: "500",
               cursor: "pointer",
@@ -161,7 +205,9 @@ function Navbar() {
             y: -4,
             scale: 1.02,
           }}
-          whileTap={{ scale: 0.96 }}
+          whileTap={{
+            scale: 0.96,
+          }}
           transition={{
             duration: 0.25,
           }}
@@ -170,12 +216,12 @@ function Navbar() {
             borderRadius: "18px",
             background:
               "linear-gradient(135deg, #2563eb, #3b82f6)",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
-            color: "white",
+            border: "1px solid rgba(255,255,255,0.08)",
+           color: darkMode ? "white" : "#0f172a",
             fontSize: "15px",
             fontWeight: "600",
             cursor: "pointer",
-            boxShadow: "0 0 40px rgba(37, 99, 235, 0.35)",
+            boxShadow: "0 0 40px rgba(37,99,235,0.35)",
             position: "relative",
             overflow: "hidden",
             flexShrink: 0,
@@ -188,7 +234,7 @@ function Navbar() {
               position: "absolute",
               inset: 0,
               background:
-                "linear-gradient(to right, transparent, rgba(255, 255, 255, 0.18), transparent)",
+                "linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent)",
               transform: "translateX(-100%)",
             }}
           />

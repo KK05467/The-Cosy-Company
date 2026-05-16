@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 
-function Testimonial() {
+function Testimonial({ darkMode }) {
 
   return (
 
@@ -17,8 +17,9 @@ function Testimonial() {
         style={{
           padding: "70px",
           borderRadius: "40px",
-          background:
-            "linear-gradient(to right, rgba(37,99,235,0.15), rgba(255,255,255,0.04))",
+         background: darkMode
+  ? "linear-gradient(to bottom right, #020617, #050816)"
+  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
           border: "1px solid rgba(255,255,255,0.08)",
           backdropFilter: "blur(20px)",
         }}
@@ -36,7 +37,7 @@ function Testimonial() {
 
         <h1
           style={{
-            color: "white",
+            color: darkMode ? "white" : "#0f172a",
             fontSize: "52px",
             lineHeight: "1.4",
             maxWidth: "1000px",
@@ -69,7 +70,7 @@ function Testimonial() {
 
             <h3
               style={{
-                color: "white",
+                color: darkMode ? "white" : "#0f172a",
                 marginBottom: "6px",
               }}
             >

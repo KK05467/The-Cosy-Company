@@ -7,7 +7,7 @@ import {
   FaClock,
 } from "react-icons/fa"
 
-function Features() {
+function Features({ darkMode }) {
 
   const features = [
     {
@@ -99,7 +99,9 @@ function Features() {
             style={{
               padding: "45px",
               borderRadius: "32px",
-              background: "rgba(255,255,255,0.04)",
+              background: darkMode
+  ? "linear-gradient(to bottom right, #020617, #050816)"
+  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
               border: "1px solid rgba(255,255,255,0.08)",
               backdropFilter: "blur(20px)",
             }}
@@ -110,7 +112,9 @@ function Features() {
                 width: "80px",
                 height: "80px",
                 borderRadius: "24px",
-                background: "rgba(37,99,235,0.15)",
+                background: darkMode
+  ? "linear-gradient(to bottom right, #020617, #050816)"
+  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -124,7 +128,7 @@ function Features() {
 
             <h2
               style={{
-                color: "white",
+                color: darkMode ? "white" : "#0f172a",
                 fontSize: "34px",
                 marginBottom: "18px",
               }}

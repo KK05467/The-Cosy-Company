@@ -7,7 +7,7 @@ import {
   FaCar,
 } from "react-icons/fa"
 
-function Hero() {
+function Hero({ darkMode }) {
 
   return (
 
@@ -19,8 +19,9 @@ function Hero() {
         display: "flex",
         alignItems: "center",
         padding: "180px 80px 100px",
-        background:
-          "linear-gradient(to bottom right, #020617, #050816)",
+        background: darkMode
+  ? "linear-gradient(to bottom right, #020617, #050816)"
+  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
       }}
     >
 
@@ -44,8 +45,10 @@ function Hero() {
         style={{
           position: "absolute",
           inset: 0,
-          background:
-            "linear-gradient(to right, rgba(2,6,23,0.96) 30%, rgba(2,6,23,0.55) 70%, rgba(2,6,23,0.9) 100%)",
+          
+           background: darkMode
+  ? "linear-gradient(to bottom right, #020617, #050816)"
+  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
           zIndex: 2,
         }}
       />
@@ -97,7 +100,7 @@ function Hero() {
 
           <span
             style={{
-              color: "white",
+              color: darkMode ? "white" : "#0f172a",
               fontSize: "15px",
             }}
           >
@@ -113,7 +116,7 @@ function Hero() {
             lineHeight: "1",
             fontWeight: "700",
             marginBottom: "30px",
-            color: "white",
+            color: darkMode ? "white" : "#0f172a",
           }}
         >
           Travel{" "}
@@ -135,7 +138,7 @@ function Hero() {
         {/* SUBTEXT */}
         <p
           style={{
-            color: "#cbd5e1",
+            color: darkMode ? "white" : "#0f172a",
             fontSize: "22px",
             lineHeight: "1.8",
             maxWidth: "680px",
@@ -165,7 +168,7 @@ function Hero() {
               borderRadius: "22px",
               border: "none",
               background: "#2563eb",
-              color: "white",
+              color: darkMode ? "white" : "#0f172a",
               fontSize: "18px",
               fontWeight: "600",
               cursor: "pointer",
@@ -187,7 +190,7 @@ function Hero() {
               borderRadius: "22px",
               background: "rgba(255,255,255,0.05)",
               border: "1px solid rgba(255,255,255,0.1)",
-              color: "white",
+              color: darkMode ? "white" : "#0f172a",
               fontSize: "18px",
               cursor: "pointer",
               backdropFilter: "blur(20px)",
@@ -241,7 +244,7 @@ function Hero() {
 
             <p
               style={{
-                color: "white",
+                color: darkMode ? "white" : "#0f172a",
                 marginBottom: "6px",
                 fontSize: "17px",
               }}
@@ -264,7 +267,7 @@ function Hero() {
 
               <span
                 style={{
-                  color: "#cbd5e1",
+                  color: darkMode ? "white" : "#0f172a",
                   marginLeft: "6px",
                 }}
               >

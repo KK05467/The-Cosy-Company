@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 
-function AuthLeft() {
+function AuthLeft({ darkMode }) {
 
   return (
 
@@ -46,8 +46,9 @@ function AuthLeft() {
         style={{
           position: "absolute",
           inset: 0,
-          background:
-            "linear-gradient(to bottom right, rgba(2,6,23,0.98), rgba(5,8,22,0.92))",
+          background: darkMode
+  ? "linear-gradient(to bottom right, #020617, #050816)"
+  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
         }}
       />
 
@@ -87,7 +88,7 @@ function AuthLeft() {
 
         <h1
           style={{
-            color: "white",
+            color: darkMode ? "white" : "#0f172a",
             fontSize: "78px",
             lineHeight: "1.1",
             marginBottom: "30px",

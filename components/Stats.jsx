@@ -6,7 +6,7 @@ import {
   FaMapMarkedAlt,
 } from "react-icons/fa"
 
-function Stats() {
+function Stats({ darkMode }) {
 
   const stats = [
     {
@@ -62,7 +62,9 @@ function Stats() {
             style={{
               padding: "40px",
               borderRadius: "28px",
-              background: "rgba(255,255,255,0.04)",
+              background: darkMode
+  ? "linear-gradient(to bottom right, #020617, #050816)"
+  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
               border: "1px solid rgba(255,255,255,0.08)",
               backdropFilter: "blur(20px)",
             }}
@@ -73,7 +75,9 @@ function Stats() {
                 width: "70px",
                 height: "70px",
                 borderRadius: "20px",
-                background: "rgba(37,99,235,0.15)",
+                background: darkMode
+  ? "linear-gradient(to bottom right, #020617, #050816)"
+  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -87,7 +91,7 @@ function Stats() {
 
             <h1
               style={{
-                color: "white",
+                color: darkMode ? "white" : "#0f172a",
                 fontSize: "42px",
                 marginBottom: "10px",
               }}

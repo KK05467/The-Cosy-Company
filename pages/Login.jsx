@@ -1,7 +1,11 @@
 import AuthLeft from "../components/AuthLeft"
 import LoginForm from "../components/LoginForm"
 
-function Login() {
+import { useNavigate } from "react-router-dom"
+
+function Login({ darkMode }) {
+
+  const navigate = useNavigate()
 
   return (
 
@@ -13,8 +17,12 @@ function Login() {
       }}
     >
 
-      <AuthLeft />
-      <LoginForm />
+      <AuthLeft darkMode={darkMode} />
+
+      <LoginForm
+        darkMode={darkMode}
+        navigate={navigate}
+      />
 
     </div>
 
