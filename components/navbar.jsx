@@ -200,55 +200,64 @@ function Navbar({ darkMode, setDarkMode }) {
         </Link>
 
         {/* SIGNUP BUTTON */}
-        <motion.button
-          whileHover={{
-            y: -4,
-            scale: 1.02,
-          }}
-          whileTap={{
-            scale: 0.96,
-          }}
-          transition={{
-            duration: 0.25,
-          }}
+        <Link
+          to="/signup"
           style={{
-            padding: "14px 32px",
-            borderRadius: "18px",
-            background:
-              "linear-gradient(135deg, #2563eb, #3b82f6)",
-            border: "1px solid rgba(255,255,255,0.08)",
-           color: darkMode ? "white" : "#0f172a",
-            fontSize: "15px",
-            fontWeight: "600",
-            cursor: "pointer",
-            boxShadow: "0 0 40px rgba(37,99,235,0.35)",
-            position: "relative",
-            overflow: "hidden",
-            flexShrink: 0,
+            textDecoration: "none",
           }}
         >
 
-          {/* SHINE EFFECT */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent)",
-              transform: "translateX(-100%)",
+          <motion.button
+            whileHover={{
+              y: -4,
+              scale: 1.02,
             }}
-          />
-
-          <span
+            whileTap={{
+              scale: 0.96,
+            }}
+            transition={{
+              duration: 0.25,
+            }}
             style={{
+              padding: "14px 32px",
+              borderRadius: "18px",
+              background:
+                "linear-gradient(135deg, #2563eb, #3b82f6)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              color: "white",
+              fontSize: "15px",
+              fontWeight: "600",
+              cursor: "pointer",
+              boxShadow: "0 0 40px rgba(37,99,235,0.35)",
               position: "relative",
-              zIndex: 2,
+              overflow: "hidden",
+              flexShrink: 0,
             }}
           >
-            Sign up
-          </span>
 
-        </motion.button>
+            {/* SHINE EFFECT */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background:
+                  "linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent)",
+                transform: "translateX(-100%)",
+              }}
+            />
+
+            <span
+              style={{
+                position: "relative",
+                zIndex: 2,
+              }}
+            >
+              Sign up
+            </span>
+
+          </motion.button>
+
+        </Link>
 
       </div>
 

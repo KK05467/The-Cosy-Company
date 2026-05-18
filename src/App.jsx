@@ -1,78 +1,134 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom"
 
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion"
 
-import SplashScreen from "../pages/Splashscreen";
+import SplashScreen from "../pages/Splashscreen"
 
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import Dashboard from "../pages/Dashboard";
+import Home from "../pages/Home"
+import Login from "../pages/Login"
+import Dashboard from "../pages/Dashboard"
+import Signup from "../pages/Signup"
+import Wallet from "../pages/Wallet"
+import Profile from "../pages/Profile"
 
 function App() {
-  const [darkMode, setDarkMode] = useState(true);
-  const [loading, setLoading] = useState(true);
 
-  const location = useLocation();
+  const [darkMode, setDarkMode] = useState(true)
+  const [loading, setLoading] = useState(true)
+
+  const location = useLocation()
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
 
-    return () => clearTimeout(timer);
-  }, []);
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 2000)
+
+    return () => clearTimeout(timer)
+
+  }, [])
 
   if (loading) {
-    return <SplashScreen />;
+    return <SplashScreen />
   }
 
   return (
+
     <div
       style={{
         minHeight: "100vh",
         width: "100%",
         overflowX: "hidden",
-        background: "linear-gradient(to bottom right, #020617, #050816)",
+        background: darkMode
+          ? "linear-gradient(to bottom right, #020617, #050816)"
+          : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
         fontFamily: "Inter, sans-serif",
       }}
     >
+
       <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
+
+        <Routes
+          location={location}
+          key={location.pathname}
+        >
+
           {/* HOME */}
           <Route
-             path="/"
-             element={
-               <Home
-                 darkMode={darkMode}
-                 setDarkMode={setDarkMode}
+            path="/"
+            element={
+              <Home
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
               />
-              }
-        />
+            }
+          />
 
           {/* LOGIN */}
           <Route
             path="/login"
             element={
-             <Login
-               darkMode={darkMode}
-               setDarkMode={setDarkMode}
-            />
+              <Login
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
             }
           />
 
-          {/*DASHBOARD*/}
-          <Route path="/dashboard" element={
-            <Dashboard
-              darkMode={darkMode}
-              setDarkMode={setDarkMode}
-            />} 
+          {/* DASHBOARD */}
+          <Route
+            path="/dashboard"
+            element={
+              <Dashboard
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+            
           />
+          
+
+          {/* SIGNUP */}
+          <Route
+            path="/signup"
+            element={
+              <Signup
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+          {/* PROFILE */}
+          <Route
+            path="/profile"
+            element={
+              <Profile
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+           {/* WALLET */}
+          <Route
+            path="/wallet"
+            element={
+              <Wallet
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+          
+
         </Routes>
+
       </AnimatePresence>
+
     </div>
-  );
+
+  )
 }
 
-export default App;
+export default App
