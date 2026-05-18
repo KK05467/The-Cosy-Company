@@ -1,6 +1,6 @@
 // src/pages/Profile.jsx
 
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 
 import {
   FaCamera,
@@ -11,22 +11,18 @@ import {
   FaStar,
   FaShieldAlt,
   FaEdit,
-} from "react-icons/fa"
+} from "react-icons/fa";
 
 function Profile({ darkMode }) {
-
   const cardStyle = {
-    background: darkMode
-      ? "rgba(255,255,255,0.04)"
-      : "rgba(255,255,255,0.7)",
+    background: darkMode ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.7)",
     border: darkMode
       ? "1px solid rgba(255,255,255,0.08)"
       : "1px solid rgba(15,23,42,0.08)",
     backdropFilter: "blur(20px)",
-  }
+  };
 
   return (
-
     <div
       style={{
         minHeight: "100vh",
@@ -39,7 +35,6 @@ function Profile({ darkMode }) {
         overflow: "hidden",
       }}
     >
-
       {/* BLUE GLOW */}
       <div
         style={{
@@ -63,7 +58,6 @@ function Profile({ darkMode }) {
           zIndex: 2,
         }}
       >
-
         <p
           style={{
             color: "#3b82f6",
@@ -92,7 +86,6 @@ function Profile({ darkMode }) {
         >
           Manage your personal information and travel identity.
         </p>
-
       </div>
 
       {/* MAIN GRID */}
@@ -105,7 +98,6 @@ function Profile({ darkMode }) {
           zIndex: 2,
         }}
       >
-
         {/* LEFT PROFILE CARD */}
         <motion.div
           whileHover={{
@@ -120,7 +112,6 @@ function Profile({ darkMode }) {
             ...cardStyle,
           }}
         >
-
           {/* IMAGE */}
           <div
             style={{
@@ -130,7 +121,6 @@ function Profile({ darkMode }) {
               position: "relative",
             }}
           >
-
             <img
               src="https://i.pravatar.cc/300?img=15"
               alt=""
@@ -161,7 +151,6 @@ function Profile({ darkMode }) {
             >
               <FaCamera />
             </button>
-
           </div>
 
           {/* USER INFO */}
@@ -171,7 +160,6 @@ function Profile({ darkMode }) {
               marginBottom: "40px",
             }}
           >
-
             <h2
               style={{
                 color: darkMode ? "white" : "#0f172a",
@@ -204,13 +192,9 @@ function Profile({ darkMode }) {
                 fontWeight: "600",
               }}
             >
-
               <FaShieldAlt />
-
               Verified Account
-
             </div>
-
           </div>
 
           {/* STATS */}
@@ -221,7 +205,6 @@ function Profile({ darkMode }) {
               gap: "20px",
             }}
           >
-
             {[
               {
                 value: "4.9",
@@ -234,7 +217,6 @@ function Profile({ darkMode }) {
                 icon: <FaCar />,
               },
             ].map((item, index) => (
-
               <div
                 key={index}
                 style={{
@@ -245,7 +227,6 @@ function Profile({ darkMode }) {
                   textAlign: "center",
                 }}
               >
-
                 <div
                   style={{
                     color: "#3b82f6",
@@ -273,13 +254,9 @@ function Profile({ darkMode }) {
                 >
                   {item.label}
                 </p>
-
               </div>
-
             ))}
-
           </div>
-
         </motion.div>
 
         {/* RIGHT SECTION */}
@@ -290,7 +267,6 @@ function Profile({ darkMode }) {
             gap: "30px",
           }}
         >
-
           {/* PERSONAL INFO */}
           <motion.div
             whileHover={{
@@ -302,7 +278,6 @@ function Profile({ darkMode }) {
               ...cardStyle,
             }}
           >
-
             <div
               style={{
                 display: "flex",
@@ -311,9 +286,7 @@ function Profile({ darkMode }) {
                 marginBottom: "36px",
               }}
             >
-
               <div>
-
                 <h2
                   style={{
                     color: darkMode ? "white" : "#0f172a",
@@ -331,7 +304,6 @@ function Profile({ darkMode }) {
                 >
                   Your basic account information.
                 </p>
-
               </div>
 
               <button
@@ -348,7 +320,6 @@ function Profile({ darkMode }) {
               >
                 <FaEdit />
               </button>
-
             </div>
 
             {/* INFO GRID */}
@@ -359,7 +330,6 @@ function Profile({ darkMode }) {
                 gap: "24px",
               }}
             >
-
               {[
                 {
                   icon: <FaEnvelope />,
@@ -382,7 +352,6 @@ function Profile({ darkMode }) {
                   value: "Premium Pooling",
                 },
               ].map((item, index) => (
-
                 <div
                   key={index}
                   style={{
@@ -392,7 +361,6 @@ function Profile({ darkMode }) {
                     border: "1px solid rgba(255,255,255,0.08)",
                   }}
                 >
-
                   <div
                     style={{
                       color: "#3b82f6",
@@ -421,13 +389,9 @@ function Profile({ darkMode }) {
                   >
                     {item.value}
                   </h3>
-
                 </div>
-
               ))}
-
             </div>
-
           </motion.div>
 
           {/* ACTIVITY CARD */}
@@ -441,7 +405,6 @@ function Profile({ darkMode }) {
               ...cardStyle,
             }}
           >
-
             <h2
               style={{
                 color: darkMode ? "white" : "#0f172a",
@@ -453,7 +416,6 @@ function Profile({ darkMode }) {
             </h2>
 
             {[1, 2, 3].map((item) => (
-
               <div
                 key={item}
                 style={{
@@ -462,14 +424,10 @@ function Profile({ darkMode }) {
                   alignItems: "center",
                   padding: "22px 0",
                   borderBottom:
-                    item !== 3
-                      ? "1px solid rgba(255,255,255,0.06)"
-                      : "none",
+                    item !== 3 ? "1px solid rgba(255,255,255,0.06)" : "none",
                 }}
               >
-
                 <div>
-
                   <h3
                     style={{
                       color: darkMode ? "white" : "#0f172a",
@@ -486,7 +444,6 @@ function Profile({ darkMode }) {
                   >
                     KIIT Square → Infocity
                   </p>
-
                 </div>
 
                 <span
@@ -497,20 +454,13 @@ function Profile({ darkMode }) {
                 >
                   Today
                 </span>
-
               </div>
-
             ))}
-
           </motion.div>
-
         </div>
-
       </div>
-
     </div>
-
-  )
+  );
 }
 
-export default Profile
+export default Profile;
