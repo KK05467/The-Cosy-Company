@@ -12,6 +12,10 @@ import Dashboard from "../pages/Dashboard"
 import Signup from "../pages/Signup"
 import Wallet from "../pages/Wallet"
 import Profile from "../pages/Profile"
+import Settings from "../pages/Settings"
+import EditProfile from "../components/EditProfile"
+import PaymentSuccess from "../pages/PaymentSuccess"
+import PaymentFailed from "../pages/PaymentFailed"
 
 function App() {
 
@@ -110,6 +114,51 @@ function App() {
               />
             }
           />
+          {/* SETTINGS */}
+          <Route
+            path="/settings"
+            element={
+              <Settings
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* EDIT PROFILE */}
+          <Route
+            path="/edit-profile"
+            element={
+              <EditProfile
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+          
+          {/* PAYMENT FAILED */}
+          <Route
+            path="/payment-failed"
+            element={
+              <PaymentFailed
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* PAYMENT SUCCESS */}
+          <Route
+            path="/payment-success"
+            element={
+              <PaymentSuccess
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+          
+          
            {/* WALLET */}
           <Route
             path="/wallet"
