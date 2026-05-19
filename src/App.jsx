@@ -16,6 +16,8 @@ import Settings from "../pages/Settings"
 import EditProfile from "../components/EditProfile"
 import PaymentSuccess from "../pages/PaymentSuccess"
 import PaymentFailed from "../pages/PaymentFailed"
+import DriverCreateRide from "../pages/DriverCreateRide"
+import NotFound from "../pages/NotFound"
 
 function App() {
 
@@ -158,6 +160,27 @@ function App() {
             }
           />
           
+          {/* ERROR 404 */}
+          <Route
+            path="/not-found"
+            element={
+              <NotFound
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* DRIVER CREATE RIDE */}
+          <Route
+            path="/driver-create-ride"
+            element={
+              <DriverCreateRide
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
           
            {/* WALLET */}
           <Route
