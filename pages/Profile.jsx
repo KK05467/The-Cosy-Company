@@ -1,32 +1,47 @@
-// src/pages/Profile.jsx
-
-import { motion } from "framer-motion";
-
 import {
-  FaCamera,
+  FaUser,
   FaEnvelope,
   FaPhone,
   FaMapMarkerAlt,
-  FaCar,
-  FaStar,
+  FaCog,
   FaShieldAlt,
+  FaStar,
+  FaCar,
+  FaWallet,
+  FaLeaf,
   FaEdit,
-} from "react-icons/fa";
+} from "react-icons/fa"
+
+import { motion } from "framer-motion"
+
+import { Link } from "react-router-dom"
 
 function Profile({ darkMode }) {
-  const cardStyle = {
-    background: darkMode ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.7)",
-    border: darkMode
-      ? "1px solid rgba(255,255,255,0.08)"
-      : "1px solid rgba(15,23,42,0.08)",
-    backdropFilter: "blur(20px)",
-  };
+
+  const stats = [
+    {
+      icon: <FaCar />,
+      value: "148",
+      label: "Trips",
+    },
+    {
+      icon: <FaWallet />,
+      value: "₹12.4K",
+      label: "Saved",
+    },
+    {
+      icon: <FaLeaf />,
+      value: "82kg",
+      label: "CO₂ Saved",
+    },
+  ]
 
   return (
+
     <div
       style={{
         minHeight: "100vh",
-        padding: "140px 80px 60px",
+        padding: "50px",
         background: darkMode
           ? "linear-gradient(to bottom right, #020617, #050816)"
           : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
@@ -35,6 +50,7 @@ function Profile({ darkMode }) {
         overflow: "hidden",
       }}
     >
+
       {/* BLUE GLOW */}
       <div
         style={{
@@ -51,321 +67,331 @@ function Profile({ darkMode }) {
       />
 
       {/* HEADER */}
-      <div
+      <motion.div
+        initial={{
+          opacity: 0,
+          y: 40,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 0.8,
+        }}
         style={{
-          marginBottom: "50px",
           position: "relative",
           zIndex: 2,
         }}
       >
-        <p
-          style={{
-            color: "#3b82f6",
-            letterSpacing: "4px",
-            marginBottom: "14px",
-          }}
-        >
-          USER PROFILE
-        </p>
 
-        <h1
-          style={{
-            color: darkMode ? "white" : "#0f172a",
-            fontSize: "64px",
-            marginBottom: "14px",
-          }}
-        >
-          My Profile
-        </h1>
-
-        <p
-          style={{
-            color: "#94a3b8",
-            fontSize: "18px",
-          }}
-        >
-          Manage your personal information and travel identity.
-        </p>
-      </div>
-
-      {/* MAIN GRID */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "420px 1fr",
-          gap: "30px",
-          position: "relative",
-          zIndex: 2,
-        }}
-      >
-        {/* LEFT PROFILE CARD */}
-        <motion.div
-          whileHover={{
-            y: -6,
-          }}
-          transition={{
-            duration: 0.3,
-          }}
-          style={{
-            padding: "40px",
-            borderRadius: "34px",
-            ...cardStyle,
-          }}
-        >
-          {/* IMAGE */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: "30px",
-              position: "relative",
-            }}
-          >
-            <img
-              src="https://i.pravatar.cc/300?img=15"
-              alt=""
-              style={{
-                width: "160px",
-                height: "160px",
-                borderRadius: "50%",
-                objectFit: "cover",
-                border: "4px solid rgba(37,99,235,0.4)",
-              }}
-            />
-
-            <button
-              style={{
-                position: "absolute",
-                bottom: "8px",
-                right: "110px",
-                width: "52px",
-                height: "52px",
-                borderRadius: "18px",
-                border: "none",
-                background: "#2563eb",
-                color: "white",
-                cursor: "pointer",
-                fontSize: "18px",
-                boxShadow: "0 0 30px rgba(37,99,235,0.4)",
-              }}
-            >
-              <FaCamera />
-            </button>
-          </div>
-
-          {/* USER INFO */}
-          <div
-            style={{
-              textAlign: "center",
-              marginBottom: "40px",
-            }}
-          >
-            <h2
-              style={{
-                color: darkMode ? "white" : "#0f172a",
-                fontSize: "34px",
-                marginBottom: "10px",
-              }}
-            >
-              Keertan Kumar
-            </h2>
-
-            <p
-              style={{
-                color: "#94a3b8",
-                fontSize: "17px",
-                marginBottom: "18px",
-              }}
-            >
-              Premium Rider • Bhubaneswar
-            </p>
-
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "10px",
-                padding: "12px 20px",
-                borderRadius: "999px",
-                background: "rgba(37,99,235,0.14)",
-                color: "#3b82f6",
-                fontWeight: "600",
-              }}
-            >
-              <FaShieldAlt />
-              Verified Account
-            </div>
-          </div>
-
-          {/* STATS */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "20px",
-            }}
-          >
-            {[
-              {
-                value: "4.9",
-                label: "Rating",
-                icon: <FaStar />,
-              },
-              {
-                value: "124",
-                label: "Trips",
-                icon: <FaCar />,
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                style={{
-                  padding: "24px",
-                  borderRadius: "24px",
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  textAlign: "center",
-                }}
-              >
-                <div
-                  style={{
-                    color: "#3b82f6",
-                    fontSize: "24px",
-                    marginBottom: "14px",
-                  }}
-                >
-                  {item.icon}
-                </div>
-
-                <h2
-                  style={{
-                    color: darkMode ? "white" : "#0f172a",
-                    fontSize: "34px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  {item.value}
-                </h2>
-
-                <p
-                  style={{
-                    color: "#94a3b8",
-                  }}
-                >
-                  {item.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* RIGHT SECTION */}
+        {/* TOP BAR */}
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "40px",
+          }}
+        >
+
+          {/* LEFT */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "26px",
+            }}
+          >
+
+            {/* AVATAR */}
+            <div
+              style={{
+                position: "relative",
+              }}
+            >
+
+              <div
+                style={{
+                  width: "130px",
+                  height: "130px",
+                  borderRadius: "36px",
+                  background:
+                    "linear-gradient(135deg,#2563eb,#3b82f6)",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  boxShadow:
+                    "0 0 60px rgba(37,99,235,0.45)",
+                }}
+              >
+
+                <FaUser
+                  style={{
+                    color: "white",
+                    fontSize: "48px",
+                  }}
+                />
+
+              </div>
+
+              {/* VERIFIED BADGE */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "-5px",
+                  right: "-5px",
+                  width: "42px",
+                  height: "42px",
+                  borderRadius: "50%",
+                  background: "#22c55e",
+                  border: "4px solid #020617",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+
+                <FaShieldAlt
+                  style={{
+                    color: "white",
+                    fontSize: "16px",
+                  }}
+                />
+
+              </div>
+
+            </div>
+
+            {/* USER INFO */}
+            <div>
+
+              <p
+                style={{
+                  color: "#3b82f6",
+                  letterSpacing: "3px",
+                  marginBottom: "14px",
+                  fontSize: "14px",
+                }}
+              >
+                PREMIUM MEMBER
+              </p>
+
+              <h1
+                style={{
+                  color: darkMode ? "white" : "#0f172a",
+                  fontSize: "58px",
+                  marginBottom: "10px",
+                  lineHeight: 1,
+                }}
+              >
+                Keertan Kumar
+              </h1>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+
+                <FaStar color="#facc15" />
+
+                <span
+                  style={{
+                    color: "#cbd5e1",
+                    fontSize: "17px",
+                  }}
+                >
+                  4.9 Rating • Elite Rider & Driver
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* RIGHT */}
+          <div
+            style={{
+              display: "flex",
+              gap: "18px",
+            }}
+          >
+
+            {/* EDIT BUTTON */}
+
+              <Link
+                to="/edit-profile"
+                style={{
+                    textDecoration: "none",
+                }}
+                >
+
+    <motion.button
+        whileHover={{
+        y: -4,
+        }}
+        whileTap={{
+        scale: 0.96,
+        }}
+        style={{
+        padding: "18px 28px",
+        borderRadius: "20px",
+        border:
+            "1px solid rgba(255,255,255,0.08)",
+        background: "rgba(255,255,255,0.05)",
+        color: darkMode ? "white" : "#0f172a",
+        cursor: "pointer",
+        fontSize: "16px",
+        fontWeight: "600",
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        backdropFilter: "blur(20px)",
+        }}
+    >
+
+    <FaEdit />
+
+    Edit Profile
+
+  </motion.button>
+
+</Link>
+
+            {/* SETTINGS BUTTON */}
+            <Link
+              to="/settings"
+              style={{
+                textDecoration: "none",
+              }}
+            >
+
+              <motion.button
+                whileHover={{
+                  y: -4,
+                }}
+                whileTap={{
+                  scale: 0.96,
+                }}
+                style={{
+                  padding: "18px 28px",
+                  borderRadius: "20px",
+                  border: "none",
+                  background:
+                    "linear-gradient(135deg,#2563eb,#3b82f6)",
+                  color: "white",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  boxShadow:
+                    "0 0 40px rgba(37,99,235,0.35)",
+                }}
+              >
+
+                <FaCog />
+
+                Settings
+
+              </motion.button>
+
+            </Link>
+
+          </div>
+
+        </div>
+
+        {/* MAIN GRID */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.4fr 1fr",
             gap: "30px",
           }}
         >
-          {/* PERSONAL INFO */}
-          <motion.div
-            whileHover={{
-              y: -4,
-            }}
+
+          {/* PROFILE CARD */}
+          <div
             style={{
               padding: "40px",
-              borderRadius: "34px",
-              ...cardStyle,
+              borderRadius: "36px",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              backdropFilter: "blur(20px)",
             }}
           >
-            <div
+
+            <h2
               style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "36px",
+                color: darkMode ? "white" : "#0f172a",
+                fontSize: "32px",
+                marginBottom: "34px",
               }}
             >
-              <div>
-                <h2
-                  style={{
-                    color: darkMode ? "white" : "#0f172a",
-                    fontSize: "34px",
-                    marginBottom: "10px",
-                  }}
-                >
-                  Personal Information
-                </h2>
+              Personal Information
+            </h2>
 
-                <p
-                  style={{
-                    color: "#94a3b8",
-                  }}
-                >
-                  Your basic account information.
-                </p>
-              </div>
-
-              <button
-                style={{
-                  width: "58px",
-                  height: "58px",
-                  borderRadius: "18px",
-                  border: "none",
-                  background: "#2563eb",
-                  color: "white",
-                  cursor: "pointer",
-                  fontSize: "18px",
-                }}
-              >
-                <FaEdit />
-              </button>
-            </div>
-
-            {/* INFO GRID */}
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "24px",
+                gridTemplateColumns: "repeat(2,1fr)",
+                gap: "28px",
               }}
             >
+
               {[
                 {
                   icon: <FaEnvelope />,
-                  title: "Email Address",
-                  value: "keertan@gmail.com",
+                  label: "Email",
+                  value: "keertan@example.com",
                 },
                 {
                   icon: <FaPhone />,
-                  title: "Phone Number",
+                  label: "Phone",
                   value: "+91 9876543210",
                 },
                 {
                   icon: <FaMapMarkerAlt />,
-                  title: "Location",
+                  label: "Location",
                   value: "Bhubaneswar, India",
                 },
                 {
-                  icon: <FaCar />,
-                  title: "Preferred Travel",
-                  value: "Premium Pooling",
+                  icon: <FaUser />,
+                  label: "Account Type",
+                  value: "Rider + Driver",
                 },
               ].map((item, index) => (
+
                 <div
                   key={index}
                   style={{
-                    padding: "28px",
-                    borderRadius: "26px",
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    padding: "26px",
+                    borderRadius: "24px",
+                    background: "rgba(255,255,255,0.03)",
+                    border:
+                      "1px solid rgba(255,255,255,0.06)",
                   }}
                 >
+
                   <div
                     style={{
+                      width: "58px",
+                      height: "58px",
+                      borderRadius: "18px",
+                      background:
+                        "rgba(37,99,235,0.15)",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                       color: "#3b82f6",
-                      fontSize: "24px",
-                      marginBottom: "18px",
+                      fontSize: "22px",
+                      marginBottom: "22px",
                     }}
                   >
                     {item.icon}
@@ -375,92 +401,160 @@ function Profile({ darkMode }) {
                     style={{
                       color: "#94a3b8",
                       marginBottom: "10px",
+                      fontSize: "15px",
                     }}
                   >
-                    {item.title}
+                    {item.label}
                   </p>
 
                   <h3
                     style={{
-                      color: darkMode ? "white" : "#0f172a",
-                      fontSize: "22px",
-                      lineHeight: "1.5",
+                      color: darkMode
+                        ? "white"
+                        : "#0f172a",
+                      fontSize: "20px",
+                      lineHeight: 1.5,
                     }}
                   >
                     {item.value}
                   </h3>
-                </div>
-              ))}
-            </div>
-          </motion.div>
 
-          {/* ACTIVITY CARD */}
-          <motion.div
-            whileHover={{
-              y: -4,
-            }}
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+          {/* STATS CARD */}
+          <div
             style={{
-              padding: "40px",
-              borderRadius: "34px",
-              ...cardStyle,
+              display: "flex",
+              flexDirection: "column",
+              gap: "24px",
             }}
           >
-            <h2
+
+            {/* MEMBERSHIP */}
+            <div
               style={{
-                color: darkMode ? "white" : "#0f172a",
-                fontSize: "34px",
-                marginBottom: "32px",
+                padding: "36px",
+                borderRadius: "34px",
+                background:
+                  "linear-gradient(135deg,#2563eb,#1d4ed8)",
+                color: "white",
+                boxShadow:
+                  "0 0 50px rgba(37,99,235,0.35)",
               }}
             >
-              Recent Activity
-            </h2>
 
-            {[1, 2, 3].map((item) => (
-              <div
-                key={item}
+              <p
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "22px 0",
-                  borderBottom:
-                    item !== 3 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                  letterSpacing: "3px",
+                  marginBottom: "20px",
+                  opacity: 0.8,
                 }}
               >
+                COSY PREMIUM
+              </p>
+
+              <h1
+                style={{
+                  fontSize: "42px",
+                  marginBottom: "18px",
+                }}
+              >
+                Gold Member
+              </h1>
+
+              <p
+                style={{
+                  lineHeight: 1.8,
+                  opacity: 0.9,
+                }}
+              >
+                Enjoy priority ride matching,
+                premium support, and lower ride fees.
+              </p>
+
+            </div>
+
+            {/* STATS */}
+            {stats.map((item, index) => (
+
+              <motion.div
+                key={index}
+                whileHover={{
+                  y: -5,
+                }}
+                style={{
+                  padding: "28px",
+                  borderRadius: "28px",
+                  background: "rgba(255,255,255,0.04)",
+                  border:
+                    "1px solid rgba(255,255,255,0.08)",
+                  backdropFilter: "blur(20px)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "22px",
+                }}
+              >
+
+                <div
+                  style={{
+                    width: "72px",
+                    height: "72px",
+                    borderRadius: "22px",
+                    background:
+                      "rgba(37,99,235,0.15)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "#3b82f6",
+                    fontSize: "28px",
+                  }}
+                >
+                  {item.icon}
+                </div>
+
                 <div>
-                  <h3
+
+                  <h1
                     style={{
-                      color: darkMode ? "white" : "#0f172a",
-                      marginBottom: "8px",
+                      color: darkMode
+                        ? "white"
+                        : "#0f172a",
+                      fontSize: "38px",
+                      marginBottom: "6px",
                     }}
                   >
-                    Ride Completed Successfully
-                  </h3>
+                    {item.value}
+                  </h1>
 
                   <p
                     style={{
                       color: "#94a3b8",
                     }}
                   >
-                    KIIT Square → Infocity
+                    {item.label}
                   </p>
+
                 </div>
 
-                <span
-                  style={{
-                    color: "#3b82f6",
-                    fontWeight: "600",
-                  }}
-                >
-                  Today
-                </span>
-              </div>
+              </motion.div>
+
             ))}
-          </motion.div>
+
+          </div>
+
         </div>
-      </div>
+
+      </motion.div>
+
     </div>
-  );
+
+  )
 }
 
-export default Profile;
+export default Profile
