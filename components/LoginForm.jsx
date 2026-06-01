@@ -1,4 +1,6 @@
 import { motion } from "framer-motion"
+import { FaGoogle } from "react-icons/fa"
+import { Link } from "react-router-dom"
 
 function LoginForm({ navigate, darkMode }) {
 
@@ -167,6 +169,78 @@ function LoginForm({ navigate, darkMode }) {
           </p>
 
         </div>
+        {/* DIVIDER */}
+<div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "16px",
+    marginBottom: "28px",
+  }}
+>
+  <div
+    style={{
+      flex: 1,
+      height: "1px",
+      background: "rgba(255,255,255,0.08)",
+    }}
+  />
+
+  <span
+    style={{
+      color: "#94a3b8",
+      fontSize: "14px",
+    }}
+  >
+    OR
+  </span>
+
+  <div
+    style={{
+      flex: 1,
+      height: "1px",
+      background: "rgba(255,255,255,0.08)",
+    }}
+  />
+</div>
+
+{/* GOOGLE LOGIN */}
+<motion.button
+  whileHover={{
+    scale: 1.02,
+    y: -3,
+  }}
+  whileTap={{
+    scale: 0.96,
+  }}
+  onClick={() => navigate("/dashboard")}
+  style={{
+    width: "100%",
+    padding: "18px",
+    borderRadius: "18px",
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    color: darkMode ? "white" : "#0f172a",
+    fontSize: "16px",
+    fontWeight: "600",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "14px",
+    marginBottom: "28px",
+    backdropFilter: "blur(20px)",
+  }}
+>
+  <FaGoogle
+    style={{
+      color: "#EA4335",
+      fontSize: "20px",
+    }}
+  />
+
+  Continue with Google
+</motion.button>
 
         {/* BUTTON */}
         <motion.button
@@ -215,16 +289,17 @@ function LoginForm({ navigate, darkMode }) {
             Don’t have an account?
           </p>
 
-          <span
-            style={{
-              color: "#3b82f6",
-              cursor: "pointer",
-              fontSize: "15px",
-              fontWeight: "600",
-            }}
-          >
-            Sign Up
-          </span>
+          <Link
+  to="/signup"
+  style={{
+    color: "#3b82f6",
+    textDecoration: "none",
+    fontSize: "15px",
+    fontWeight: "600",
+  }}
+>
+  Sign Up
+</Link>
 
         </div>
 

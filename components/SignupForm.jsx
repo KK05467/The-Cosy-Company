@@ -1,4 +1,6 @@
 import { motion } from "framer-motion"
+import { FaGoogle } from "react-icons/fa"
+import { Link } from "react-router-dom"
 
 function SignupForm({ darkMode }) {
 
@@ -18,11 +20,11 @@ function SignupForm({ darkMode }) {
       }}
       style={{
         flex: 1,
-        height: "100vh",
+        minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "40px",
+        padding: "32px",
         background: darkMode
           ? "linear-gradient(to bottom right, #020617, #050816)"
           : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
@@ -35,14 +37,14 @@ function SignupForm({ darkMode }) {
       <div
         style={{
           position: "absolute",
-          width: "500px",
-          height: "500px",
+          width: "450px",
+          height: "450px",
           borderRadius: "50%",
           background: "#2563eb",
-          filter: "blur(160px)",
+          filter: "blur(150px)",
           opacity: 0.12,
-          right: "-150px",
-          top: "-100px",
+          right: "-120px",
+          top: "-80px",
         }}
       />
 
@@ -50,9 +52,9 @@ function SignupForm({ darkMode }) {
       <div
         style={{
           width: "100%",
-          maxWidth: "540px",
-          padding: "55px",
-          borderRadius: "32px",
+          maxWidth: "460px",
+          padding: "40px",
+          borderRadius: "28px",
           background: "rgba(255,255,255,0.04)",
           border: "1px solid rgba(255,255,255,0.08)",
           backdropFilter: "blur(20px)",
@@ -62,11 +64,13 @@ function SignupForm({ darkMode }) {
         }}
       >
 
+        {/* HEADING */}
         <h1
           style={{
             color: darkMode ? "white" : "#0f172a",
-            fontSize: "52px",
-            marginBottom: "14px",
+            fontSize: "38px",
+            marginBottom: "10px",
+            lineHeight: 1.1,
           }}
         >
           Create Account
@@ -75,8 +79,9 @@ function SignupForm({ darkMode }) {
         <p
           style={{
             color: "#94a3b8",
-            marginBottom: "40px",
-            fontSize: "18px",
+            marginBottom: "28px",
+            fontSize: "15px",
+            lineHeight: 1.6,
           }}
         >
           Join the future of smart mobility.
@@ -95,30 +100,28 @@ function SignupForm({ darkMode }) {
           placeholder="Email Address"
           style={{
             ...inputStyle(darkMode),
-            marginTop: "20px",
+            marginTop: "14px",
           }}
         />
 
-        {/* PHONE NUMBER */}
+        {/* PHONE */}
         <input
-          type="numeric"
-          placeholder="Phone No."
+          type="tel"
+          placeholder="Phone Number"
           style={{
             ...inputStyle(darkMode),
-            marginTop: "20px",
+            marginTop: "14px",
           }}
         />
 
         {/* DOB */}
         <input
-        type="date"
-        placeholder = "DOB"
-        style={{
+          type="date"
+          style={{
             ...inputStyle(darkMode),
-            marginTop: "20px",
-            color: darkMode ? "white" : "#0f172a",
+            marginTop: "14px",
             cursor: "pointer",
-        }}
+          }}
         />
 
         {/* PASSWORD */}
@@ -127,36 +130,140 @@ function SignupForm({ darkMode }) {
           placeholder="Password"
           style={{
             ...inputStyle(darkMode),
-            marginTop: "20px",
+            marginTop: "14px",
           }}
         />
 
-        {/* BUTTON */}
+        {/* CREATE ACCOUNT BUTTON */}
         <motion.button
           whileHover={{
             scale: 1.02,
-            y: -3,
+            y: -2,
           }}
           whileTap={{
-            scale: 0.96,
+            scale: 0.97,
           }}
           style={{
             width: "100%",
-            padding: "18px",
-            borderRadius: "18px",
+            padding: "14px",
+            borderRadius: "14px",
             border: "none",
             background:
               "linear-gradient(135deg, #2563eb, #3b82f6)",
             color: "white",
-            fontSize: "17px",
+            fontSize: "15px",
             fontWeight: "600",
             cursor: "pointer",
-            marginTop: "32px",
-            boxShadow: "0 0 40px rgba(37,99,235,0.3)",
+            marginTop: "24px",
+            boxShadow: "0 0 30px rgba(37,99,235,0.3)",
           }}
         >
           Create Account
         </motion.button>
+
+        {/* DIVIDER */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "14px",
+            marginTop: "24px",
+            marginBottom: "24px",
+          }}
+        >
+          <div
+            style={{
+              flex: 1,
+              height: "1px",
+              background: "rgba(255,255,255,0.08)",
+            }}
+          />
+
+          <span
+            style={{
+              color: "#94a3b8",
+              fontSize: "13px",
+            }}
+          >
+            OR
+          </span>
+
+          <div
+            style={{
+              flex: 1,
+              height: "1px",
+              background: "rgba(255,255,255,0.08)",
+            }}
+          />
+        </div>
+
+        {/* GOOGLE SIGNUP */}
+        <motion.button
+          whileHover={{
+            scale: 1.02,
+            y: -2,
+          }}
+          whileTap={{
+            scale: 0.97,
+          }}
+          style={{
+            width: "100%",
+            padding: "14px",
+            borderRadius: "14px",
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            color: darkMode ? "white" : "#0f172a",
+            fontSize: "15px",
+            fontWeight: "600",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "12px",
+            backdropFilter: "blur(20px)",
+          }}
+        >
+          <FaGoogle
+            style={{
+              color: "#EA4335",
+              fontSize: "18px",
+            }}
+          />
+
+          Continue with Google
+        </motion.button>
+
+        {/* LOGIN LINK */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "8px",
+            marginTop: "22px",
+          }}
+        >
+          <p
+            style={{
+              color: "#94a3b8",
+              fontSize: "14px",
+              margin: 0,
+            }}
+          >
+            Already have an account?
+          </p>
+
+          <Link
+            to="/login"
+            style={{
+              color: "#3b82f6",
+              textDecoration: "none",
+              fontSize: "14px",
+              fontWeight: "600",
+            }}
+          >
+            Sign In
+          </Link>
+        </div>
 
       </div>
 
@@ -167,12 +274,12 @@ function SignupForm({ darkMode }) {
 
 const inputStyle = (darkMode) => ({
   width: "100%",
-  padding: "18px",
-  borderRadius: "18px",
+  padding: "14px",
+  borderRadius: "14px",
   background: "rgba(255,255,255,0.04)",
   border: "1px solid rgba(255,255,255,0.08)",
   color: darkMode ? "white" : "#0f172a",
-  fontSize: "16px",
+  fontSize: "14px",
   outline: "none",
   boxSizing: "border-box",
 })
