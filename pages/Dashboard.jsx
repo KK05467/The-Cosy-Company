@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import {
   FaBell,
@@ -7,7 +7,6 @@ import {
   FaMapMarkerAlt,
   FaUsers,
   FaWallet,
-  FaClock,
   FaRoute,
 } from "react-icons/fa"
 
@@ -15,73 +14,72 @@ import Sidebar from "../components/dashboard/Sidebar"
 import DashboardToggle from "../components/dashboard/DashboardToggle"
 
 function Dashboard({ darkMode, setDarkMode }) {
-  useEffect(() => {
-  try {
-    const storedUser = localStorage.getItem("user")
-
-    if (storedUser) {
-      const parsed = JSON.parse(storedUser)
-      console.log("USER LOADED:", parsed)
-      setUser(parsed)
-    }
-  } catch (err) {
-    console.log("Error parsing user:", err)
-  }
-}, [])
-
+  const [user, setUser] = useState(null)
   const [mode, setMode] = useState("rider")
 
-  const stats = mode === "rider"
-    ? [
-        {
-          title: "Active Pools",
-          value: "12",
-          icon: <FaUsers />,
-        },
-        {
-          title: "Money Saved",
-          value: "₹4,240",
-          icon: <FaWallet />,
-        },
-        {
-          title: "CO₂ Reduced",
-          value: "82kg",
-          icon: <FaLeaf />,
-        },
-      ]
-    : [
-        {
-          title: "Today's Earnings",
-          value: "₹5,820",
-          icon: <FaWallet />,
-        },
-        {
-          title: "Passengers",
-          value: "28",
-          icon: <FaUsers />,
-        },
-        {
-          title: "Trips Completed",
-          value: "16",
-          icon: <FaCar />,
-        },
-      ]
+  useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem("user")
+
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser)
+        setUser(parsed)
+      }
+    } catch (err) {
+      console.log("Error parsing user:", err)
+    }
+  }, [])
+
+  const stats =
+    mode === "rider"
+      ? [
+          {
+            title: "Active Pools",
+            value: user?.activePools ?? 0,
+            icon: <FaUsers />,
+          },
+          {
+            title: "Money Saved",
+            value: user?.moneySaved ?? "₹0",
+            icon: <FaWallet />,
+          },
+          {
+            title: "CO₂ Reduced",
+            value: user?.co2Reduced ?? "0kg",
+            icon: <FaLeaf />,
+          },
+        ]
+      : [
+          {
+            title: "Today's Earnings",
+            value: user?.earnings ?? "₹0",
+            icon: <FaWallet />,
+          },
+          {
+            title: "Passengers",
+            value: user?.passengers ?? 0,
+            icon: <FaUsers />,
+          },
+          {
+            title: "Trips Completed",
+            value: user?.tripsCompleted ?? 0,
+            icon: <FaCar />,
+          },
+        ]
 
   return (
-
     <div
       style={{
         minHeight: "100vh",
         display: "flex",
-          background: darkMode
-  ? "linear-gradient(to bottom right, #020617, #050816)"
-  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
+        background: darkMode
+          ? "linear-gradient(to bottom right, #020617, #050816)"
+          : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
         fontFamily: "Inter, sans-serif",
         overflow: "hidden",
         position: "relative",
       }}
     >
-
       {/* BLUE GLOW */}
       <div
         style={{
@@ -110,7 +108,6 @@ function Dashboard({ darkMode, setDarkMode }) {
           zIndex: 2,
         }}
       >
-
         {/* TOPBAR */}
         <div
           style={{
@@ -120,10 +117,8 @@ function Dashboard({ darkMode, setDarkMode }) {
             marginBottom: "40px",
           }}
         >
-
           {/* LEFT */}
           <div>
-
             <p
               style={{
                 color: "#3b82f6",
@@ -137,24 +132,18 @@ function Dashboard({ darkMode, setDarkMode }) {
 
             <h1
               style={{
-               color: darkMode ? "white" : "#0f172a",
+                color: darkMode ? "white" : "#0f172a",
                 fontSize: "54px",
                 lineHeight: 1.1,
                 marginBottom: "10px",
               }}
             >
-              Welcome back, {user && user.name ? user.name : "User"}
+              Welcome back, {user?.name || "User"}
             </h1>
 
-            <p
-              style={{
-                color: "#94a3b8",
-                fontSize: "18px",
-              }}
-            >
+            <p style={{ color: "#94a3b8", fontSize: "18px" }}>
               Your smart travel ecosystem is active.
             </p>
-
           </div>
 
           {/* RIGHT */}
@@ -165,7 +154,6 @@ function Dashboard({ darkMode, setDarkMode }) {
               gap: "20px",
             }}
           >
-
             <DashboardToggle
               mode={mode}
               setMode={setMode}
@@ -190,9 +178,7 @@ function Dashboard({ darkMode, setDarkMode }) {
             >
               <FaBell />
             </div>
-
           </div>
-
         </div>
 
         {/* HERO GRID */}
@@ -204,7 +190,6 @@ function Dashboard({ darkMode, setDarkMode }) {
             marginBottom: "30px",
           }}
         >
-
           {/* MAP CARD */}
           <div
             style={{
@@ -213,13 +198,12 @@ function Dashboard({ darkMode, setDarkMode }) {
               borderRadius: "34px",
               overflow: "hidden",
               background: darkMode
-  ? "linear-gradient(to bottom right, #020617, #050816)"
-  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
+                ? "linear-gradient(to bottom right, #020617, #050816)"
+                : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
               border: "1px solid rgba(255,255,255,0.08)",
               backdropFilter: "blur(20px)",
             }}
           >
-
             <img
               src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1600&auto=format&fit=crop"
               alt=""
@@ -233,18 +217,16 @@ function Dashboard({ darkMode, setDarkMode }) {
               }}
             />
 
-            {/* OVERLAY */}
             <div
               style={{
                 position: "absolute",
                 inset: 0,
                 background: darkMode
-  ? "linear-gradient(to bottom right, #020617, #050816)"
-  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
+                  ? "linear-gradient(to bottom right, #020617, #050816)"
+                  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
               }}
             />
 
-            {/* CONTENT */}
             <div
               style={{
                 position: "relative",
@@ -256,10 +238,7 @@ function Dashboard({ darkMode, setDarkMode }) {
                 justifyContent: "space-between",
               }}
             >
-
-              {/* TOP */}
               <div>
-
                 <div
                   style={{
                     display: "inline-flex",
@@ -268,22 +247,19 @@ function Dashboard({ darkMode, setDarkMode }) {
                     padding: "12px 20px",
                     borderRadius: "999px",
                     background: "rgba(255,255,255,0.08)",
-                    border:
-                      "1px solid rgba(255,255,255,0.08)",
+                    border: "1px solid rgba(255,255,255,0.08)",
                     marginBottom: "28px",
                   }}
                 >
-
                   <FaRoute color="#3b82f6" />
 
                   <span
                     style={{
-                     color: darkMode ? "white" : "#0f172a",
+                      color: darkMode ? "white" : "#0f172a",
                     }}
                   >
                     AI Pool Matching Active
                   </span>
-
                 </div>
 
                 <h1
@@ -297,8 +273,7 @@ function Dashboard({ darkMode, setDarkMode }) {
                 >
                   {mode === "rider"
                     ? "Find smarter shared rides nearby."
-                    : "Manage rides and maximize earnings."
-                  }
+                    : "Manage rides and maximize earnings."}
                 </h1>
 
                 <p
@@ -309,87 +284,10 @@ function Dashboard({ darkMode, setDarkMode }) {
                     maxWidth: "620px",
                   }}
                 >
-                  Cosy intelligently matches routes,
-                  passengers, and drivers in real-time
-                  for seamless vehicle pooling.
+                  Cosy intelligently matches routes, passengers, and drivers in real-time.
                 </p>
-
               </div>
-
-              {/* BOTTOM CARDS */}
-              <div
-                style={{
-                  display: "flex",
-                  gap: "20px",
-                }}
-              >
-
-                <div
-                  style={{
-                    padding: "20px 24px",
-                    borderRadius: "22px",
-                    background: "rgba(255,255,255,0.08)",
-                    border:
-                      "1px solid rgba(255,255,255,0.08)",
-                    backdropFilter: "blur(20px)",
-                  }}
-                >
-
-                  <p
-                    style={{
-                      color: "#94a3b8",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    Match Score
-                  </p>
-
-                  <h1
-                    style={{
-                      color: darkMode ? "white" : "#0f172a",
-                      fontSize: "38px",
-                    }}
-                  >
-                    92%
-                  </h1>
-
-                </div>
-
-                <div
-                  style={{
-                    padding: "20px 24px",
-                    borderRadius: "22px",
-                    background: "rgba(255,255,255,0.08)",
-                    border:
-                      "1px solid rgba(255,255,255,0.08)",
-                    backdropFilter: "blur(20px)",
-                  }}
-                >
-
-                  <p
-                    style={{
-                      color: "#94a3b8",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    Nearby Pools
-                  </p>
-
-                  <h1
-                    style={{
-                     color: darkMode ? "white" : "#0f172a",
-                      fontSize: "38px",
-                    }}
-                  >
-                    18
-                  </h1>
-
-                </div>
-
-              </div>
-
             </div>
-
           </div>
 
           {/* RIGHT PANEL */}
@@ -400,18 +298,14 @@ function Dashboard({ darkMode, setDarkMode }) {
               gap: "24px",
             }}
           >
-
-            {/* LIVE ACTIVITY */}
             <div
               style={{
                 padding: "30px",
                 borderRadius: "30px",
                 background: "rgba(255,255,255,0.04)",
                 border: "1px solid rgba(255,255,255,0.08)",
-                backdropFilter: "blur(20px)",
               }}
             >
-
               <h2
                 style={{
                   color: darkMode ? "white" : "#0f172a",
@@ -422,8 +316,7 @@ function Dashboard({ darkMode, setDarkMode }) {
                 Live Activity
               </h2>
 
-              {[1,2,3].map((item) => (
-
+              {[1, 2, 3].map((item) => (
                 <div
                   key={item}
                   style={{
@@ -433,14 +326,12 @@ function Dashboard({ darkMode, setDarkMode }) {
                     alignItems: "center",
                   }}
                 >
-
                   <div
                     style={{
                       width: "48px",
                       height: "48px",
                       borderRadius: "16px",
-                      background:
-                        "rgba(37,99,235,0.18)",
+                      background: "rgba(37,99,235,0.18)",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
@@ -451,7 +342,6 @@ function Dashboard({ darkMode, setDarkMode }) {
                   </div>
 
                   <div>
-
                     <p
                       style={{
                         color: darkMode ? "white" : "#0f172a",
@@ -460,74 +350,14 @@ function Dashboard({ darkMode, setDarkMode }) {
                     >
                       Pool forming near Downtown
                     </p>
-
-                    <span
-                      style={{
-                        color: "#94a3b8",
-                        fontSize: "14px",
-                      }}
-                    >
+                    <span style={{ color: "#94a3b8", fontSize: "14px" }}>
                       2 mins ago
                     </span>
-
                   </div>
-
                 </div>
-
               ))}
-
             </div>
-
-            {/* AI INSIGHTS */}
-            <div
-              style={{
-                padding: "30px",
-                borderRadius: "30px",
-               background: darkMode
-  ? "linear-gradient(to bottom right, #020617, #050816)"
-  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
-                border: "1px solid rgba(255,255,255,0.08)",
-              }}
-            >
-
-              <p
-                style={{
-                  color: "#3b82f6",
-                  marginBottom: "14px",
-                  letterSpacing: "2px",
-                }}
-              >
-                AI INSIGHT
-              </p>
-
-              <h1
-                style={{
-                  color: darkMode ? "white" : "#0f172a",
-                  fontSize: "34px",
-                  lineHeight: 1.2,
-                  marginBottom: "18px",
-                }}
-              >
-                {mode === "rider"
-                  ? "You can save ₹240 today using smart pooling."
-                  : "Add 1 more passenger to increase earnings by ₹320."
-                }
-              </h1>
-
-              <p
-                style={{
-                  color: "#cbd5e1",
-                  lineHeight: 1.8,
-                }}
-              >
-                Real-time route optimization powered
-                by AI mobility intelligence.
-              </p>
-
-            </div>
-
           </div>
-
         </div>
 
         {/* STATS */}
@@ -538,9 +368,7 @@ function Dashboard({ darkMode, setDarkMode }) {
             gap: "24px",
           }}
         >
-
           {stats.map((item, index) => (
-
             <div
               key={index}
               style={{
@@ -551,7 +379,6 @@ function Dashboard({ darkMode, setDarkMode }) {
                 backdropFilter: "blur(20px)",
               }}
             >
-
               <div
                 style={{
                   width: "70px",
@@ -579,25 +406,14 @@ function Dashboard({ darkMode, setDarkMode }) {
                 {item.value}
               </h1>
 
-              <p
-                style={{
-                  color: "#94a3b8",
-                  fontSize: "17px",
-                }}
-              >
+              <p style={{ color: "#94a3b8", fontSize: "17px" }}>
                 {item.title}
               </p>
-
             </div>
-
           ))}
-
         </div>
-
       </div>
-
     </div>
-
   )
 }
 
