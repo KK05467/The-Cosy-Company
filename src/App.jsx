@@ -18,6 +18,8 @@ import PaymentSuccess from "../pages/PaymentSuccess"
 import PaymentFailed from "../pages/PaymentFailed"
 import DriverCreateRide from "../pages/DriverCreateRide"
 import NotFound from "../pages/NotFound"
+import ForgotPassword from "../pages/ForgotPassword"
+import ResetPassword from "../pages/ResetPassword"
 
 function App() {
 
@@ -106,6 +108,30 @@ function App() {
               />
             }
           />
+
+          {/* FORGOT PASSWORD */}
+          <Route
+            path="/forgot-password"
+            element={
+              <ForgotPassword
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* RESET PASSWORD */}
+          <Route
+            path="/reset-password"
+            element={
+              <ResetPassword
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+
           {/* PROFILE */}
           <Route
             path="/profile"

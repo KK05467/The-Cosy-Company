@@ -14,7 +14,20 @@ import {
 import Sidebar from "../components/dashboard/Sidebar"
 import DashboardToggle from "../components/dashboard/DashboardToggle"
 
-function Dashboard(darkMode, setDarkMode) {
+function Dashboard({ darkMode, setDarkMode }) {
+  useEffect(() => {
+  try {
+    const storedUser = localStorage.getItem("user")
+
+    if (storedUser) {
+      const parsed = JSON.parse(storedUser)
+      console.log("USER LOADED:", parsed)
+      setUser(parsed)
+    }
+  } catch (err) {
+    console.log("Error parsing user:", err)
+  }
+}, [])
 
   const [mode, setMode] = useState("rider")
 
@@ -130,7 +143,7 @@ function Dashboard(darkMode, setDarkMode) {
                 marginBottom: "10px",
               }}
             >
-              Welcome back, Keertan
+              Welcome back, {user && user.name ? user.name : "User"}
             </h1>
 
             <p
