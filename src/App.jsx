@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion"
 import SplashScreen from "../pages/Splashscreen"
 
 import Home from "../pages/Home"
+import Navbar from "../components/Navbar"
 import Login from "../pages/Login"
 import Dashboard from "../pages/Dashboard"
 import Signup from "../pages/Signup"
@@ -20,6 +21,16 @@ import DriverCreateRide from "../pages/DriverCreateRide"
 import NotFound from "../pages/NotFound"
 import ForgotPassword from "../pages/ForgotPassword"
 import ResetPassword from "../pages/ResetPassword"
+import Bookings from "../pages/Bookings"
+import Pricing from "../pages/Pricing"
+import HowItWorks from "../pages/HowItWorks"
+import FAQ from "../pages/FAQ"
+import About from "../pages/About"
+import Contact from "../pages/Contact"
+
+import Test from "/Test"
+
+
 
 function App() {
 
@@ -43,8 +54,10 @@ function App() {
   }
 
   return (
+    <>
 
     <div
+    
       style={{
         minHeight: "100vh",
         width: "100%",
@@ -57,6 +70,7 @@ function App() {
     >
 
       <AnimatePresence mode="wait">
+         <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
         <Routes
           location={location}
@@ -73,6 +87,7 @@ function App() {
               />
             }
           />
+
 
           {/* LOGIN */}
           <Route
@@ -97,6 +112,16 @@ function App() {
             
           />
           
+          {/* BOOKINGS */}
+          <Route
+            path="/bookings"
+            element={
+              <Bookings
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
 
           {/* SIGNUP */}
           <Route
@@ -120,6 +145,17 @@ function App() {
             }
           />
 
+
+
+
+
+            <Route
+  path="/test"
+  element={<Test />}
+/>
+
+
+
           {/* RESET PASSWORD */}
           <Route
             path="/reset-password"
@@ -137,6 +173,61 @@ function App() {
             path="/profile"
             element={
               <Profile
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* ABOUT */}
+          <Route
+            path="/about"
+            element={
+              <About
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* CONTACT */}
+          <Route
+            path="/contact"
+            element={
+              <Contact
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* FAQ */}
+          <Route
+            path="/faq"
+            element={
+              <FAQ
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* HOW IT WORKS */}
+          <Route
+            path="/how-it-works"
+            element={
+              <HowItWorks
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* PRICING */}
+          <Route
+            path="/pricing"
+            element={
+              <Pricing
                 darkMode={darkMode}
                 setDarkMode={setDarkMode}
               />
@@ -225,6 +316,7 @@ function App() {
       </AnimatePresence>
 
     </div>
+    </>
 
   )
 }
