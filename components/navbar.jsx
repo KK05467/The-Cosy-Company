@@ -1,19 +1,20 @@
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
 
-import { FaMoon, FaSun } from "react-icons/fa"
+import { FaMoon, FaSun, FaUserCircle } from "react-icons/fa"
 
 function Navbar({ darkMode, setDarkMode }) {
 
   const navLinks = [
-    "Home",
-    "About",
-    "How it works",
-    "Routes",
-    "Pricing",
-    "Contact",
-  ]
+  { title: "Home", path: "/" },
+  { title: "About", path: "/about" },
+  { title: "How it works", path: "/how-it-works" },
+  { title: "FAQ", path: "/faq" },
+  { title: "Pricing", path: "/pricing" },
+  { title: "Contact", path: "/contact" },
+]
 
+const isLoggedIn = !!localStorage.getItem("token")
   return (
 
     <nav
@@ -94,27 +95,34 @@ function Navbar({ darkMode, setDarkMode }) {
 
         {navLinks.map((link, index) => (
 
-          <motion.p
-            key={index}
-            whileHover={{
-              color: "#3b82f6",
-              y: -2,
-            }}
-            transition={{
-              duration: 0.25,
-            }}
-            style={{
-              color: darkMode ? "white" : "#0f172a",
-              fontSize: "16px",
-              fontWeight: "500",
-              cursor: "pointer",
-              margin: 0,
-            }}
-          >
-            {link}
-          </motion.p>
+  <Link
+    key={index}
+    to={link.path}
+    style={{
+      textDecoration: "none",
+    }}
+  >
+    <motion.p
+      whileHover={{
+        color: "#3b82f6",
+        y: -2,
+      }}
+      transition={{
+        duration: 0.25,
+      }}
+      style={{
+        color: darkMode ? "white" : "#0f172a",
+        fontSize: "16px",
+        fontWeight: "500",
+        cursor: "pointer",
+        margin: 0,
+      }}
+    >
+      {link.title}
+    </motion.p>
+  </Link>
 
-        ))}
+))}
 
       </div>
 
@@ -160,104 +168,165 @@ function Navbar({ darkMode, setDarkMode }) {
 
         </motion.button>
 
-        {/* LOGIN BUTTON */}
+        {/* PROFILE BUTTON */}
         <Link
-          to="/login"
+  to="/profile"
+  style={{
+    textDecoration: "none",
+  }}
+>
+  <motion.div
+    whileHover={{
+      y: -3,
+      scale: 1.05,
+    }}
+    whileTap={{
+      scale: 0.95,
+    }}
+    style={{
+      width: "56px",
+      height: "56px",
+      borderRadius: "18px",
+      border: darkMode
+        ? "1px solid rgba(255,255,255,0.08)"
+        : "1px solid rgba(15,23,42,0.08)",
+      background: darkMode
+        ? "rgba(255,255,255,0.05)"
+        : "rgba(255,255,255,0.75)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      color: "#3b82f6",
+      fontSize: "24px",
+      cursor: "pointer",
+      backdropFilter: "blur(20px)",
+    }}
+  >
+    <FaUserCircle />
+  </motion.div>
+</Link>
+
+        {!isLoggedIn ? (
+  <>
+    {/* LOGIN BUTTON */}
+    <Link to="/login" style={{ textDecoration: "none" }}>
+      <motion.button
+        whileHover={{ y: -3 }}
+        whileTap={{ scale: 0.96 }}
+        transition={{ duration: 0.25 }}
+        style={{
+          padding: "14px 30px",
+          borderRadius: "16px",
+          background: darkMode
+            ? "rgba(255,255,255,0.04)"
+            : "rgba(255,255,255,0.75)",
+          border: darkMode
+            ? "1px solid rgba(255,255,255,0.08)"
+            : "1px solid rgba(15,23,42,0.08)",
+          backdropFilter: "blur(20px)",
+          color: darkMode ? "#e2e8f0" : "#0f172a",
+          fontSize: "15px",
+          fontWeight: "500",
+          cursor: "pointer",
+        }}
+      >
+        Log in
+      </motion.button>
+    </Link>
+
+    {/* SIGNUP BUTTON */}
+    <Link to="/signup" style={{ textDecoration: "none" }}>
+      <motion.button
+        whileHover={{ y: -4, scale: 1.02 }}
+        whileTap={{ scale: 0.96 }}
+        transition={{ duration: 0.25 }}
+        style={{
+          padding: "14px 32px",
+          borderRadius: "18px",
+          background:
+            "linear-gradient(135deg, #2563eb, #3b82f6)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          color: "white",
+          fontSize: "15px",
+          fontWeight: "600",
+          cursor: "pointer",
+          boxShadow: "0 0 40px rgba(37,99,235,0.35)",
+          position: "relative",
+          overflow: "hidden",
+          flexShrink: 0,
+        }}
+      >
+        {/* SHINE EFFECT */}
+        <div
           style={{
-            textDecoration: "none",
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent)",
+            transform: "translateX(-100%)",
           }}
-        >
+        />
 
-          <motion.button
-            whileHover={{
-              y: -3,
-            }}
-            whileTap={{
-              scale: 0.96,
-            }}
-            transition={{
-              duration: 0.25,
-            }}
-            style={{
-              padding: "14px 30px",
-              borderRadius: "16px",
-              background: darkMode
-                ? "rgba(255,255,255,0.04)"
-                : "rgba(255,255,255,0.75)",
-              border: darkMode
-                ? "1px solid rgba(255,255,255,0.08)"
-                : "1px solid rgba(15,23,42,0.08)",
-              backdropFilter: "blur(20px)",
-              color: darkMode ? "#e2e8f0" : "#0f172a",
-              fontSize: "15px",
-              fontWeight: "500",
-              cursor: "pointer",
-            }}
-          >
-            Log in
-          </motion.button>
+        <span style={{ position: "relative", zIndex: 2 }}>
+          Sign up
+        </span>
+      </motion.button>
+    </Link>
+  </>
+) : (
+  <>
+    {/* PROFILE BUTTON */}
+    <Link to="/profile" style={{ textDecoration: "none" }}>
+      <motion.div
+        whileHover={{ y: -3, scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        style={{
+          width: "56px",
+          height: "56px",
+          borderRadius: "18px",
+          border: darkMode
+            ? "1px solid rgba(255,255,255,0.08)"
+            : "1px solid rgba(15,23,42,0.08)",
+          background: darkMode
+            ? "rgba(255,255,255,0.05)"
+            : "rgba(255,255,255,0.75)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          color: "#3b82f6",
+          fontSize: "24px",
+          cursor: "pointer",
+          backdropFilter: "blur(20px)",
+        }}
+      >
+        👤
+      </motion.div>
+    </Link>
 
-        </Link>
-
-        {/* SIGNUP BUTTON */}
-        <Link
-          to="/signup"
-          style={{
-            textDecoration: "none",
-          }}
-        >
-
-          <motion.button
-            whileHover={{
-              y: -4,
-              scale: 1.02,
-            }}
-            whileTap={{
-              scale: 0.96,
-            }}
-            transition={{
-              duration: 0.25,
-            }}
-            style={{
-              padding: "14px 32px",
-              borderRadius: "18px",
-              background:
-                "linear-gradient(135deg, #2563eb, #3b82f6)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              color: "white",
-              fontSize: "15px",
-              fontWeight: "600",
-              cursor: "pointer",
-              boxShadow: "0 0 40px rgba(37,99,235,0.35)",
-              position: "relative",
-              overflow: "hidden",
-              flexShrink: 0,
-            }}
-          >
-
-            {/* SHINE EFFECT */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent)",
-                transform: "translateX(-100%)",
-              }}
-            />
-
-            <span
-              style={{
-                position: "relative",
-                zIndex: 2,
-              }}
-            >
-              Sign up
-            </span>
-
-          </motion.button>
-
-        </Link>
+    {/* LOGOUT BUTTON */}
+    <motion.button
+      onClick={() => {
+        localStorage.removeItem("token")
+        window.location.href = "/"
+      }}
+      whileHover={{ y: -3 }}
+      whileTap={{ scale: 0.96 }}
+      style={{
+        padding: "14px 30px",
+        borderRadius: "16px",
+        background: "#ef4444",
+        border: "none",
+        color: "white",
+        fontSize: "15px",
+        fontWeight: "600",
+        cursor: "pointer",
+      }}
+    >
+      Logout
+    </motion.button>
+  </>
+)}
+        
 
       </div>
 
