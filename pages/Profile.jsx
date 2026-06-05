@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   FaUser,
   FaEnvelope,
@@ -10,34 +12,57 @@ import {
   FaWallet,
   FaLeaf,
   FaEdit,
-} from "react-icons/fa"
+} from "react-icons/fa";
 
-import { motion } from "framer-motion"
-
-import { Link } from "react-router-dom"
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 function Profile({ darkMode }) {
 
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(
+          "http://localhost:5000/api/auth/profile",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setUser(res.data.user);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   const stats = [
-    {
-      icon: <FaCar />,
-      value: "148",
-      label: "Trips",
-    },
-    {
-      icon: <FaWallet />,
-      value: "₹12.4K",
-      label: "Saved",
-    },
-    {
-      icon: <FaLeaf />,
-      value: "82kg",
-      label: "CO₂ Saved",
-    },
-  ]
+  {
+    icon: <FaCar />,
+    value: user?.totalTrips || 0,
+    label: "Trips",
+  },
+  {
+    icon: <FaWallet />,
+    value: `₹${user?.totalSaved || 0}`,
+    label: "Saved",
+  },
+  {
+    icon: <FaLeaf />,
+    value: `${user?.co2Saved || 0}kg`,
+    label: "CO₂ Saved",
+  },
+];
 
   return (
-
     <div
       style={{
         minHeight: "100vh",
@@ -50,7 +75,6 @@ function Profile({ darkMode }) {
         overflow: "hidden",
       }}
     >
-
       {/* BLUE GLOW */}
       <div
         style={{
@@ -84,7 +108,6 @@ function Profile({ darkMode }) {
           zIndex: 2,
         }}
       >
-
         {/* TOP BAR */}
         <div
           style={{
@@ -94,7 +117,6 @@ function Profile({ darkMode }) {
             marginBottom: "40px",
           }}
         >
-
           {/* LEFT */}
           <div
             style={{
@@ -103,38 +125,31 @@ function Profile({ darkMode }) {
               gap: "26px",
             }}
           >
-
             {/* AVATAR */}
             <div
               style={{
                 position: "relative",
               }}
             >
-
               <div
                 style={{
                   width: "130px",
                   height: "130px",
                   borderRadius: "36px",
-                  background:
-                    "linear-gradient(135deg,#2563eb,#3b82f6)",
+                  background: "linear-gradient(135deg,#2563eb,#3b82f6)",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  boxShadow:
-                    "0 0 60px rgba(37,99,235,0.45)",
+                  boxShadow: "0 0 60px rgba(37,99,235,0.45)",
                 }}
               >
-
                 <FaUser
                   style={{
                     color: "white",
                     fontSize: "48px",
                   }}
                 />
-
               </div>
-
               {/* VERIFIED BADGE */}
               <div
                 style={{
@@ -151,21 +166,16 @@ function Profile({ darkMode }) {
                   alignItems: "center",
                 }}
               >
-
                 <FaShieldAlt
                   style={{
                     color: "white",
                     fontSize: "16px",
                   }}
                 />
-
               </div>
-
             </div>
-
             {/* USER INFO */}
             <div>
-
               <p
                 style={{
                   color: "#3b82f6",
@@ -176,7 +186,6 @@ function Profile({ darkMode }) {
               >
                 PREMIUM MEMBER
               </p>
-
               <h1
                 style={{
                   color: darkMode ? "white" : "#0f172a",
@@ -185,9 +194,8 @@ function Profile({ darkMode }) {
                   lineHeight: 1,
                 }}
               >
-                Keertan Kumar
+                {user?.name || "Loading..."}
               </h1>
-
               <div
                 style={{
                   display: "flex",
@@ -195,24 +203,18 @@ function Profile({ darkMode }) {
                   gap: "12px",
                 }}
               >
-
                 <FaStar color="#facc15" />
-
                 <span
                   style={{
                     color: "#cbd5e1",
                     fontSize: "17px",
                   }}
                 >
-                  4.9 Rating • Elite Rider & Driver
+                  {user?.rating || 5} Rating • Elite Rider & Driver
                 </span>
-
               </div>
-
             </div>
-
           </div>
-
           {/* RIGHT */}
           <div
             style={{
@@ -220,48 +222,39 @@ function Profile({ darkMode }) {
               gap: "18px",
             }}
           >
-
             {/* EDIT BUTTON */}
-
-              <Link
-                to="/edit-profile"
-                style={{
-                    textDecoration: "none",
+            <Link
+              to="/edit-profile"
+              style={{
+                textDecoration: "none",
+              }}
+            >
+              <motion.button
+                whileHover={{
+                  y: -4,
                 }}
-                >
-
-    <motion.button
-        whileHover={{
-        y: -4,
-        }}
-        whileTap={{
-        scale: 0.96,
-        }}
-        style={{
-        padding: "18px 28px",
-        borderRadius: "20px",
-        border:
-            "1px solid rgba(255,255,255,0.08)",
-        background: "rgba(255,255,255,0.05)",
-        color: darkMode ? "white" : "#0f172a",
-        cursor: "pointer",
-        fontSize: "16px",
-        fontWeight: "600",
-        display: "flex",
-        alignItems: "center",
-        gap: "12px",
-        backdropFilter: "blur(20px)",
-        }}
-    >
-
-    <FaEdit />
-
-    Edit Profile
-
-  </motion.button>
-
-</Link>
-
+                whileTap={{
+                  scale: 0.96,
+                }}
+                style={{
+                  padding: "18px 28px",
+                  borderRadius: "20px",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  background: "rgba(255,255,255,0.05)",
+                  color: darkMode ? "white" : "#0f172a",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  backdropFilter: "blur(20px)",
+                }}
+              >
+                <FaEdit />
+                Edit Profile
+              </motion.button>
+            </Link>
             {/* SETTINGS BUTTON */}
             <Link
               to="/settings"
@@ -269,7 +262,6 @@ function Profile({ darkMode }) {
                 textDecoration: "none",
               }}
             >
-
               <motion.button
                 whileHover={{
                   y: -4,
@@ -281,8 +273,7 @@ function Profile({ darkMode }) {
                   padding: "18px 28px",
                   borderRadius: "20px",
                   border: "none",
-                  background:
-                    "linear-gradient(135deg,#2563eb,#3b82f6)",
+                  background: "linear-gradient(135deg,#2563eb,#3b82f6)",
                   color: "white",
                   cursor: "pointer",
                   fontSize: "16px",
@@ -290,23 +281,15 @@ function Profile({ darkMode }) {
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
-                  boxShadow:
-                    "0 0 40px rgba(37,99,235,0.35)",
+                  boxShadow: "0 0 40px rgba(37,99,235,0.35)",
                 }}
               >
-
                 <FaCog />
-
                 Settings
-
               </motion.button>
-
             </Link>
-
           </div>
-
         </div>
-
         {/* MAIN GRID */}
         <div
           style={{
@@ -315,7 +298,6 @@ function Profile({ darkMode }) {
             gap: "30px",
           }}
         >
-
           {/* PROFILE CARD */}
           <div
             style={{
@@ -326,7 +308,6 @@ function Profile({ darkMode }) {
               backdropFilter: "blur(20px)",
             }}
           >
-
             <h2
               style={{
                 color: darkMode ? "white" : "#0f172a",
@@ -336,7 +317,6 @@ function Profile({ darkMode }) {
             >
               Personal Information
             </h2>
-
             <div
               style={{
                 display: "grid",
@@ -344,48 +324,43 @@ function Profile({ darkMode }) {
                 gap: "28px",
               }}
             >
-
               {[
                 {
                   icon: <FaEnvelope />,
                   label: "Email",
-                  value: "keertan@example.com",
+                  value: user?.email || "Not Added",
                 },
                 {
                   icon: <FaPhone />,
                   label: "Phone",
-                  value: "+91 9876543210",
+                  value: user?.phone || "Not Added",
                 },
                 {
                   icon: <FaMapMarkerAlt />,
                   label: "Location",
-                  value: "Bhubaneswar, India",
+                  value: user?.location || "Not Added",
                 },
                 {
                   icon: <FaUser />,
                   label: "Account Type",
-                  value: "Rider + Driver",
+                  value: user?.accountType || "Rider",
                 },
               ].map((item, index) => (
-
                 <div
                   key={index}
                   style={{
                     padding: "26px",
                     borderRadius: "24px",
                     background: "rgba(255,255,255,0.03)",
-                    border:
-                      "1px solid rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.06)",
                   }}
                 >
-
                   <div
                     style={{
                       width: "58px",
                       height: "58px",
                       borderRadius: "18px",
-                      background:
-                        "rgba(37,99,235,0.15)",
+                      background: "rgba(37,99,235,0.15)",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
@@ -396,7 +371,6 @@ function Profile({ darkMode }) {
                   >
                     {item.icon}
                   </div>
-
                   <p
                     style={{
                       color: "#94a3b8",
@@ -406,27 +380,19 @@ function Profile({ darkMode }) {
                   >
                     {item.label}
                   </p>
-
                   <h3
                     style={{
-                      color: darkMode
-                        ? "white"
-                        : "#0f172a",
+                      color: darkMode ? "white" : "#0f172a",
                       fontSize: "20px",
                       lineHeight: 1.5,
                     }}
                   >
                     {item.value}
                   </h3>
-
                 </div>
-
               ))}
-
             </div>
-
           </div>
-
           {/* STATS CARD */}
           <div
             style={{
@@ -435,20 +401,16 @@ function Profile({ darkMode }) {
               gap: "24px",
             }}
           >
-
             {/* MEMBERSHIP */}
             <div
               style={{
                 padding: "36px",
                 borderRadius: "34px",
-                background:
-                  "linear-gradient(135deg,#2563eb,#1d4ed8)",
+                background: "linear-gradient(135deg,#2563eb,#1d4ed8)",
                 color: "white",
-                boxShadow:
-                  "0 0 50px rgba(37,99,235,0.35)",
+                boxShadow: "0 0 50px rgba(37,99,235,0.35)",
               }}
             >
-
               <p
                 style={{
                   letterSpacing: "3px",
@@ -458,31 +420,25 @@ function Profile({ darkMode }) {
               >
                 COSY PREMIUM
               </p>
-
               <h1
                 style={{
                   fontSize: "42px",
                   marginBottom: "18px",
                 }}
               >
-                Gold Member
+                {user?.membership || "Gold Member"}
               </h1>
-
               <p
                 style={{
                   lineHeight: 1.8,
                   opacity: 0.9,
                 }}
               >
-                Enjoy priority ride matching,
-                premium support, and lower ride fees.
+                Enjoy priority ride matching, premium support, and lower ride fees.
               </p>
-
             </div>
-
             {/* STATS */}
             {stats.map((item, index) => (
-
               <motion.div
                 key={index}
                 whileHover={{
@@ -492,22 +448,19 @@ function Profile({ darkMode }) {
                   padding: "28px",
                   borderRadius: "28px",
                   background: "rgba(255,255,255,0.04)",
-                  border:
-                    "1px solid rgba(255,255,255,0.08)",
+                  border: "1px solid rgba(255,255,255,0.08)",
                   backdropFilter: "blur(20px)",
                   display: "flex",
                   alignItems: "center",
                   gap: "22px",
                 }}
               >
-
                 <div
                   style={{
                     width: "72px",
                     height: "72px",
                     borderRadius: "22px",
-                    background:
-                      "rgba(37,99,235,0.15)",
+                    background: "rgba(37,99,235,0.15)",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
@@ -517,21 +470,16 @@ function Profile({ darkMode }) {
                 >
                   {item.icon}
                 </div>
-
                 <div>
-
                   <h1
                     style={{
-                      color: darkMode
-                        ? "white"
-                        : "#0f172a",
+                      color: darkMode ? "white" : "#0f172a",
                       fontSize: "38px",
                       marginBottom: "6px",
                     }}
                   >
                     {item.value}
                   </h1>
-
                   <p
                     style={{
                       color: "#94a3b8",
@@ -539,22 +487,14 @@ function Profile({ darkMode }) {
                   >
                     {item.label}
                   </p>
-
                 </div>
-
               </motion.div>
-
             ))}
-
           </div>
-
         </div>
-
       </motion.div>
-
     </div>
-
-  )
+  );
 }
 
-export default Profile
+export default Profile;
