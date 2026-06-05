@@ -2,6 +2,8 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { FaGoogle } from "react-icons/fa"
 import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "../src/context/AuthContext"
+
 
 function LoginForm({ darkMode }) {
   const navigate = useNavigate()
@@ -10,7 +12,7 @@ function LoginForm({ darkMode }) {
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-
+const { login } = useAuth()
   const handleLogin = async () => {
     try {
       setLoading(true)
@@ -37,12 +39,7 @@ function LoginForm({ darkMode }) {
         throw new Error(data.message)
       }
 
-      localStorage.setItem("token", data.token)
-
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data.user)
-      )
+      login(data.user, data.token);
 
       navigate("/dashboard")
     } catch (err) {
