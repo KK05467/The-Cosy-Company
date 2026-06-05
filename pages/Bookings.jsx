@@ -6,8 +6,10 @@ import {
   FaClock,
   FaRupeeSign,
 } from "react-icons/fa"
+import { useNavigate } from "react-router-dom"
 
 function Bookings({ darkMode }) {
+    const navigate = useNavigate()
   const bookings = [
     {
       id: "COSY-2847",
@@ -17,7 +19,7 @@ function Bookings({ darkMode }) {
       time: "09:30 AM",
       driver: "Aman Sharma",
       vehicle: "Hyundai i20",
-      fare: "₹120",
+      fare: 120,
       status: "Upcoming",
     },
     {
@@ -28,7 +30,7 @@ function Bookings({ darkMode }) {
       time: "08:00 AM",
       driver: "Rahul Singh",
       vehicle: "Swift Dzire",
-      fare: "₹90",
+      fare: 90,
       status: "Completed",
     },
   ]
@@ -192,7 +194,7 @@ function Bookings({ darkMode }) {
                   fontSize: "28px",
                 }}
               >
-                {booking.fare}
+                ₹{booking.fare}
               </h2>
             </div>
 
@@ -303,40 +305,68 @@ function Bookings({ darkMode }) {
 
             {/* ACTIONS */}
             <div
-              style={{
-                display: "flex",
-                gap: "16px",
-                marginTop: "24px",
-              }}
-            >
-              <button
-                style={{
-                  padding: "12px 20px",
-                  borderRadius: "14px",
-                  border: "none",
-                  background:
-                    "linear-gradient(135deg,#2563eb,#3b82f6)",
-                  color: "white",
-                  cursor: "pointer",
-                }}
-              >
-                Track Ride
-              </button>
+  style={{
+    display: "flex",
+    gap: "16px",
+    marginTop: "24px",
+    flexWrap: "wrap",
+  }}
+>
+  <button
+    style={{
+      padding: "12px 20px",
+      borderRadius: "14px",
+      border: "none",
+      background:
+        "linear-gradient(135deg,#2563eb,#3b82f6)",
+      color: "white",
+      cursor: "pointer",
+    }}
+  >
+    Track Ride
+  </button>
 
-              <button
-                style={{
-                  padding: "12px 20px",
-                  borderRadius: "14px",
-                  border:
-                    "1px solid rgba(255,255,255,0.1)",
-                  background: "transparent",
-                  color: darkMode ? "white" : "#0f172a",
-                  cursor: "pointer",
-                }}
-              >
-                Cancel Booking
-              </button>
-            </div>
+  {booking.status === "Upcoming" && (
+    <button
+      onClick={() =>
+        navigate("/payment", {
+          state: {
+            bookingId: booking.id,
+            amount: booking.fare,
+            from: booking.from,
+            to: booking.to,
+            driver: booking.driver,
+          },
+        })
+      }
+      style={{
+        padding: "12px 20px",
+        borderRadius: "14px",
+        border: "none",
+        background:
+          "linear-gradient(135deg,#16a34a,#22c55e)",
+        color: "white",
+        cursor: "pointer",
+      }}
+    >
+      Pay Now
+    </button>
+  )}
+
+  <button
+    style={{
+      padding: "12px 20px",
+      borderRadius: "14px",
+      border:
+        "1px solid rgba(255,255,255,0.1)",
+      background: "transparent",
+      color: darkMode ? "white" : "#0f172a",
+      cursor: "pointer",
+    }}
+  >
+    Cancel Booking
+  </button>
+</div>
           </div>
         ))}
       </div>

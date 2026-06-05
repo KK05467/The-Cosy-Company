@@ -27,6 +27,7 @@ import HowItWorks from "../pages/HowItWorks"
 import FAQ from "../pages/FAQ"
 import About from "../pages/About"
 import Contact from "../pages/Contact"
+import Payment from "../pages/payments"
 
 import Test from "/Test"
 
@@ -105,6 +106,18 @@ function App() {
             path="/dashboard"
             element={
               <Dashboard
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+            
+          />
+
+          {/* PAYMENTS */}
+          <Route
+            path="/payment"
+            element={
+              <Payment
                 darkMode={darkMode}
                 setDarkMode={setDarkMode}
               />
