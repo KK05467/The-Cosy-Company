@@ -30,7 +30,7 @@ export default function ForgotPassword({ darkMode }) {
       setMessage("OTP sent to email ✔")
 
       setTimeout(() => {
-        navigate("/resetPassword")
+        navigate("/reset-password")
       }, 1500)
     } catch (err) {
       setMessage(err.message)
