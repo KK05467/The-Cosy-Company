@@ -9,11 +9,86 @@ import {
   FaArrowLeft,
 } from "react-icons/fa"
 
+import { useState, useEffect } from "react"
+import axios from "axios"
+
 import { motion } from "framer-motion"
 
 import { Link } from "react-router-dom"
 
 function EditProfile({ darkMode }) {
+  const [user, setUser] = useState({
+  name: "",
+  email: "",
+  phone: "",
+  location: "",
+  accountType: "",
+  bio: "",
+})
+
+
+const [loading, setLoading] = useState(false)
+useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(
+        "http://localhost:5000/api/auth/profile",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setUser(res.data.user);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  fetchProfile();
+}, []);
+
+const handleChange = (e) => {
+  setUser({
+    ...user,
+    [e.target.name]: e.target.value,
+  });
+};
+
+const saveProfile = async () => {
+  try {
+    setLoading(true);
+
+    const token = localStorage.getItem("token");
+
+    await axios.put(
+      "http://localhost:5000/api/auth/profile",
+      {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        location: user.location,
+        accountType: user.accountType,
+        bio: user.bio,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Profile Updated Successfully");
+  } catch (err) {
+    console.log(err);
+    alert("Failed To Update Profile");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const inputStyle = {
     width: "100%",
@@ -166,6 +241,7 @@ function EditProfile({ darkMode }) {
 
           {/* SAVE BUTTON */}
           <motion.button
+          onClick={saveProfile}
             whileHover={{
               y: -4,
               scale: 1.02,
@@ -299,7 +375,8 @@ function EditProfile({ darkMode }) {
                   marginBottom: "10px",
                 }}
               >
-                Keertan Kumar
+                {user.name}
+               
               </h2>
 
               <p
@@ -309,7 +386,8 @@ function EditProfile({ darkMode }) {
                   marginBottom: "35px",
                 }}
               >
-                Premium Rider & Driver
+                {user.accountType}
+               
               </p>
 
             </div>
@@ -429,7 +507,7 @@ function EditProfile({ darkMode }) {
               }}
             >
 
-              {/* FIRST NAME */}
+              {/* FULL NAME */}
               <div>
 
                 <p
@@ -438,32 +516,14 @@ function EditProfile({ darkMode }) {
                     marginBottom: "14px",
                   }}
                 >
-                  First Name
+                  Full Name
                 </p>
 
                 <input
                   type="text"
-                  defaultValue="Keertan"
-                  style={inputStyle}
-                />
-
-              </div>
-
-              {/* LAST NAME */}
-              <div>
-
-                <p
-                  style={{
-                    color: "#cbd5e1",
-                    marginBottom: "14px",
-                  }}
-                >
-                  Last Name
-                </p>
-
-                <input
-                  type="text"
-                  defaultValue="Kumar"
+                  name = "name"
+                  value = {user.name}
+                  onChange={handleChange}
                   style={inputStyle}
                 />
 
@@ -483,8 +543,10 @@ function EditProfile({ darkMode }) {
 
                 <input
                   type="email"
-                  defaultValue="keertan@example.com"
+                  name = "email"
+                  value = {user.email}
                   style={inputStyle}
+                  onChange={handleChange}
                 />
 
               </div>
@@ -503,8 +565,10 @@ function EditProfile({ darkMode }) {
 
                 <input
                   type="text"
-                  defaultValue="+91 9876543210"
+                  name = "phone"
+                  value = {user.phone}
                   style={inputStyle}
+                  onChange={handleChange}
                 />
 
               </div>
@@ -523,8 +587,10 @@ function EditProfile({ darkMode }) {
 
                 <input
                   type="text"
-                  defaultValue="Bhubaneswar, India"
+                  name = "location"
+                  value = {user.location}
                   style={inputStyle}
+                  onChange={handleChange}
                 />
 
               </div>
@@ -543,7 +609,9 @@ function EditProfile({ darkMode }) {
 
                 <select
                   style={inputStyle}
-                  defaultValue="Rider + Driver"
+                  name="accountType"
+                  onChange={handleChange}
+                  value = {user.accountType}
                 >
 
                   <option>Rider</option>
@@ -574,12 +642,14 @@ function EditProfile({ darkMode }) {
 
               <textarea
                 rows="6"
-                defaultValue="Passionate about smart mobility and sustainable transportation. Love connecting with people through premium ride experiences."
+                value = {user.bio}
+                name = "bio"
                 style={{
                   ...inputStyle,
                   resize: "none",
                   lineHeight: "1.8",
                 }}
+                onChange={handleChange}
               />
 
             </div>
