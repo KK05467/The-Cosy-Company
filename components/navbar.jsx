@@ -1,5 +1,7 @@
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
+import { useAuth } from "../src/context/AuthContext";
+import { useEffect, useState } from "react"
 
 import { FaMoon, FaSun, FaUserCircle } from "react-icons/fa"
 
@@ -13,11 +15,40 @@ function Navbar({ darkMode, setDarkMode }) {
   { title: "Pricing", path: "/pricing" },
   { title: "Contact", path: "/contact" },
 ]
+const [showNavbar, setShowNavbar] = useState(true)
 
-const isLoggedIn = !!localStorage.getItem("token")
+useEffect(() => {
+  let lastScrollY = window.scrollY
+
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY
+
+    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      setShowNavbar(false) // scrolling down
+    } else {
+      setShowNavbar(true) // scrolling up
+    }
+
+    lastScrollY = currentScrollY
+  }
+
+  window.addEventListener("scroll", handleScroll)
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll)
+  }
+}, [])
+const { user, logout } = useAuth();
   return (
 
-    <nav
+    <motion.nav
+    animate={{
+    y: showNavbar ? 0 : -120,
+  }}
+  transition={{
+    duration: 0.3,
+    ease: "easeInOut",
+  }}
       style={{
         width: "100%",
         padding: "26px 80px",
@@ -206,7 +237,7 @@ const isLoggedIn = !!localStorage.getItem("token")
   </motion.div>
 </Link>
 
-        {!isLoggedIn ? (
+        {!user ? (
   <>
     {/* LOGIN BUTTON */}
     <Link to="/login" style={{ textDecoration: "none" }}>
@@ -275,39 +306,13 @@ const isLoggedIn = !!localStorage.getItem("token")
   </>
 ) : (
   <>
-    {/* PROFILE BUTTON */}
-    <Link to="/profile" style={{ textDecoration: "none" }}>
-      <motion.div
-        whileHover={{ y: -3, scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        style={{
-          width: "56px",
-          height: "56px",
-          borderRadius: "18px",
-          border: darkMode
-            ? "1px solid rgba(255,255,255,0.08)"
-            : "1px solid rgba(15,23,42,0.08)",
-          background: darkMode
-            ? "rgba(255,255,255,0.05)"
-            : "rgba(255,255,255,0.75)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          color: "#3b82f6",
-          fontSize: "24px",
-          cursor: "pointer",
-          backdropFilter: "blur(20px)",
-        }}
-      >
-        👤
-      </motion.div>
-    </Link>
+    
 
     {/* LOGOUT BUTTON */}
     <motion.button
       onClick={() => {
         localStorage.removeItem("token")
-        window.location.href = "/"
+        logout();
       }}
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.96 }}
@@ -330,7 +335,7 @@ const isLoggedIn = !!localStorage.getItem("token")
 
       </div>
 
-    </nav>
+    </motion.nav>
 
   )
 }
