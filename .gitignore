@@ -1,0 +1,5 @@
+backend/node_modules/
+cosy-company/node_modules/
+
+backend/.env
+cosy-company/.env
