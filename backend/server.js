@@ -7,6 +7,10 @@ import authRoutes from "./routes/authRoutes.js"
 import paymentRoutes from "./routes/paymentRoutes.js";
 import rideRoutes from "./routes/rideRoutes.js";
 
+
+import bookingRoutes
+from "./routes/bookingRoutes.js";
+
 dotenv.config()
 
 connectDB()
@@ -29,6 +33,10 @@ app.use(
 );
 
 app.use("/api/rides", rideRoutes);
+app.use(
+  "/api/bookings",
+  bookingRoutes
+);
 
 app.get("/", (req, res) => {
   res.send("Cosy Backend Running")
