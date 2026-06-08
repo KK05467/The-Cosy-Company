@@ -1,53 +1,49 @@
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { FaGoogle } from "react-icons/fa"
-import { Link, useNavigate } from "react-router-dom"
-import { useAuth } from "../src/context/AuthContext"
-
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { FaGoogle } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../src/context/AuthContext";
 
 function LoginForm({ darkMode }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
-const { login } = useAuth()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const { login } = useAuth();
   const handleLogin = async () => {
     try {
-      setLoading(true)
-      setError("")
+      setLoading(true);
+      setError("");
 
-      const response = await fetch(
-        "http://localhost:5000/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      )
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
 
-      const data = await response.json()
+      const data = await response.json();
       console.log(data);
 
       if (!response.ok) {
-        throw new Error(data.message)
+        throw new Error(data.message);
       }
 
       login(data.user, data.token);
 
-      navigate("/dashboard")
+      navigate("/dashboard");
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <motion.div
@@ -180,7 +176,7 @@ const { login } = useAuth()
           }}
         >
           <p
-          onClick={() => navigate("/forgot-password")}
+            onClick={() => navigate("/forgot-password")}
             style={{
               color: "#3b82f6",
               cursor: "pointer",
@@ -220,8 +216,7 @@ const { login } = useAuth()
             padding: "14px",
             borderRadius: "14px",
             border: "none",
-            background:
-              "linear-gradient(135deg, #2563eb, #3b82f6)",
+            background: "linear-gradient(135deg, #2563eb, #3b82f6)",
             color: "white",
             fontSize: "15px",
             fontWeight: "600",
@@ -300,7 +295,6 @@ const { login } = useAuth()
               fontSize: "18px",
             }}
           />
-
           Continue with Google
         </motion.button>
 
@@ -336,7 +330,7 @@ const { login } = useAuth()
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
 
 const inputStyle = (darkMode) => ({
@@ -349,6 +343,6 @@ const inputStyle = (darkMode) => ({
   fontSize: "14px",
   outline: "none",
   boxSizing: "border-box",
-})
+});
 
-export default LoginForm
+export default LoginForm;
