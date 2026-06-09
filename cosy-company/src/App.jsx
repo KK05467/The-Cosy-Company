@@ -28,6 +28,9 @@ import FAQ from "../pages/FAQ"
 import About from "../pages/About"
 import Contact from "../pages/Contact"
 import Payment from "../pages/payments"
+import SearchRides from "../pages/SearchRides"
+import RideResults from "../pages/RideResults"
+import RideDetails from "../pages/RideDetails"
 
 import Test from "/Test"
 
@@ -57,26 +60,27 @@ function App() {
   return (
     <>
 
-    <div
-    
-      style={{
-        minHeight: "100vh",
-        width: "100%",
-        overflowX: "hidden",
-        background: darkMode
-          ? "linear-gradient(to bottom right, #020617, #050816)"
-          : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
-        fontFamily: "Inter, sans-serif",
-      }}
+   <div
+  style={{
+    minHeight: "100vh",
+    width: "100%",
+    overflowX: "hidden",
+    background: darkMode
+      ? "linear-gradient(to bottom right, #020617, #050816)"
+      : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
+    fontFamily: "Inter, sans-serif",
+  }}
+>
+  <Navbar
+    darkMode={darkMode}
+    setDarkMode={setDarkMode}
+  />
+
+  <AnimatePresence mode="wait">
+    <Routes
+      location={location}
+      key={location.pathname}
     >
-
-      <AnimatePresence mode="wait">
-         <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
-
-        <Routes
-          location={location}
-          key={location.pathname}
-        >
 
           {/* HOME */}
           <Route
@@ -100,6 +104,34 @@ function App() {
               />
             }
           />
+
+          {/* SEARCH RIDES */}
+          <Route
+            path="/search-rides"
+            element={
+              <SearchRides
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* RIDE RESULTS */}
+          <Route
+            path="/ride-results"
+            element={
+              <RideResults
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* RIDE DETAILS */}
+          <Route
+  path="/ride/:id"
+  element={<RideDetails darkMode={darkMode} />}
+/>
 
           {/* DASHBOARD */}
           <Route

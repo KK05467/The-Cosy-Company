@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../src/context/AuthContext";
+import { useAuth } from "../src/context/AuthContext";
 
 function LoginForm({ darkMode }) {
   const navigate = useNavigate();

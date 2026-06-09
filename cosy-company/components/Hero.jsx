@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import { useNavigate } from "react-router-dom"
 
 import {
   FaArrowRight,
@@ -8,6 +9,7 @@ import {
 } from "react-icons/fa"
 
 function Hero({ darkMode }) {
+  const navigate = useNavigate();
 
   return (
 
@@ -151,6 +153,7 @@ function Hero({ darkMode }) {
 
         {/* BUTTONS */}
         <div
+        onClick={() => navigate("/search-rides")}
           style={{
             display: "flex",
             gap: "22px",

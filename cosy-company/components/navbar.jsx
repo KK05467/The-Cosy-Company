@@ -1,9 +1,9 @@
-import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { useAuth } from "../../src/context/AuthContext";
-import { useEffect, useState } from "react";
+import { motion } from "framer-motion"
+import { Link } from "react-router-dom"
+import { useAuth } from "../src/context/AuthContext"
+import { useEffect, useState } from "react"
 
-import { FaMoon, FaSun, FaUserCircle } from "react-icons/fa";
+import { FaMoon, FaSun, FaUserCircle } from "react-icons/fa"
 
 function Navbar({ darkMode, setDarkMode }) {
   const navLinks = [
@@ -13,14 +13,14 @@ function Navbar({ darkMode, setDarkMode }) {
     { title: "FAQ", path: "/faq" },
     { title: "Pricing", path: "/pricing" },
     { title: "Contact", path: "/contact" },
-  ];
+  ]
   const [showNavbar, setShowNavbar] = useState(true);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
+    let lastScrollY = window.scrollY
 
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+      const currentScrollY = window.scrollY
 
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         setShowNavbar(false); // scrolling down
@@ -28,16 +28,16 @@ function Navbar({ darkMode, setDarkMode }) {
         setShowNavbar(true); // scrolling up
       }
 
-      lastScrollY = currentScrollY;
+      lastScrollY = currentScrollY
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll)
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll)
     };
   }, []);
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuth()
   return (
     <motion.nav
       animate={{

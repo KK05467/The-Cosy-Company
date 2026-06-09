@@ -18,7 +18,6 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 function Profile({ darkMode }) {
-
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -26,14 +25,11 @@ function Profile({ darkMode }) {
       try {
         const token = localStorage.getItem("token");
 
-        const res = await axios.get(
-          "http://localhost:5000/api/auth/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await axios.get("http://localhost:5000/api/auth/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setUser(res.data.user);
       } catch (error) {
@@ -45,22 +41,22 @@ function Profile({ darkMode }) {
   }, []);
 
   const stats = [
-  {
-    icon: <FaCar />,
-    value: user?.totalTrips || 0,
-    label: "Trips",
-  },
-  {
-    icon: <FaWallet />,
-    value: `₹${user?.totalSaved || 0}`,
-    label: "Saved",
-  },
-  {
-    icon: <FaLeaf />,
-    value: `${user?.co2Saved || 0}kg`,
-    label: "CO₂ Saved",
-  },
-];
+    {
+      icon: <FaCar />,
+      value: user?.totalTrips || 0,
+      label: "Trips",
+    },
+    {
+      icon: <FaWallet />,
+      value: `₹${user?.totalSaved || 0}`,
+      label: "Saved",
+    },
+    {
+      icon: <FaLeaf />,
+      value: `${user?.co2Saved || 0}kg`,
+      label: "CO₂ Saved",
+    },
+  ];
 
   return (
     <div
@@ -288,8 +284,42 @@ function Profile({ darkMode }) {
                 Settings
               </motion.button>
             </Link>
+            {/* DASHBOARD BUTTON */}
+            <Link
+              to="/dashboard"
+              style={{
+                textDecoration: "none",
+              }}
+            >
+              <motion.button
+                whileHover={{
+                  y: -4,
+                }}
+                whileTap={{
+                  scale: 0.96,
+                }}
+                style={{
+                  padding: "18px 28px",
+                  borderRadius: "20px",
+                  border: "none",
+                  background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+                  color: "white",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  boxShadow: "0 0 40px rgba(37,99,235,0.35)",
+                }}
+              >
+                <FaUser />
+                Dashboard
+              </motion.button>
+            </Link>
           </div>
         </div>
+
         {/* MAIN GRID */}
         <div
           style={{
@@ -434,7 +464,8 @@ function Profile({ darkMode }) {
                   opacity: 0.9,
                 }}
               >
-                Enjoy priority ride matching, premium support, and lower ride fees.
+                Enjoy priority ride matching, premium support, and lower ride
+                fees.
               </p>
             </div>
             {/* STATS */}
