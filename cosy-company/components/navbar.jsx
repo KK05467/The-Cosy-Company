@@ -49,7 +49,7 @@ function Navbar({ darkMode, setDarkMode }) {
       }}
       style={{
         width: "100%",
-        padding: "26px 80px",
+        padding: "14px 49px",
         boxSizing: "border-box",
         display: "flex",
         justifyContent: "space-between",
@@ -83,7 +83,7 @@ function Navbar({ darkMode, setDarkMode }) {
           <h1
             style={{
               color: darkMode ? "white" : "#0f172a",
-              fontSize: "42px",
+              fontSize: "30px",
               fontWeight: "700",
               margin: 0,
               lineHeight: 1,
@@ -95,8 +95,8 @@ function Navbar({ darkMode, setDarkMode }) {
           <p
             style={{
               color: "#3b82f6",
-              fontSize: "11px",
-              letterSpacing: "5px",
+              fontSize: "10px",
+              letterSpacing: "3px",
               marginTop: "6px",
               fontWeight: "500",
             }}
@@ -162,9 +162,9 @@ function Navbar({ darkMode, setDarkMode }) {
           }}
           onClick={() => setDarkMode(!darkMode)}
           style={{
-            width: "56px",
-            height: "56px",
-            borderRadius: "18px",
+            width: "46px",
+            height: "46px",
+            borderRadius: "14px",
             border: darkMode
               ? "1px solid rgba(255,255,255,0.08)"
               : "1px solid rgba(15,23,42,0.08)",
@@ -199,8 +199,8 @@ function Navbar({ darkMode, setDarkMode }) {
               scale: 0.95,
             }}
             style={{
-              width: "56px",
-              height: "56px",
+              width: "46px",
+              height: "46px",
               borderRadius: "18px",
               border: darkMode
                 ? "1px solid rgba(255,255,255,0.08)"
@@ -230,7 +230,7 @@ function Navbar({ darkMode, setDarkMode }) {
                 whileTap={{ scale: 0.96 }}
                 transition={{ duration: 0.25 }}
                 style={{
-                  padding: "14px 30px",
+                  padding: "12px 22px",
                   borderRadius: "16px",
                   background: darkMode
                     ? "rgba(255,255,255,0.04)"
@@ -256,7 +256,7 @@ function Navbar({ darkMode, setDarkMode }) {
                 whileTap={{ scale: 0.96 }}
                 transition={{ duration: 0.25 }}
                 style={{
-                  padding: "14px 32px",
+                  padding: "12px 24px",
                   borderRadius: "18px",
                   background: "linear-gradient(135deg, #2563eb, #3b82f6)",
                   border: "1px solid rgba(255,255,255,0.08)",

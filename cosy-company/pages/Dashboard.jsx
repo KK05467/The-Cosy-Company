@@ -71,6 +71,7 @@ function Dashboard({ darkMode, setDarkMode }) {
     <div
       style={{
         minHeight: "100vh",
+        padding: "120px",
         display: "flex",
         background: darkMode
           ? "linear-gradient(to bottom right, #020617, #050816)"

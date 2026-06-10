@@ -8,18 +8,6 @@ const rideSchema = new mongoose.Schema(
       required: true,
     },
 
-    from: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    to: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
     stops: [
       {
         type: String,
@@ -69,6 +57,57 @@ const rideSchema = new mongoose.Schema(
       enum: ["active", "full", "completed", "cancelled"],
       default: "active",
     },
+    vehicleType: {
+    type: String,
+    enum: ["bike", "car"],
+    default: "car"
+},
+
+distance: {
+    type: Number,
+    default: 0
+},
+
+startLocation: {
+    lat: Number,
+    lng: Number,
+    address: String
+},
+
+destinationLocation: {
+    lat: Number,
+    lng: Number,
+    address: String
+},
+currentLocation: {
+  lat: Number,
+  lng: Number
+},
+
+routeCoordinates: [
+{
+    lat: Number,
+    lng: Number
+}
+],
+rideStatus: {
+    type: String,
+    enum: [
+        "scheduled",
+        "started",
+        "arrived",
+        "completed",
+        "cancelled"
+    ],
+    default: "scheduled"
+},
+
+estimatedDuration: Number,
+
+currentLocation: {
+    lat: Number,
+    lng: Number
+},
   },
   {
     timestamps: true,

@@ -43,9 +43,23 @@ const bookingSchema = new mongoose.Schema(
 
     bookingStatus: {
       type: String,
-      enum: ["pending", "confirmed", "cancelled", "completed"],
+      enum: ["pending", "confirmed","paid", "cancelled", "completed"],
       default: "pending",
     },
+    driverId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+},
+
+distanceCovered: Number,
+
+fareBreakdown: {
+    baseFare: Number,
+    platformCharge: Number,
+    rainCharge: Number,
+    nightCharge: Number,
+    totalFare: Number
+},
   },
   {
     timestamps: true,

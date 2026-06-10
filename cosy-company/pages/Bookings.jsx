@@ -23,15 +23,12 @@ function Bookings({ darkMode }) {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch(
-        "http://localhost:5000/api/bookings/my",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch("http://localhost:5000/api/bookings/my", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await res.json();
 
@@ -151,14 +148,21 @@ function Bookings({ darkMode }) {
                     style={{
                       padding: "8px 16px",
                       borderRadius: "999px",
+
                       background:
                         booking.bookingStatus === "pending"
                           ? "rgba(59,130,246,0.15)"
-                          : "rgba(34,197,94,0.15)",
+                          : booking.bookingStatus === "confirmed"
+                            ? "rgba(34,197,94,0.15)"
+                            : "rgba(239,68,68,0.15)",
+
                       color:
                         booking.bookingStatus === "pending"
                           ? "#3b82f6"
-                          : "#22c55e",
+                          : booking.bookingStatus === "confirmed"
+                            ? "#22c55e"
+                            : "#ef4444",
+
                       fontSize: "13px",
                     }}
                   >
@@ -227,9 +231,7 @@ function Bookings({ darkMode }) {
                   <p style={{ color: "#94a3b8" }}>
                     <FaUser /> Passenger
                   </p>
-                  <h4 style={{ color: darkMode ? "white" : "#0f172a" }}>
-                    You
-                  </h4>
+                  <h4 style={{ color: darkMode ? "white" : "#0f172a" }}>You</h4>
                 </div>
 
                 <div>
@@ -250,21 +252,35 @@ function Bookings({ darkMode }) {
                   marginTop: "24px",
                 }}
               >
+                <button
+                  onClick={() => navigate(`/booking/${booking._id}`)}
+                  style={{
+                    padding: "12px 20px",
+                    borderRadius: "14px",
+                    border: "none",
+                    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+                    color: "white",
+                    cursor: "pointer",
+                  }}
+                >
+                  View Details
+                </button>
+
+                {booking.bookingStatus === "pending" && (
                   <button
-                    onClick={() => navigate(`/booking/${booking._id}`)}
                     style={{
                       padding: "12px 20px",
                       borderRadius: "14px",
                       border: "none",
-                      background: "linear-gradient(135deg,#2563eb,#3b82f6)",
-                      color: "white",
-                      cursor: "pointer",
+                      background: "#1e293b",
+                      color: "#94a3b8",
                     }}
                   >
-                    View Details
+                    Waiting For Driver
                   </button>
+                )}
 
-                {booking.bookingStatus === "pending" && (
+                {booking.bookingStatus === "confirmed" && (
                   <button
                     onClick={() =>
                       navigate("/payment", {
@@ -278,13 +294,26 @@ function Bookings({ darkMode }) {
                       padding: "12px 20px",
                       borderRadius: "14px",
                       border: "none",
-                      background:
-                        "linear-gradient(135deg,#16a34a,#22c55e)",
+                      background: "linear-gradient(135deg,#16a34a,#22c55e)",
                       color: "white",
                       cursor: "pointer",
                     }}
                   >
                     Pay Now
+                  </button>
+                )}
+
+                {booking.bookingStatus === "cancelled" && (
+                  <button
+                    style={{
+                      padding: "12px 20px",
+                      borderRadius: "14px",
+                      border: "none",
+                      background: "#7f1d1d",
+                      color: "#fecaca",
+                    }}
+                  >
+                    Request Rejected
                   </button>
                 )}
               </div>

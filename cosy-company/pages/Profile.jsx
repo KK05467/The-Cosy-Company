@@ -12,6 +12,7 @@ import {
   FaWallet,
   FaLeaf,
   FaEdit,
+  FaExchangeAlt,
 } from "react-icons/fa";
 
 import { motion } from "framer-motion";
@@ -19,6 +20,9 @@ import { Link } from "react-router-dom";
 
 function Profile({ darkMode }) {
   const [user, setUser] = useState(null);
+  const [currentRole, setCurrentRole] = useState(
+  localStorage.getItem("role") || "rider"
+);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -39,6 +43,21 @@ function Profile({ darkMode }) {
 
     fetchProfile();
   }, []);
+      const switchRole = () => {
+
+  const newRole =
+    currentRole === "rider"
+      ? "driver"
+      : "rider";
+
+  setCurrentRole(newRole);
+
+  localStorage.setItem(
+    "role",
+    newRole
+  );
+
+};
 
   const stats = [
     {
@@ -62,7 +81,7 @@ function Profile({ darkMode }) {
     <div
       style={{
         minHeight: "100vh",
-        padding: "50px",
+        padding: "120px",
         background: darkMode
           ? "linear-gradient(to bottom right, #020617, #050816)"
           : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
@@ -218,6 +237,7 @@ function Profile({ darkMode }) {
               gap: "18px",
             }}
           >
+           
             {/* EDIT BUTTON */}
             <Link
               to="/edit-profile"
@@ -317,6 +337,50 @@ function Profile({ darkMode }) {
                 Dashboard
               </motion.button>
             </Link>
+            <motion.button
+  whileHover={{
+    y: -4,
+  }}
+  whileTap={{
+    scale: 0.96,
+  }}
+  onClick={switchRole}
+  style={{
+    padding: "18px 28px",
+    borderRadius: "20px",
+    border: "none",
+
+    background:
+      currentRole === "driver"
+        ? "linear-gradient(135deg,#16a34a,#22c55e)"
+        : "linear-gradient(135deg,#2563eb,#3b82f6)",
+
+    color: "white",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "600",
+
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+
+    boxShadow:
+      currentRole === "driver"
+        ? "0 0 40px rgba(34,197,94,0.35)"
+        : "0 0 40px rgba(37,99,235,0.35)",
+  }}
+>
+
+<FaExchangeAlt />
+
+{
+  currentRole === "rider"
+    ? "Switch to Driver"
+    : "Switch to Rider"
+}
+
+</motion.button>
+            
           </div>
         </div>
 
@@ -371,10 +435,13 @@ function Profile({ darkMode }) {
                   value: user?.location || "Not Added",
                 },
                 {
-                  icon: <FaUser />,
-                  label: "Account Type",
-                  value: user?.accountType || "Rider",
-                },
+  icon: <FaUser />,
+  label: "Current Mode",
+  value:
+    currentRole === "driver"
+      ? "Driver"
+      : "Rider",
+},
               ].map((item, index) => (
                 <div
                   key={index}

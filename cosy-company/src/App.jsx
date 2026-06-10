@@ -31,6 +31,8 @@ import Payment from "../pages/payments"
 import SearchRides from "../pages/SearchRides"
 import RideResults from "../pages/RideResults"
 import RideDetails from "../pages/RideDetails"
+import DriverNotifications from "../pages/DriverNotifications"
+import DriverMyRides from "../pages/DriverMyRides"
 
 import Test from "/Test"
 
@@ -110,6 +112,28 @@ function App() {
             path="/search-rides"
             element={
               <SearchRides
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* DRIVER MY RIDES */}
+          <Route
+            path="/driver/my-rides"
+            element={
+              <DriverMyRides
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+
+          {/* DRIVER NOTIFICATIONS */}
+          <Route
+            path="/notifications"
+            element={
+              <DriverNotifications
                 darkMode={darkMode}
                 setDarkMode={setDarkMode}
               />

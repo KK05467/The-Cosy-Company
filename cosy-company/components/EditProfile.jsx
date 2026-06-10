@@ -112,7 +112,7 @@ const saveProfile = async () => {
     <div
       style={{
         minHeight: "100vh",
-        padding: "50px",
+        padding: "120px",
         background: darkMode
           ? "linear-gradient(to bottom right, #020617, #050816)"
           : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",

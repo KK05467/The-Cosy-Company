@@ -36,7 +36,7 @@ function Features({ darkMode }) {
 
     <section
       style={{
-        padding: "80px",
+        padding: "120px",
       }}
     >
 

@@ -6,6 +6,11 @@ import connectDB from "./config/db.js"
 import authRoutes from "./routes/authRoutes.js"
 import paymentRoutes from "./routes/paymentRoutes.js";
 import rideRoutes from "./routes/rideRoutes.js";
+import notificationRoutes
+from "./routes/notificationRoutes.js";
+
+import rideRequestRoutes
+from "./routes/rideRequestRoutes.js";
 
 
 import bookingRoutes
@@ -25,11 +30,23 @@ app.use(
   })
 );
 app.use(express.json())
-
+app.use(
+  "/api/bookings",
+  bookingRoutes
+);
 app.use("/api/auth", authRoutes)
 app.use(
   "/api/payment",
   paymentRoutes
+);
+app.use(
+    "/api/notifications",
+    notificationRoutes
+);
+
+app.use(
+    "/api/ride-requests",
+    rideRequestRoutes
 );
 
 app.use("/api/rides", rideRoutes);
@@ -37,6 +54,7 @@ app.use(
   "/api/bookings",
   bookingRoutes
 );
+
 
 app.get("/", (req, res) => {
   res.send("Cosy Backend Running")

@@ -72,7 +72,21 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+  earnings: {
+    type: Number,
+    default: 0
+},
+    emergencyContacts: 
+    {
+        name: String,
+        phone: String
+    },
+    currentLocation: {
+        lat: Number,
+        lng: Number
+    }
   },
+
   {
     timestamps: true,
   }
