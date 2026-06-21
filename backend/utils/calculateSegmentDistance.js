@@ -1,105 +1,44 @@
-function distanceInMeters(p1, p2) {
+/**
+ * calculateSegmentDistance.js
+ * Calculates the road distance (in km) between two points
+ * by walking the route polyline between their nearest indices.
+ *
+ * riderStart       : { lat, lng }
+ * riderEnd         : { lat, lng }
+ * routeCoordinates : [{ lat, lng }, ...]
+ *
+ * Returns: distance in KM, or 0 if invalid / reverse direction.
+ */
 
-  const R = 6371000;
-
-  const lat1 = p1[1] * Math.PI / 180;
-  const lat2 = p2[1] * Math.PI / 180;
-
-  const dLat =
-    (p2[1] - p1[1]) * Math.PI / 180;
-
-  const dLng =
-    (p2[0] - p1[0]) * Math.PI / 180;
-
-  const a =
-    Math.sin(dLat / 2) *
-      Math.sin(dLat / 2) +
-    Math.cos(lat1) *
-      Math.cos(lat2) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2);
-
-  const c =
-    2 *
-    Math.atan2(
-      Math.sqrt(a),
-      Math.sqrt(1 - a)
-    );
-
-  return R * c;
-}
+import { distanceInMeters } from "./haversine.js";
+import { findNearestIndex } from "./findNearestIndex.js";
 
 export function calculateSegmentDistance(
   riderStart,
   riderEnd,
   routeCoordinates
 ) {
+  const startIndex = findNearestIndex(riderStart, routeCoordinates);
+  const endIndex = findNearestIndex(riderEnd, routeCoordinates);
 
-  let startIndex = -1;
-  let endIndex = -1;
-
-  let minStart = Infinity;
-  let minEnd = Infinity;
-
-  for (
-    let i = 0;
-    i < routeCoordinates.length;
-    i++
-  ) {
-
-    const d1 =
-      distanceInMeters(
-        riderStart,
-        routeCoordinates[i]
-      );
-
-    if (d1 < minStart) {
-
-      minStart = d1;
-      startIndex = i;
-
-    }
-
-    const d2 =
-      distanceInMeters(
-        riderEnd,
-        routeCoordinates[i]
-      );
-
-    if (d2 < minEnd) {
-
-      minEnd = d2;
-      endIndex = i;
-
-    }
-
-  }
-
+  // Invalid indices or reverse direction
   if (
     startIndex === -1 ||
     endIndex === -1 ||
     endIndex <= startIndex
   ) {
-
     return 0;
-
   }
 
   let totalDistance = 0;
 
-  for (
-    let i = startIndex;
-    i < endIndex;
-    i++
-  ) {
-
-    totalDistance +=
-      distanceInMeters(
-        routeCoordinates[i],
-        routeCoordinates[i + 1]
-      );
-
+  for (let i = startIndex; i < endIndex; i++) {
+    totalDistance += distanceInMeters(
+      routeCoordinates[i],
+      routeCoordinates[i + 1]
+    );
   }
 
-  return totalDistance / 1000;
+  // Convert meters → km
+  return parseFloat((totalDistance / 1000).toFixed(2));
 }
