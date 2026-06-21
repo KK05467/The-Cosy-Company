@@ -1,17 +1,7 @@
-import axios from "axios";
-import { useEffect } from "react";
+//import { configDotenv } from "dotenv";
+import dotenv from "dotenv";
 
-useEffect(() => {
-  axios.get(
-    "http://localhost:5000/api/auth/profile",
-    {
-      withCredentials: true,
-    }
-  )
-  .then((res) => {
-    console.log("PROFILE:", res.data);
-  })
-  .catch((err) => {
-    console.log("ERROR:", err.response?.data);
-  });
-}, []);
+dotenv.config();
+console.log(process.env.CLOUDINARY_NAME);
+console.log(process.env.CLOUDINARY_KEY);
+console.log(process.env.CLOUDINARY_SECRET);
