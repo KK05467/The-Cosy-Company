@@ -1,3 +1,17 @@
+// src/pages/Profile.jsx
+//
+// REDESIGN NOTES:
+// - Replaced glass-card-on-gradient with flat paper/ink surfaces and hairline
+//   borders (s.line), matching Home's ticket language.
+// - Membership card keeps a solid fill (forest/gold) since it's the one place
+//   a strong color block earns its keep — everything else stays flat.
+// - Headline uses Fraunces (display), labels use IBM Plex Mono (route-label
+//   feel), body copy stays Inter.
+// - Role switch now writes "userMode" (not "role") to match the key Home.jsx
+//   and Dashboard read — previously this page used a different localStorage
+//   key than the rest of the app, so switching roles here wouldn't actually
+//   affect Home's CTA.
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -14,579 +28,361 @@ import {
   FaEdit,
   FaExchangeAlt,
 } from "react-icons/fa";
-
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { colors, fonts, surface } from "../styles/tokens";
 
 function Profile({ darkMode }) {
   const [user, setUser] = useState(null);
   const [currentRole, setCurrentRole] = useState(
-  localStorage.getItem("role") || "rider"
-);
+    localStorage.getItem("userMode") || "rider"
+  );
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
-
         const res = await axios.get("http://localhost:5000/api/auth/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-
         setUser(res.data.user);
       } catch (error) {
         console.log(error.response?.data);
       }
     };
-
     fetchProfile();
   }, []);
-      const switchRole = () => {
 
-  const newRole =
-    currentRole === "rider"
-      ? "driver"
-      : "rider";
+  const switchRole = () => {
+    const newRole = currentRole === "rider" ? "driver" : "rider";
+    setCurrentRole(newRole);
+    localStorage.setItem("userMode", newRole);
+  };
 
-  setCurrentRole(newRole);
-
-  localStorage.setItem(
-    "role",
-    newRole
-  );
-
-};
+  const s = surface(darkMode);
 
   const stats = [
-    {
-      icon: <FaCar />,
-      value: user?.totalTrips || 0,
-      label: "Trips",
-    },
-    {
-      icon: <FaWallet />,
-      value: `₹${user?.totalSaved || 0}`,
-      label: "Saved",
-    },
-    {
-      icon: <FaLeaf />,
-      value: `${user?.co2Saved || 0}kg`,
-      label: "CO₂ Saved",
-    },
+    { icon: <FaCar />, value: user?.totalTrips || 0, label: "Trips" },
+    { icon: <FaWallet />, value: `₹${user?.totalSaved || 0}`, label: "Saved" },
+    { icon: <FaLeaf />, value: `${user?.co2Saved || 0}kg`, label: "CO₂ Saved" },
+  ];
+
+  const infoRows = [
+    { icon: <FaEnvelope />, label: "Email", value: user?.email },
+    { icon: <FaPhone />, label: "Phone", value: user?.phone },
+    { icon: <FaMapMarkerAlt />, label: "Location", value: user?.location },
+    { icon: <FaUser />, label: "Mode", value: currentRole === "driver" ? "Driver" : "Rider" },
   ];
 
   return (
     <div
       style={{
         minHeight: "100vh",
-        padding: "120px",
-        background: darkMode
-          ? "linear-gradient(to bottom right, #020617, #050816)"
-          : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
-        fontFamily: "Inter, sans-serif",
-        position: "relative",
-        overflow: "hidden",
+        padding: "150px 80px 90px",
+        background: s.bg,
+        fontFamily: fonts.body,
       }}
     >
-      {/* BLUE GLOW */}
-      <div
-        style={{
-          position: "absolute",
-          width: "700px",
-          height: "700px",
-          borderRadius: "50%",
-          background: "#2563eb",
-          filter: "blur(180px)",
-          opacity: 0.12,
-          top: "-250px",
-          right: "-200px",
-        }}
-      />
-
-      {/* HEADER */}
       <motion.div
-        initial={{
-          opacity: 0,
-          y: 40,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.8,
-        }}
-        style={{
-          position: "relative",
-          zIndex: 2,
-        }}
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        style={{ maxWidth: "1180px", margin: "0 auto" }}
       >
-        {/* TOP BAR */}
+        {/* HEADER */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: "40px",
+            flexWrap: "wrap",
+            gap: "24px",
+            marginBottom: "48px",
+            paddingBottom: "40px",
+            borderBottom: `1px solid ${s.line}`,
           }}
         >
-          {/* LEFT */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "26px",
-            }}
-          >
-            {/* AVATAR */}
-            <div
-              style={{
-                position: "relative",
-              }}
-            >
-              <div
-                style={{
-                  width: "130px",
-                  height: "130px",
-                  borderRadius: "36px",
-                  background: "linear-gradient(135deg,#2563eb,#3b82f6)",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  boxShadow: "0 0 60px rgba(37,99,235,0.45)",
-                }}
-              >
-                <FaUser
+          <div style={{ display: "flex", alignItems: "center", gap: "26px" }}>
+            <div style={{ position: "relative" }}>
+              {user?.profilePicture ? (
+                <img
+                  src={user.profilePicture}
+                  alt="Profile"
                   style={{
-                    color: "white",
-                    fontSize: "48px",
+                    width: "110px",
+                    height: "110px",
+                    borderRadius: "20px",
+                    objectFit: "cover",
+                    border: `1px solid ${s.line}`,
                   }}
                 />
-              </div>
-              {/* VERIFIED BADGE */}
+              ) : (
+                <div
+                  style={{
+                    width: "110px",
+                    height: "110px",
+                    borderRadius: "20px",
+                    background: darkMode ? colors.inkSoft : colors.paperSoft,
+                    border: `1px solid ${s.line}`,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <FaUser style={{ color: s.accent, fontSize: "38px" }} />
+                </div>
+              )}
+
               <div
                 style={{
                   position: "absolute",
-                  bottom: "-5px",
-                  right: "-5px",
-                  width: "42px",
-                  height: "42px",
+                  bottom: "-6px",
+                  right: "-6px",
+                  width: "32px",
+                  height: "32px",
                   borderRadius: "50%",
-                  background: "#22c55e",
-                  border: "4px solid #020617",
+                  background: s.accent,
+                  border: `3px solid ${s.bg}`,
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <FaShieldAlt
-                  style={{
-                    color: "white",
-                    fontSize: "16px",
-                  }}
-                />
+                <FaShieldAlt style={{ color: darkMode ? colors.ink : "#fff", fontSize: "12px" }} />
               </div>
             </div>
-            {/* USER INFO */}
+
             <div>
               <p
                 style={{
-                  color: "#3b82f6",
-                  letterSpacing: "3px",
-                  marginBottom: "14px",
-                  fontSize: "14px",
+                  fontFamily: fonts.mono,
+                  color: s.accent,
+                  letterSpacing: "2.5px",
+                  fontSize: "11px",
+                  marginBottom: "10px",
+                  textTransform: "uppercase",
                 }}
               >
                 PREMIUM MEMBER
               </p>
+
               <h1
                 style={{
-                  color: darkMode ? "white" : "#0f172a",
-                  fontSize: "58px",
+                  fontFamily: fonts.display,
+                  color: s.text,
+                  fontSize: "46px",
+                  fontWeight: "600",
                   marginBottom: "10px",
                   lineHeight: 1,
                 }}
               >
                 {user?.name || "Loading..."}
               </h1>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                }}
-              >
-                <FaStar color="#facc15" />
-                <span
-                  style={{
-                    color: "#cbd5e1",
-                    fontSize: "17px",
-                  }}
-                >
-                  {user?.rating || 5} Rating • Elite Rider & Driver
+
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <FaStar color={colors.gold} size={13} />
+                <span style={{ color: s.textMuted, fontSize: "14px" }}>
+                  {user?.rating || 5} Rating · Elite Rider & Driver
                 </span>
               </div>
             </div>
           </div>
-          {/* RIGHT */}
-          <div
-            style={{
-              display: "flex",
-              gap: "18px",
-            }}
-          >
-           
-            {/* EDIT BUTTON */}
-            <Link
-              to="/edit-profile"
-              style={{
-                textDecoration: "none",
-              }}
-            >
+
+          {/* ACTIONS */}
+          <div style={{ display: "flex", gap: "12px" }}>
+            <Link to="/edit-profile" style={{ textDecoration: "none" }}>
               <motion.button
-                whileHover={{
-                  y: -4,
-                }}
-                whileTap={{
-                  scale: 0.96,
-                }}
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.96 }}
                 style={{
-                  padding: "18px 28px",
-                  borderRadius: "20px",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  background: "rgba(255,255,255,0.05)",
-                  color: darkMode ? "white" : "#0f172a",
+                  padding: "13px 22px",
+                  borderRadius: "12px",
+                  background: "transparent",
+                  border: `1px solid ${s.line}`,
+                  color: s.text,
                   cursor: "pointer",
-                  fontSize: "16px",
-                  fontWeight: "600",
                   display: "flex",
                   alignItems: "center",
-                  gap: "12px",
-                  backdropFilter: "blur(20px)",
+                  gap: "9px",
+                  fontSize: "14px",
+                  fontWeight: "600",
                 }}
               >
-                <FaEdit />
-                Edit Profile
+                <FaEdit size={13} /> Edit
               </motion.button>
             </Link>
-            {/* SETTINGS BUTTON */}
-            <Link
-              to="/settings"
-              style={{
-                textDecoration: "none",
-              }}
-            >
+
+            <Link to="/settings" style={{ textDecoration: "none" }}>
               <motion.button
-                whileHover={{
-                  y: -4,
-                }}
-                whileTap={{
-                  scale: 0.96,
-                }}
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.96 }}
                 style={{
-                  padding: "18px 28px",
-                  borderRadius: "20px",
+                  padding: "13px 22px",
+                  borderRadius: "12px",
+                  background: darkMode ? colors.goldSoft : colors.forest,
+                  color: darkMode ? colors.ink : "#fff",
                   border: "none",
-                  background: "linear-gradient(135deg,#2563eb,#3b82f6)",
-                  color: "white",
                   cursor: "pointer",
-                  fontSize: "16px",
-                  fontWeight: "600",
                   display: "flex",
                   alignItems: "center",
-                  gap: "12px",
-                  boxShadow: "0 0 40px rgba(37,99,235,0.35)",
-                }}
-              >
-                <FaCog />
-                Settings
-              </motion.button>
-            </Link>
-            {/* DASHBOARD BUTTON */}
-            <Link
-              to="/dashboard"
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              <motion.button
-                whileHover={{
-                  y: -4,
-                }}
-                whileTap={{
-                  scale: 0.96,
-                }}
-                style={{
-                  padding: "18px 28px",
-                  borderRadius: "20px",
-                  border: "none",
-                  background: "linear-gradient(135deg,#2563eb,#3b82f6)",
-                  color: "white",
-                  cursor: "pointer",
-                  fontSize: "16px",
+                  gap: "9px",
+                  fontSize: "14px",
                   fontWeight: "600",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  boxShadow: "0 0 40px rgba(37,99,235,0.35)",
                 }}
               >
-                <FaUser />
-                Dashboard
+                <FaCog size={13} /> Settings
               </motion.button>
             </Link>
+
             <motion.button
-  whileHover={{
-    y: -4,
-  }}
-  whileTap={{
-    scale: 0.96,
-  }}
-  onClick={switchRole}
-  style={{
-    padding: "18px 28px",
-    borderRadius: "20px",
-    border: "none",
-
-    background:
-      currentRole === "driver"
-        ? "linear-gradient(135deg,#16a34a,#22c55e)"
-        : "linear-gradient(135deg,#2563eb,#3b82f6)",
-
-    color: "white",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "600",
-
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-
-    boxShadow:
-      currentRole === "driver"
-        ? "0 0 40px rgba(34,197,94,0.35)"
-        : "0 0 40px rgba(37,99,235,0.35)",
-  }}
->
-
-<FaExchangeAlt />
-
-{
-  currentRole === "rider"
-    ? "Switch to Driver"
-    : "Switch to Rider"
-}
-
-</motion.button>
-            
+              onClick={switchRole}
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.96 }}
+              style={{
+                padding: "13px 22px",
+                borderRadius: "12px",
+                border: "none",
+                background: currentRole === "driver" ? colors.rust : (darkMode ? colors.goldSoft : colors.forest),
+                color: currentRole === "driver" ? "#fff" : (darkMode ? colors.ink : "#fff"),
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "9px",
+                fontSize: "14px",
+                fontWeight: "600",
+              }}
+            >
+              <FaExchangeAlt size={13} />
+              Switch to {currentRole === "rider" ? "Driver" : "Rider"}
+            </motion.button>
           </div>
         </div>
 
         {/* MAIN GRID */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1.4fr 1fr",
-            gap: "30px",
-          }}
-        >
-          {/* PROFILE CARD */}
+        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: "28px" }}>
+          {/* LEFT — personal info */}
           <div
             style={{
-              padding: "40px",
-              borderRadius: "36px",
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              backdropFilter: "blur(20px)",
+              padding: "36px",
+              borderRadius: "20px",
+              background: s.bgSoft,
+              border: `1px solid ${s.line}`,
             }}
           >
-            <h2
+            <p
               style={{
-                color: darkMode ? "white" : "#0f172a",
-                fontSize: "32px",
-                marginBottom: "34px",
+                fontFamily: fonts.mono,
+                color: s.accent,
+                fontSize: "11px",
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+                marginBottom: "24px",
               }}
             >
-              Personal Information
-            </h2>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2,1fr)",
-                gap: "28px",
-              }}
-            >
-              {[
-                {
-                  icon: <FaEnvelope />,
-                  label: "Email",
-                  value: user?.email || "Not Added",
-                },
-                {
-                  icon: <FaPhone />,
-                  label: "Phone",
-                  value: user?.phone || "Not Added",
-                },
-                {
-                  icon: <FaMapMarkerAlt />,
-                  label: "Location",
-                  value: user?.location || "Not Added",
-                },
-                {
-  icon: <FaUser />,
-  label: "Current Mode",
-  value:
-    currentRole === "driver"
-      ? "Driver"
-      : "Rider",
-},
-              ].map((item, index) => (
+              PERSONAL INFORMATION
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+              {infoRows.map((item, i) => (
                 <div
-                  key={index}
+                  key={i}
                   style={{
-                    padding: "26px",
-                    borderRadius: "24px",
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "18px",
+                    padding: "20px 4px",
+                    borderBottom: i < infoRows.length - 1 ? `1px solid ${s.line}` : "none",
                   }}
                 >
                   <div
                     style={{
-                      width: "58px",
-                      height: "58px",
-                      borderRadius: "18px",
-                      background: "rgba(37,99,235,0.15)",
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "10px",
+                      background: darkMode ? colors.inkDark : colors.paperSoft,
                       display: "flex",
-                      justifyContent: "center",
                       alignItems: "center",
-                      color: "#3b82f6",
-                      fontSize: "22px",
-                      marginBottom: "22px",
+                      justifyContent: "center",
+                      color: s.accent,
+                      flexShrink: 0,
                     }}
                   >
                     {item.icon}
                   </div>
-                  <p
-                    style={{
-                      color: "#94a3b8",
-                      marginBottom: "10px",
-                      fontSize: "15px",
-                    }}
-                  >
-                    {item.label}
-                  </p>
-                  <h3
-                    style={{
-                      color: darkMode ? "white" : "#0f172a",
-                      fontSize: "20px",
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {item.value}
-                  </h3>
+                  <div>
+                    <p style={{ color: s.textMuted, fontSize: "12px", marginBottom: "4px" }}>
+                      {item.label}
+                    </p>
+                    <h3 style={{ color: s.text, fontSize: "16px", fontWeight: "600", margin: 0 }}>
+                      {item.value || "Not added"}
+                    </h3>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-          {/* STATS CARD */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "24px",
-            }}
-          >
-            {/* MEMBERSHIP */}
+
+          {/* RIGHT — membership + stats */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+            {/* MEMBERSHIP — the one solid color block */}
             <div
               style={{
-                padding: "36px",
-                borderRadius: "34px",
-                background: "linear-gradient(135deg,#2563eb,#1d4ed8)",
-                color: "white",
-                boxShadow: "0 0 50px rgba(37,99,235,0.35)",
+                padding: "32px",
+                borderRadius: "20px",
+                background: darkMode
+                  ? `linear-gradient(135deg, ${colors.forestDeep}, ${colors.forest})`
+                  : `linear-gradient(135deg, ${colors.forest}, ${colors.forestDeep})`,
+                color: colors.paper,
               }}
             >
-              <p
-                style={{
-                  letterSpacing: "3px",
-                  marginBottom: "20px",
-                  opacity: 0.8,
-                }}
-              >
+              <p style={{ fontFamily: fonts.mono, opacity: 0.7, letterSpacing: "2.5px", fontSize: "11px", marginBottom: "12px" }}>
                 COSY PREMIUM
               </p>
-              <h1
-                style={{
-                  fontSize: "42px",
-                  marginBottom: "18px",
-                }}
-              >
+              <h1 style={{ fontFamily: fonts.display, fontSize: "34px", fontWeight: "600", marginBottom: "12px" }}>
                 {user?.membership || "Gold Member"}
               </h1>
-              <p
-                style={{
-                  lineHeight: 1.8,
-                  opacity: 0.9,
-                }}
-              >
-                Enjoy priority ride matching, premium support, and lower ride
-                fees.
+              <p style={{ opacity: 0.85, fontSize: "14px", lineHeight: "1.6" }}>
+                Premium ride experience with savings &amp; priority support.
               </p>
             </div>
+
             {/* STATS */}
-            {stats.map((item, index) => (
-              <motion.div
-                key={index}
-                whileHover={{
-                  y: -5,
-                }}
+            {stats.map((stat, i) => (
+              <div
+                key={i}
                 style={{
-                  padding: "28px",
-                  borderRadius: "28px",
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  backdropFilter: "blur(20px)",
+                  padding: "22px",
+                  borderRadius: "16px",
+                  background: s.bgSoft,
+                  border: `1px solid ${s.line}`,
                   display: "flex",
+                  gap: "18px",
                   alignItems: "center",
-                  gap: "22px",
                 }}
               >
                 <div
                   style={{
-                    width: "72px",
-                    height: "72px",
-                    borderRadius: "22px",
-                    background: "rgba(37,99,235,0.15)",
+                    width: "44px",
+                    height: "44px",
+                    borderRadius: "10px",
+                    background: darkMode ? colors.inkDark : colors.paperSoft,
+                    color: s.accent,
+                    fontSize: "18px",
                     display: "flex",
-                    justifyContent: "center",
                     alignItems: "center",
-                    color: "#3b82f6",
-                    fontSize: "28px",
+                    justifyContent: "center",
+                    flexShrink: 0,
                   }}
                 >
-                  {item.icon}
+                  {stat.icon}
                 </div>
                 <div>
-                  <h1
-                    style={{
-                      color: darkMode ? "white" : "#0f172a",
-                      fontSize: "38px",
-                      marginBottom: "6px",
-                    }}
-                  >
-                    {item.value}
-                  </h1>
-                  <p
-                    style={{
-                      color: "#94a3b8",
-                    }}
-                  >
-                    {item.label}
-                  </p>
+                  <h2 style={{ color: s.text, fontSize: "22px", fontWeight: "700", margin: 0 }}>
+                    {stat.value}
+                  </h2>
+                  <p style={{ color: s.textMuted, fontSize: "13px", margin: 0 }}>{stat.label}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

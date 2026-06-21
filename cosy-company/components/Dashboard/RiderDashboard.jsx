@@ -1,16 +1,16 @@
-import DashboardCards from "./cards/DashboardCards"
+// src/components/dashboard/RiderDashboard.jsx
+//
+// BUG FIX: same issue as DriverDashboard.jsx — darkMode was never passed
+// down to DashboardCards, so it was always undefined there.
 
-function RiderDashboard() {
+import DashboardCards from "./cards/DashboardCards";
 
+function RiderDashboard({ darkMode }) {
   return (
-
     <div>
-
-      <DashboardCards />
-
+      <DashboardCards darkMode={darkMode} />
     </div>
-
-  )
+  );
 }
 
-export default RiderDashboard
+export default RiderDashboard;

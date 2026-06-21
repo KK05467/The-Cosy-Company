@@ -1,131 +1,104 @@
-import { useState, useEffect } from "react"
+// src/pages/Dashboard.jsx
+//
+// REDESIGN NOTES (visual only — the useEffect reading localStorage("user"),
+// the mode state, and the stats array branching by mode are all unchanged):
+// - Replaced the dual blurred glow orbs and glass cards with the flat
+//   surface()/colors/fonts system used everywhere else in the redesign.
+// - "Live Activity" card and the stat grid now use hairline rules instead
+//   of glow-on-hover; the stat grid specifically is now a manifest strip
+//   (matches Stats.jsx / SearchRides.jsx's feature row / DashboardCards.jsx)
+//   instead of 3 separate glow cards.
+//
+// FLAGGING, NOT FIXING: this file computes its own inline `stats` array
+// and renders it directly — it never actually imports or renders
+// RiderDashboard, DriverDashboard, or DashboardCards, even though those
+// components exist and branch on the same rider/driver mode. That might be
+// intentional (this page has its own bespoke stats), or those three
+// components might be meant for a different route I haven't seen. I've
+// left Dashboard.jsx's own stats logic exactly as-is rather than guessing
+// which one should replace the other — let me know if you want them
+// unified.
+//
+// Sidebar.jsx wasn't shared in this conversation, so it's imported as-is
+// and NOT redesigned — it will render with its own (likely old-style)
+// visuals until you share that file too.
 
-import {
-  FaBell,
-  FaCar,
-  FaLeaf,
-  FaMapMarkerAlt,
-  FaUsers,
-  FaWallet,
-  FaRoute,
-} from "react-icons/fa"
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { FaBell, FaCar, FaLeaf, FaMapMarkerAlt, FaUsers, FaWallet, FaRoute } from "react-icons/fa";
 
-import Sidebar from "../components/dashboard/Sidebar"
-import DashboardToggle from "../components/dashboard/DashboardToggle"
+import Sidebar from "../components/dashboard/Sidebar";
+import DashboardToggle from "../components/dashboard/DashboardToggle";
+import { colors, fonts, surface } from "../styles/tokens";
 
 function Dashboard({ darkMode, setDarkMode }) {
-  const [user, setUser] = useState(null)
-  const [mode, setMode] = useState("rider")
+  const [user, setUser] = useState(null);
+  const [mode, setMode] = useState("rider");
 
   useEffect(() => {
     try {
-      const storedUser = localStorage.getItem("user")
-
+      const storedUser = localStorage.getItem("user");
       if (storedUser) {
-        const parsed = JSON.parse(storedUser)
-        setUser(parsed)
+        const parsed = JSON.parse(storedUser);
+        setUser(parsed);
       }
     } catch (err) {
-      console.log("Error parsing user:", err)
+      console.log("Error parsing user:", err);
     }
-  }, [])
+  }, []);
 
   const stats =
     mode === "rider"
       ? [
-          {
-            title: "Active Pools",
-            value: user?.activePools ?? 0,
-            icon: <FaUsers />,
-          },
-          {
-            title: "Money Saved",
-            value: user?.moneySaved ?? "₹0",
-            icon: <FaWallet />,
-          },
-          {
-            title: "CO₂ Reduced",
-            value: user?.co2Reduced ?? "0kg",
-            icon: <FaLeaf />,
-          },
+          { title: "Active pools", value: user?.activePools ?? 0, icon: <FaUsers /> },
+          { title: "Money saved", value: user?.moneySaved ?? "₹0", icon: <FaWallet /> },
+          { title: "CO₂ reduced", value: user?.co2Reduced ?? "0 kg", icon: <FaLeaf /> },
         ]
       : [
-          {
-            title: "Today's Earnings",
-            value: user?.earnings ?? "₹0",
-            icon: <FaWallet />,
-          },
-          {
-            title: "Passengers",
-            value: user?.passengers ?? 0,
-            icon: <FaUsers />,
-          },
-          {
-            title: "Trips Completed",
-            value: user?.tripsCompleted ?? 0,
-            icon: <FaCar />,
-          },
-        ]
+          { title: "Today's earnings", value: user?.earnings ?? "₹0", icon: <FaWallet /> },
+          { title: "Passengers", value: user?.passengers ?? 0, icon: <FaUsers /> },
+          { title: "Trips completed", value: user?.tripsCompleted ?? 0, icon: <FaCar /> },
+        ];
+
+  const s = surface(darkMode);
 
   return (
     <div
       style={{
         minHeight: "100vh",
-        padding: "120px",
         display: "flex",
-        background: darkMode
-          ? "linear-gradient(to bottom right, #020617, #050816)"
-          : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
-        fontFamily: "Inter, sans-serif",
-        overflow: "hidden",
-        position: "relative",
+        fontFamily: fonts.body,
+        background: s.bg,
       }}
     >
-      {/* BLUE GLOW */}
-      <div
-        style={{
-          position: "absolute",
-          width: "700px",
-          height: "700px",
-          borderRadius: "50%",
-          background: "#2563eb",
-          filter: "blur(180px)",
-          opacity: 0.12,
-          top: "-250px",
-          right: "-200px",
-        }}
-      />
-
-      {/* SIDEBAR */}
+      {/* Sidebar — not redesigned yet, see note above */}
       <Sidebar darkMode={darkMode} />
 
-      {/* MAIN CONTENT */}
-      <div
-        style={{
-          flex: 1,
-          padding: "35px",
-          overflowY: "auto",
-          position: "relative",
-          zIndex: 2,
-        }}
-      >
+      {/* Main */}
+      <div style={{ flex: 1, padding: "150px 50px 60px", overflowY: "auto" }}>
         {/* TOPBAR */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
           style={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "40px",
+            alignItems: "flex-end",
+            flexWrap: "wrap",
+            gap: "24px",
+            marginBottom: "44px",
           }}
         >
-          {/* LEFT */}
           <div>
             <p
               style={{
-                color: "#3b82f6",
-                letterSpacing: "4px",
-                marginBottom: "10px",
-                fontSize: "14px",
+                fontFamily: fonts.mono,
+                fontSize: "13px",
+                letterSpacing: "2.5px",
+                color: s.accent,
+                marginBottom: "18px",
+                textTransform: "uppercase",
               }}
             >
               SMART MOBILITY PLATFORM
@@ -133,106 +106,92 @@ function Dashboard({ darkMode, setDarkMode }) {
 
             <h1
               style={{
-                color: darkMode ? "white" : "#0f172a",
-                fontSize: "54px",
-                lineHeight: 1.1,
+                fontFamily: fonts.display,
+                color: s.text,
+                fontSize: "46px",
+                fontWeight: "600",
+                letterSpacing: "-1px",
+                lineHeight: "1.1",
                 marginBottom: "10px",
               }}
             >
-              Welcome back, {user?.name || "User"}
+              Welcome back, {user?.name || "traveler"}.
             </h1>
 
-            <p style={{ color: "#94a3b8", fontSize: "18px" }}>
-              Your smart travel ecosystem is active.
+            <p style={{ color: s.textMuted, fontSize: "16px" }}>
+              Your route network is active.
             </p>
           </div>
 
-          {/* RIGHT */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-            }}
-          >
-            <DashboardToggle
-              mode={mode}
-              setMode={setMode}
-              darkMode={darkMode}
-            />
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <DashboardToggle mode={mode} setMode={setMode} darkMode={darkMode} />
 
-            <div
+            <motion.div
+              whileHover={{ y: -2 }}
               style={{
-                width: "58px",
-                height: "58px",
-                borderRadius: "18px",
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                width: "46px",
+                height: "46px",
+                borderRadius: "12px",
+                background: s.bgSoft,
+                border: `1px solid ${s.line}`,
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                color: darkMode ? "white" : "#0f172a",
-                fontSize: "20px",
+                color: s.accent,
+                fontSize: "17px",
                 cursor: "pointer",
-                backdropFilter: "blur(20px)",
               }}
             >
               <FaBell />
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
         {/* HERO GRID */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "2fr 1fr",
-            gap: "28px",
-            marginBottom: "30px",
+            gap: "24px",
+            marginBottom: "28px",
           }}
         >
-          {/* MAP CARD */}
-          <div
+          {/* ROUTE CARD */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
             style={{
               position: "relative",
-              minHeight: "420px",
-              borderRadius: "34px",
+              minHeight: "380px",
+              borderRadius: "24px",
               overflow: "hidden",
-              background: darkMode
-                ? "linear-gradient(to bottom right, #020617, #050816)"
-                : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              backdropFilter: "blur(20px)",
+              background: s.bgSoft,
+              border: `1px solid ${s.line}`,
             }}
           >
-            <img
-              src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1600&auto=format&fit=crop"
-              alt=""
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                opacity: 0.28,
-              }}
-            />
-
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background: darkMode
-                  ? "linear-gradient(to bottom right, #020617, #050816)"
-                  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
-              }}
-            />
+            {/* Faint route line, echoes Home.jsx hero instead of a pulsing
+                gradient wash */}
+            <svg
+              viewBox="0 0 700 400"
+              preserveAspectRatio="none"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: darkMode ? 0.14 : 0.08 }}
+            >
+              <path
+                d="M -40 320 C 150 320, 180 120, 380 140 C 540 156, 560 280, 760 260"
+                fill="none"
+                stroke={darkMode ? colors.goldSoft : colors.forest}
+                strokeWidth="2.5"
+                strokeDasharray="2 14"
+                strokeLinecap="round"
+              />
+            </svg>
 
             <div
               style={{
                 position: "relative",
                 zIndex: 2,
-                padding: "40px",
+                padding: "44px",
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
@@ -245,177 +204,150 @@ function Dashboard({ darkMode, setDarkMode }) {
                     display: "inline-flex",
                     alignItems: "center",
                     gap: "10px",
-                    padding: "12px 20px",
+                    padding: "10px 18px",
                     borderRadius: "999px",
-                    background: "rgba(255,255,255,0.08)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    marginBottom: "28px",
+                    background: darkMode ? "rgba(201,162,39,0.1)" : "rgba(31,77,58,0.08)",
+                    marginBottom: "26px",
                   }}
                 >
-                  <FaRoute color="#3b82f6" />
-
-                  <span
-                    style={{
-                      color: darkMode ? "white" : "#0f172a",
-                    }}
-                  >
-                    AI Pool Matching Active
+                  <FaRoute size={13} color={darkMode ? colors.goldSoft : colors.forest} />
+                  <span style={{ color: s.text, fontSize: "13.5px", fontWeight: "600" }}>
+                    AI pool matching active
                   </span>
                 </div>
 
-                <h1
+                <h2
                   style={{
-                    color: darkMode ? "white" : "#0f172a",
-                    fontSize: "52px",
-                    lineHeight: 1.1,
-                    maxWidth: "620px",
-                    marginBottom: "20px",
+                    fontFamily: fonts.display,
+                    color: s.text,
+                    fontSize: "38px",
+                    fontWeight: "600",
+                    letterSpacing: "-0.5px",
+                    lineHeight: "1.15",
+                    maxWidth: "560px",
+                    marginBottom: "16px",
                   }}
                 >
                   {mode === "rider"
                     ? "Find smarter shared rides nearby."
                     : "Manage rides and maximize earnings."}
-                </h1>
+                </h2>
 
-                <p
-                  style={{
-                    color: "#cbd5e1",
-                    fontSize: "18px",
-                    lineHeight: 1.8,
-                    maxWidth: "620px",
-                  }}
-                >
-                  Cosy intelligently matches routes, passengers, and drivers in real-time.
+                <p style={{ color: s.textMuted, fontSize: "16px", lineHeight: "1.7", maxWidth: "520px" }}>
+                  Cosy matches routes, riders, and drivers in real time.
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* RIGHT PANEL */}
-          <div
+          {/* RIGHT PANEL — LIVE ACTIVITY */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "24px",
+              padding: "30px",
+              borderRadius: "24px",
+              background: s.bgSoft,
+              border: `1px solid ${s.line}`,
             }}
           >
-            <div
+            <p
               style={{
-                padding: "30px",
-                borderRadius: "30px",
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                fontFamily: fonts.mono,
+                fontSize: "11px",
+                letterSpacing: "1.5px",
+                textTransform: "uppercase",
+                color: s.textMuted,
+                marginBottom: "22px",
               }}
             >
-              <h2
+              Live activity
+            </p>
+
+            {[1, 2, 3].map((item, i) => (
+              <motion.div
+                key={item}
+                whileHover={{ x: 4 }}
                 style={{
-                  color: darkMode ? "white" : "#0f172a",
-                  marginBottom: "24px",
-                  fontSize: "24px",
+                  display: "flex",
+                  gap: "14px",
+                  alignItems: "center",
+                  padding: "14px 0",
+                  borderBottom: i < 2 ? `1px solid ${s.line}` : "none",
                 }}
               >
-                Live Activity
-              </h2>
-
-              {[1, 2, 3].map((item) => (
                 <div
-                  key={item}
                   style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "11px",
+                    background: darkMode ? "rgba(201,162,39,0.1)" : "rgba(31,77,58,0.08)",
                     display: "flex",
-                    gap: "16px",
-                    marginBottom: "22px",
+                    justifyContent: "center",
                     alignItems: "center",
+                    color: s.accent,
+                    flexShrink: 0,
                   }}
                 >
-                  <div
-                    style={{
-                      width: "48px",
-                      height: "48px",
-                      borderRadius: "16px",
-                      background: "rgba(37,99,235,0.18)",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      color: "#3b82f6",
-                    }}
-                  >
-                    <FaMapMarkerAlt />
-                  </div>
-
-                  <div>
-                    <p
-                      style={{
-                        color: darkMode ? "white" : "#0f172a",
-                        marginBottom: "4px",
-                      }}
-                    >
-                      Pool forming near Downtown
-                    </p>
-                    <span style={{ color: "#94a3b8", fontSize: "14px" }}>
-                      2 mins ago
-                    </span>
-                  </div>
+                  <FaMapMarkerAlt size={14} />
                 </div>
-              ))}
-            </div>
-          </div>
+
+                <div>
+                  <p style={{ color: s.text, fontSize: "14.5px", marginBottom: "3px" }}>
+                    Pool forming near Downtown
+                  </p>
+                  <span style={{ color: s.textMuted, fontSize: "12.5px" }}>2 mins ago</span>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
 
-        {/* STATS */}
-        <div
+        {/* STATS — manifest strip, matches DashboardCards.jsx treatment */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "24px",
+            border: `1px solid ${s.line}`,
+            borderRadius: "18px",
+            overflow: "hidden",
           }}
         >
           {stats.map((item, index) => (
             <div
-              key={index}
+              key={item.title}
               style={{
-                padding: "30px",
-                borderRadius: "28px",
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                backdropFilter: "blur(20px)",
+                padding: "28px 26px",
+                background: s.bgSoft,
+                borderRight: index < stats.length - 1 ? `1px solid ${s.line}` : "none",
               }}
             >
-              <div
-                style={{
-                  width: "70px",
-                  height: "70px",
-                  borderRadius: "22px",
-                  background: "rgba(37,99,235,0.15)",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  color: "#3b82f6",
-                  fontSize: "28px",
-                  marginBottom: "24px",
-                }}
-              >
-                {item.icon}
-              </div>
+              <div style={{ color: s.accent, fontSize: "19px", marginBottom: "18px" }}>{item.icon}</div>
 
-              <h1
+              <h3
                 style={{
-                  color: darkMode ? "white" : "#0f172a",
-                  fontSize: "42px",
-                  marginBottom: "10px",
+                  fontFamily: fonts.display,
+                  color: s.text,
+                  fontSize: "34px",
+                  fontWeight: "600",
+                  letterSpacing: "-0.5px",
+                  marginBottom: "8px",
                 }}
               >
                 {item.value}
-              </h1>
+              </h3>
 
-              <p style={{ color: "#94a3b8", fontSize: "17px" }}>
-                {item.title}
-              </p>
+              <p style={{ color: s.textMuted, fontSize: "14px", margin: 0 }}>{item.title}</p>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;

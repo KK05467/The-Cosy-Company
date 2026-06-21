@@ -1,144 +1,132 @@
-import {
-  FaHome,
-  FaCar,
-  FaWallet,
-  FaUser,
-  FaCog,
-} from "react-icons/fa"
+// src/components/dashboard/Sidebar.jsx
+//
+// REDESIGN NOTES (visual only — useLocation, the active-path check, and the
+// links array are all unchanged, including the /bookings path, which I'm
+// leaving exactly as the original author wrote it rather than guessing it
+// should be /my-bookings):
+// - Replaced the gradient-filled active pill + radial hover glow with a
+//   quieter treatment: hairline-divided rows, a left-edge tick marking the
+//   active item (echoes the underline tick used for Navbar.jsx's active
+//   link), and no per-item glow. A sidebar sits on screen for an entire
+//   session — it should read as calm structure, not a row of CTAs.
+// - Wordmark now uses Fraunces, matching the wordmark treatment in
+//   Navbar.jsx and SplashScreen.jsx instead of its own one-off styling.
 
-import { Link, useLocation } from "react-router-dom"
+import { motion } from "framer-motion";
+import { FaHome, FaCar, FaWallet, FaUser, FaCog } from "react-icons/fa";
+import { Link, useLocation } from "react-router-dom";
+import { fonts, surface } from "../../styles/tokens";
 
 function Sidebar({ darkMode }) {
-  const location = useLocation()
+  const location = useLocation();
+  const s = surface(darkMode);
 
   const links = [
-    {
-      icon: <FaHome />,
-      title: "Dashboard",
-      path: "/dashboard",
-    },
-    {
-      icon: <FaCar />,
-      title: "Bookings",
-      path: "/bookings",
-    },
-    {
-      icon: <FaWallet />,
-      title: "Wallet",
-      path: "/wallet",
-    },
-    {
-      icon: <FaUser />,
-      title: "Profile",
-      path: "/profile",
-    },
-    {
-      icon: <FaCog />,
-      title: "Settings",
-      path: "/settings",
-    },
-  ]
+    { icon: <FaHome />, title: "Dashboard", path: "/dashboard" },
+    { icon: <FaCar />, title: "Bookings", path: "/bookings" },
+    { icon: <FaWallet />, title: "Wallet", path: "/wallet" },
+    { icon: <FaUser />, title: "Profile", path: "/profile" },
+    { icon: <FaCog />, title: "Settings", path: "/settings" },
+  ];
 
   return (
-    <div
-    onClick={() => alert("SIDEBAR CLICKED")}
-  style={{
-    width: "280px",
-    minHeight: "100vh",
-    padding: "40px 25px",
-    background: "rgba(255,255,255,0.03)",
-    borderRight: "1px solid rgba(255,255,255,0.06)",
-    backdropFilter: "blur(20px)",
-
-    position: "relative",
-    zIndex: 9999,
-    flexShrink: 0,
-  }}
->
-      <div
-        style={{
-          marginBottom: "70px",
-        }}
-      >
+    <motion.div
+      initial={{ x: -40, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      style={{
+        width: "260px",
+        minHeight: "100vh",
+        padding: "150px 22px 40px",
+        flexShrink: 0,
+        background: s.bg,
+        borderRight: `1px solid ${s.line}`,
+        fontFamily: fonts.body,
+      }}
+    >
+      {/* LOGO */}
+      <div style={{ marginBottom: "54px", paddingLeft: "14px" }}>
         <h1
           style={{
-            color: darkMode ? "white" : "#0f172a",
-            fontSize: "42px",
+            fontFamily: fonts.display,
+            color: s.text,
+            fontSize: "28px",
+            fontWeight: "600",
             marginBottom: "6px",
+            letterSpacing: "-0.5px",
           }}
         >
           Cosy
         </h1>
-
         <p
           style={{
-            color: "#3b82f6",
-            fontSize: "11px",
-            letterSpacing: "4px",
+            fontFamily: fonts.mono,
+            color: s.accent,
+            fontSize: "9.5px",
+            letterSpacing: "2.5px",
           }}
         >
-          TRAVEL TOGETHER
+          RIDE COSY · DRIVE COSY
         </p>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "18px",
-        }}
-      >
+      {/* LINKS */}
+      <div style={{ display: "flex", flexDirection: "column" }}>
         {links.map((item, index) => {
-          const active = location.pathname === item.path
+          const active = location.pathname === item.path;
 
           return (
-            <Link
-              key={index}
-              to={item.path}
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              <div
+            <Link key={index} to={item.path} style={{ textDecoration: "none" }}>
+              <motion.div
+                whileHover={{ x: active ? 0 : 3 }}
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "18px",
-                  padding: "18px 22px",
-                  borderRadius: "18px",
-                  background: active
-                    ? "rgba(37,99,235,0.15)"
-                    : "transparent",
-                  color: active
-                    ? "#3b82f6"
-                    : "#cbd5e1",
+                  gap: "14px",
+                  padding: "13px 16px",
+                  borderRadius: "10px",
                   cursor: "pointer",
-                  transition: "all 0.3s ease",
+                  position: "relative",
+                  background: active ? s.bgSoft : "transparent",
                 }}
               >
-                <div
-                  style={{
-                    fontSize: "18px",
-                  }}
-                >
+                {/* active tick — replaces the gradient-filled pill */}
+                {active && (
+                  <motion.div
+                    layoutId="sidebarActiveTick"
+                    style={{
+                      position: "absolute",
+                      left: "-22px",
+                      top: "8px",
+                      bottom: "8px",
+                      width: "3px",
+                      borderRadius: "2px",
+                      background: s.accent,
+                    }}
+                  />
+                )}
+
+                <div style={{ fontSize: "16px", color: active ? s.accent : s.textMuted }}>
                   {item.icon}
                 </div>
 
                 <p
                   style={{
-                    fontSize: "16px",
+                    fontSize: "15px",
                     margin: 0,
+                    fontWeight: active ? "600" : "500",
+                    color: active ? s.text : s.textMuted,
                   }}
                 >
                   {item.title}
                 </p>
-              </div>
+              </motion.div>
             </Link>
-          )
+          );
         })}
       </div>
-    </div>
-  )
+    </motion.div>
+  );
 }
 
-export default Sidebar
+export default Sidebar;

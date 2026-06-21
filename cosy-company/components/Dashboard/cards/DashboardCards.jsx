@@ -1,124 +1,79 @@
-import {
-  FaWallet,
-  FaCar,
-  FaLeaf,
-  FaUsers,
-} from "react-icons/fa"
+// src/components/dashboard/cards/DashboardCards.jsx
+//
+// REDESIGN NOTES: replaced the 4 duplicate glow-radial cards with a single
+// manifest strip (hairline-divided columns), same pattern used in
+// Stats.jsx / SearchRides.jsx's feature row — keeps every "4 stat tiles"
+// moment in the app reading as one design system instead of three.
+//
+// BUG FIX: this component takes a `darkMode` prop, but neither
+// RiderDashboard.jsx nor DriverDashboard.jsx (below) were passing it down
+// — so `darkMode` was always undefined here, meaning these cards were
+// permanently stuck rendering as if darkMode={false} regardless of the
+// app's actual theme. Fixed in both wrapper components.
 
-function DashboardCards({ driver }) {
+import { motion } from "framer-motion";
+import { FaWallet, FaCar, FaLeaf, FaUsers } from "react-icons/fa";
+import { fonts, surface } from "../../../styles/tokens";
+
+function DashboardCards({ driver, darkMode }) {
+  const s = surface(darkMode);
 
   const cards = driver
     ? [
-        {
-          icon: <FaWallet />,
-          title: "Today's Earnings",
-          value: "₹4,820",
-        },
-        {
-          icon: <FaCar />,
-          title: "Trips Completed",
-          value: "148",
-        },
-        {
-          icon: <FaUsers />,
-          title: "Passengers",
-          value: "328",
-        },
-        {
-          icon: <FaLeaf />,
-          title: "Fuel Saved",
-          value: "120L",
-        },
+        { icon: <FaWallet />, title: "Today's earnings", value: "₹4,820" },
+        { icon: <FaCar />, title: "Trips completed", value: "148" },
+        { icon: <FaUsers />, title: "Passengers", value: "328" },
+        { icon: <FaLeaf />, title: "Fuel saved", value: "120 L" },
       ]
     : [
-        {
-          icon: <FaWallet />,
-          title: "Wallet Balance",
-          value: "₹2,400",
-        },
-        {
-          icon: <FaCar />,
-          title: "Booked Rides",
-          value: "42",
-        },
-        {
-          icon: <FaUsers />,
-          title: "Shared Trips",
-          value: "16",
-        },
-        {
-          icon: <FaLeaf />,
-          title: "CO₂ Reduced",
-          value: "82kg",
-        },
-      ]
+        { icon: <FaWallet />, title: "Wallet balance", value: "₹2,400" },
+        { icon: <FaCar />, title: "Booked rides", value: "42" },
+        { icon: <FaUsers />, title: "Shared trips", value: "16" },
+        { icon: <FaLeaf />, title: "CO₂ reduced", value: "82 kg" },
+      ];
 
   return (
-
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "25px",
+        border: `1px solid ${s.line}`,
+        borderRadius: "18px",
+        overflow: "hidden",
       }}
     >
-
       {cards.map((card, index) => (
-
         <div
-          key={index}
+          key={card.title}
           style={{
-            padding: "32px",
-            borderRadius: "28px",
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            backdropFilter: "blur(20px)",
+            padding: "28px 26px",
+            background: s.bgSoft,
+            borderRight: index < cards.length - 1 ? `1px solid ${s.line}` : "none",
           }}
         >
+          <div style={{ color: s.accent, fontSize: "19px", marginBottom: "18px" }}>{card.icon}</div>
 
-          <div
+          <h3
             style={{
-              width: "70px",
-              height: "70px",
-              borderRadius: "20px",
-              background: "rgba(37,99,235,0.15)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#3b82f6",
-              fontSize: "28px",
-              marginBottom: "24px",
-            }}
-          >
-            {card.icon}
-          </div>
-
-          <h1
-            style={{
-              color: darkMode ? "white" : "#0f172a",
-              fontSize: "40px",
-              marginBottom: "10px",
+              fontFamily: fonts.display,
+              color: s.text,
+              fontSize: "32px",
+              fontWeight: "600",
+              marginBottom: "8px",
+              letterSpacing: "-0.5px",
             }}
           >
             {card.value}
-          </h1>
+          </h3>
 
-          <p
-            style={{
-              color: "#94a3b8",
-              fontSize: "17px",
-            }}
-          >
-            {card.title}
-          </p>
-
+          <p style={{ color: s.textMuted, fontSize: "14px", margin: 0 }}>{card.title}</p>
         </div>
-
       ))}
-
-    </div>
-
-  )
+    </motion.div>
+  );
 }
 
-export default DashboardCards
+export default DashboardCards;

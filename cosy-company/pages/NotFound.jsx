@@ -1,223 +1,165 @@
-import { motion } from "framer-motion"
-import { Link } from "react-router-dom"
+// src/pages/NotFound.jsx
+//
+// REDESIGN NOTES: every other route line in this app (Home.jsx hero,
+// AuthLeft.jsx, Dashboard.jsx) connects two real points — a trip that
+// exists. Here the line visibly trails off and breaks instead of
+// connecting anywhere, which is a small honest detail for "this road
+// doesn't exist" rather than reusing the same connected-path motif as a
+// page that worked. No logic to preserve — Link targets (/) and
+// window.history.back() are unchanged.
+
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { FaHome, FaArrowLeft } from "react-icons/fa";
+import { colors, fonts, surface } from "../styles/tokens";
 
 function NotFound({ darkMode }) {
+  const s = surface(darkMode);
 
   return (
-
     <div
       style={{
         minHeight: "100vh",
-        width: "100%",
-        overflow: "hidden",
-        position: "relative",
         display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
         flexDirection: "column",
-        background: darkMode
-          ? "linear-gradient(to bottom right, #020617, #050816)"
-          : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
-        fontFamily: "Inter, sans-serif",
+        alignItems: "center",
+        justifyContent: "center",
         padding: "40px",
+        background: s.bg,
+        fontFamily: fonts.body,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-
-      {/* BLUE GLOW */}
-      <div
-        style={{
-          position: "absolute",
-          width: "700px",
-          height: "700px",
-          borderRadius: "50%",
-          background: "#2563eb",
-          filter: "blur(180px)",
-          opacity: 0.12,
-          top: "-220px",
-          right: "-180px",
-        }}
-      />
-
-      {/* SECOND GLOW */}
-      <div
-        style={{
-          position: "absolute",
-          width: "500px",
-          height: "500px",
-          borderRadius: "50%",
-          background: "#60a5fa",
-          filter: "blur(150px)",
-          opacity: 0.08,
-          bottom: "-180px",
-          left: "-100px",
-        }}
-      />
-
-      {/* CONTENT */}
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 40,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.8,
-        }}
-        style={{
-          position: "relative",
-          zIndex: 5,
-          textAlign: "center",
-          maxWidth: "900px",
-        }}
+      {/* BROKEN ROUTE LINE — trails off and stops, unlike the connected
+          paths used elsewhere */}
+      <svg
+        viewBox="0 0 900 300"
+        preserveAspectRatio="none"
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: darkMode ? 0.16 : 0.1 }}
       >
-
-        {/* PSYDUCK */}
-        <motion.img
-          animate={{
-            y: [0, -12, 0],
-            rotate: [0, -2, 2, 0],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 4,
-          }}
-          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/54.png"
-          alt="psyduck"
-          style={{
-            width: "240px",
-            imageRendering: "pixelated",
-            marginBottom: "20px",
-            filter: "drop-shadow(0 0 40px rgba(37,99,235,0.4))",
-          }}
+        <path
+          d="M -40 220 C 200 220, 240 80, 420 100"
+          fill="none"
+          stroke={darkMode ? colors.goldSoft : colors.forest}
+          strokeWidth="2.5"
+          strokeDasharray="2 14"
+          strokeLinecap="round"
         />
+        {/* the break */}
+        <circle cx="420" cy="100" r="5" fill={colors.rust} />
+        <path
+          d="M 480 100 C 620 118, 680 240, 940 230"
+          fill="none"
+          stroke={darkMode ? colors.goldSoft : colors.forest}
+          strokeWidth="2.5"
+          strokeDasharray="2 14"
+          strokeLinecap="round"
+          opacity="0.4"
+        />
+      </svg>
 
-        {/* 404 */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        style={{ textAlign: "center", zIndex: 2 }}
+      >
+        <p
+          style={{
+            fontFamily: fonts.mono,
+            fontSize: "13px",
+            letterSpacing: "2.5px",
+            color: s.accent,
+            marginBottom: "10px",
+            textTransform: "uppercase",
+          }}
+        >
+          ROUTE NOT FOUND
+        </p>
+
         <h1
           style={{
-            fontSize: "150px",
+            fontFamily: fonts.display,
+            fontSize: "120px",
+            fontWeight: "600",
+            margin: 0,
             lineHeight: 1,
-            marginBottom: "20px",
-            fontWeight: "800",
-            background:
-              "linear-gradient(135deg, #3b82f6, #60a5fa)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
+            color: s.accent,
+            letterSpacing: "-2px",
           }}
         >
           404
         </h1>
 
-        {/* TITLE */}
         <h2
           style={{
-            color: darkMode ? "white" : "#0f172a",
-            fontSize: "52px",
-            marginBottom: "20px",
-            fontWeight: "700",
+            fontFamily: fonts.display,
+            color: s.text,
+            fontSize: "28px",
+            fontWeight: "600",
+            marginTop: "14px",
+            marginBottom: "12px",
           }}
         >
-          Psyduck got confused.
+          This road doesn't exist.
         </h2>
 
-        {/* DESC */}
-        <p
-          style={{
-            color: "#94a3b8",
-            fontSize: "22px",
-            lineHeight: 1.8,
-            maxWidth: "720px",
-            margin: "0 auto 45px",
-          }}
-        >
-          The page you’re looking for vanished somewhere
-          between Pallet Town and the Cosy servers.
+        <p style={{ color: s.textMuted, fontSize: "16px", marginBottom: "36px" }}>
+          The page you're looking for has been moved, removed, or never existed.
         </p>
 
-        {/* BUTTONS */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "22px",
-            flexWrap: "wrap",
-          }}
-        >
-
-          {/* HOME */}
-          <Link
-            to="/"
-            style={{
-              textDecoration: "none",
-            }}
-          >
-
+        <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
+          <Link to="/" style={{ textDecoration: "none" }}>
             <motion.button
-              whileHover={{
-                y: -4,
-                scale: 1.03,
-              }}
-              whileTap={{
-                scale: 0.96,
-              }}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.97 }}
               style={{
-                padding: "18px 34px",
-                borderRadius: "20px",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                padding: "14px 26px",
+                borderRadius: "12px",
                 border: "none",
-                background:
-                  "linear-gradient(135deg, #2563eb, #3b82f6)",
-                color: "white",
-                fontSize: "17px",
-                fontWeight: "600",
+                color: darkMode ? colors.ink : "#fff",
                 cursor: "pointer",
-                boxShadow:
-                  "0 0 50px rgba(37,99,235,0.4)",
+                background: darkMode
+                  ? `linear-gradient(135deg, ${colors.goldSoft}, ${colors.gold})`
+                  : `linear-gradient(135deg, ${colors.forest}, ${colors.forestDeep})`,
+                fontWeight: "700",
+                fontSize: "14.5px",
+                fontFamily: fonts.body,
               }}
             >
-              Back To Home
+              <FaHome size={14} /> Back to home
             </motion.button>
-
           </Link>
 
-          {/* GO BACK */}
           <motion.button
-            whileHover={{
-              y: -4,
-            }}
-            whileTap={{
-              scale: 0.96,
-            }}
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => window.history.back()}
             style={{
-              padding: "18px 34px",
-              borderRadius: "20px",
-              border:
-                darkMode
-                  ? "1px solid rgba(255,255,255,0.08)"
-                  : "1px solid rgba(15,23,42,0.08)",
-              background:
-                darkMode
-                  ? "rgba(255,255,255,0.04)"
-                  : "rgba(255,255,255,0.7)",
-              backdropFilter: "blur(20px)",
-              color: darkMode ? "white" : "#0f172a",
-              fontSize: "17px",
-              fontWeight: "600",
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "14px 26px",
+              borderRadius: "12px",
               cursor: "pointer",
+              fontWeight: "700",
+              fontSize: "14.5px",
+              fontFamily: fonts.body,
+              background: "transparent",
+              border: `1px solid ${s.line}`,
+              color: s.text,
             }}
           >
-            Go Back
+            <FaArrowLeft size={13} /> Go back
           </motion.button>
-
         </div>
-
       </motion.div>
-
     </div>
-
-  )
+  );
 }
 
-export default NotFound
+export default NotFound;

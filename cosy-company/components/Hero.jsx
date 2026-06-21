@@ -1,18 +1,44 @@
-import { motion } from "framer-motion"
-import { useNavigate } from "react-router-dom"
+// src/pages/Home.jsx
+//
+// The single CTA shown depends on the logged-in user's mode:
+// - Not logged in → shows both options (they haven't chosen yet)
+// - Driver mode    → only "Start a Ride" is shown
+// - Rider mode     → only "Book a Ride" is shown
+//
+// Mode is read from localStorage("userMode"), set by the Dashboard's
+// Rider/Driver toggle. This is a UI preference (not derived from backend
+// ownership like RideDetails) since Home is a landing page, not tied to
+// a specific ride.
 
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
   FaArrowRight,
   FaStar,
   FaUsers,
   FaCar,
-} from "react-icons/fa"
+} from "react-icons/fa";
 
-function Hero({ darkMode }) {
+function Home({ darkMode }) {
   const navigate = useNavigate();
+  const [mode, setMode] = useState(null); // null = not logged in / no mode chosen
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const savedMode = localStorage.getItem("userMode"); // "rider" | "driver"
+
+    setLoggedIn(!!token);
+    // Default to "rider" if logged in but no mode has been chosen yet,
+    // so the user always sees at least one clear CTA instead of none.
+    setMode(token ? (savedMode || "rider") : null);
+  }, []);
+
+  const showBookRide = !loggedIn || mode === "rider";
+  const showStartRide = !loggedIn || mode === "driver";
 
   return (
-
     <section
       style={{
         minHeight: "100vh",
@@ -22,271 +48,249 @@ function Hero({ darkMode }) {
         alignItems: "center",
         padding: "180px 80px 100px",
         background: darkMode
-  ? "linear-gradient(to bottom right, #020617, #050816)"
-  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
+          ? "linear-gradient(135deg,#0F1115,#171923)"
+          : "linear-gradient(135deg,#F5F1E8,#EAE3D2)",
       }}
     >
-
-      {/* FULLSCREEN IMAGE */}
+      {/* BMW IMAGE */}
       <img
-        src="/hero-car.webp"
-        alt="hero"
+        src="/BMW.jpg"
+        alt="Premium ride"
         style={{
           position: "absolute",
           inset: 0,
           width: "100%",
           height: "100%",
           objectFit: "cover",
-          opacity: 0.42,
+          opacity: 0.15,
           zIndex: 1,
         }}
       />
 
-      {/* DARK OVERLAY */}
+      {/* OVERLAY */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          
-           background: darkMode
-  ? "linear-gradient(to bottom right, #020617, #050816)"
-  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
+          background: darkMode ? "rgba(10,12,16,.82)" : "rgba(245,241,232,.84)",
           zIndex: 2,
         }}
       />
 
-      {/* BLUE GLOW */}
-      <div
+      {/* FLOATING GREEN GLOW */}
+      <motion.div
+        animate={{ y: [0, -30, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         style={{
           position: "absolute",
-          width: "700px",
-          height: "700px",
+          width: "800px",
+          height: "800px",
           borderRadius: "50%",
-          background: "#2563eb",
-          filter: "blur(180px)",
-          opacity: 0.18,
+          background: darkMode ? "#2D6A4F" : "#1F4D3A",
+          filter: "blur(220px)",
+          opacity: 0.12,
+          top: "-180px",
           right: "-250px",
-          top: "-120px",
+          zIndex: 2,
+        }}
+      />
+
+      {/* GOLD GLOW */}
+      <motion.div
+        animate={{ y: [0, 25, 0] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          position: "absolute",
+          width: "500px",
+          height: "500px",
+          borderRadius: "50%",
+          background: "#C9A96E",
+          filter: "blur(180px)",
+          opacity: 0.08,
+          left: "-100px",
+          bottom: "-100px",
           zIndex: 2,
         }}
       />
 
       {/* CONTENT */}
       <motion.div
-        initial={{ opacity: 0, y: 60 }}
+        initial={{ opacity: 0, y: 80 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        style={{
-          position: "relative",
-          zIndex: 5,
-          maxWidth: "760px",
-        }}
+        transition={{ duration: 1.1 }}
+        style={{ position: "relative", zIndex: 5, maxWidth: "760px" }}
       >
-
-        {/* TOP TAG */}
+        {/* TOP TAG — reflects current mode when logged in */}
         <div
           style={{
             display: "inline-flex",
             alignItems: "center",
             gap: "10px",
-            padding: "12px 20px",
+            padding: "14px 22px",
             borderRadius: "999px",
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            marginBottom: "30px",
-            backdropFilter: "blur(20px)",
+            background: darkMode ? "rgba(255,255,255,.05)" : "rgba(255,255,255,.65)",
+            border: darkMode
+              ? "1px solid rgba(255,255,255,.08)"
+              : "1px solid rgba(31,77,58,.12)",
+            backdropFilter: "blur(25px)",
+            marginBottom: "35px",
+            boxShadow: darkMode
+              ? "0 10px 40px rgba(0,0,0,.4)"
+              : "0 10px 40px rgba(31,77,58,.08)",
           }}
         >
-
-          <FaUsers color="#3b82f6" />
-
-          <span
-            style={{
-              color: darkMode ? "white" : "#0f172a",
-              fontSize: "15px",
-            }}
-          >
-            Smart rides. Better cities. Together.
+          <FaUsers color={darkMode ? "#D4AF37" : "#C9A96E"} />
+          <span style={{ color: darkMode ? "#fff" : "#1D1D1D", fontSize: "15px", fontWeight: "500" }}>
+            {!loggedIn && "Smart rides. Better cities. Together."}
+            {loggedIn && mode === "driver" && "Driver mode — start earning today."}
+            {loggedIn && mode === "rider" && "Rider mode — find your next ride."}
           </span>
-
         </div>
 
         {/* HEADING */}
         <h1
           style={{
-            fontSize: "92px",
+            fontSize: "96px",
             lineHeight: "1",
-            fontWeight: "700",
-            marginBottom: "30px",
-            color: darkMode ? "white" : "#0f172a",
+            fontWeight: "800",
+            letterSpacing: "-3px",
+            color: darkMode ? "#fff" : "#1D1D1D",
+            marginBottom: "35px",
           }}
         >
           Travel{" "}
-
-          <span style={{ color: "#2563eb" }}>
-            Together.
-          </span>
-
+          <span style={{ color: darkMode ? "#D4AF37" : "#1F4D3A" }}>Together.</span>
           <br />
-
           Arrive{" "}
-
-          <span style={{ color: "#2563eb" }}>
-            Better.
-          </span>
-
+          <span style={{ color: darkMode ? "#D4AF37" : "#1F4D3A" }}>Better.</span>
         </h1>
 
-        {/* SUBTEXT */}
+        {/* DESCRIPTION */}
         <p
           style={{
-            color: darkMode ? "white" : "#0f172a",
+            color: darkMode ? "#d1d5db" : "#444",
             fontSize: "22px",
-            lineHeight: "1.8",
+            lineHeight: "1.9",
             maxWidth: "680px",
           }}
         >
-          The Cosy Company connects you with verified
-          travelers going your way. Save money,
-          reduce traffic, and help build a greener tomorrow.
+          The Cosy Company connects you with verified travelers going your way.
+          Save money, reduce traffic, enjoy premium rides, and help build a greener tomorrow.
         </p>
 
-        {/* BUTTONS */}
-        <div
-        onClick={() => navigate("/search-rides")}
-          style={{
-            display: "flex",
-            gap: "22px",
-            marginTop: "45px",
-          }}
-        >
-
-          {/* PRIMARY BUTTON */}
-          <button
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "14px",
-              padding: "20px 38px",
-              borderRadius: "22px",
-              border: "none",
-              background: "#2563eb",
-              color: darkMode ? "white" : "#0f172a",
-              fontSize: "18px",
-              fontWeight: "600",
-              cursor: "pointer",
-              boxShadow: "0 0 50px rgba(37,99,235,0.45)",
-            }}
-          >
-            Book a Ride
-
-            <FaArrowRight />
-          </button>
-
-          {/* SECONDARY BUTTON */}
-          <button
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "14px",
-              padding: "20px 38px",
-              borderRadius: "22px",
-              background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              color: darkMode ? "white" : "#0f172a",
-              fontSize: "18px",
-              cursor: "pointer",
-              backdropFilter: "blur(20px)",
-            }}
-          >
-            Explore Routes
-
-            <FaCar />
-          </button>
-
-        </div>
-
-        {/* TRUSTED USERS */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "18px",
-            marginTop: "45px",
-          }}
-        >
-
-          {/* USERS */}
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-
-            {[1, 2, 3].map((item) => (
-
-              <img
-                key={item}
-                src={`https://i.pravatar.cc/100?img=${item + 10}`}
-                alt=""
-                style={{
-                  width: "52px",
-                  height: "52px",
-                  borderRadius: "50%",
-                  border: "3px solid #020617",
-                  marginLeft: "-10px",
-                }}
-              />
-
-            ))}
-
-          </div>
-
-          {/* REVIEW TEXT */}
-          <div>
-
-            <p
-              style={{
-                color: darkMode ? "white" : "#0f172a",
-                marginBottom: "6px",
-                fontSize: "17px",
-              }}
-            >
-              Trusted by 50,000+ commuters
-            </p>
-
-            <div
+        {/* BUTTONS — mode-aware, single CTA when logged in */}
+        <div style={{ display: "flex", gap: "24px", marginTop: "50px" }}>
+          {showBookRide && (
+            <motion.button
+              whileHover={{ scale: 1.04, y: -3 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => navigate("/search-rides")}
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "8px",
-                color: "#facc15",
+                gap: "14px",
+                padding: "20px 38px",
+                border: "none",
+                borderRadius: "18px",
+                cursor: "pointer",
+                fontSize: "18px",
+                fontWeight: "600",
+                color: "#fff",
+                background: "linear-gradient(135deg,#1F4D3A,#2D6A4F)",
+                boxShadow: "0 20px 50px rgba(31,77,58,.25)",
               }}
             >
+              Book a Ride
+              <FaArrowRight />
+            </motion.button>
+          )}
 
-              {[1, 2, 3, 4, 5].map((item) => (
-                <FaStar key={item} />
-              ))}
+          {showStartRide && (() => {
+            const isPrimary = loggedIn && mode === "driver";
 
-              <span
-                style={{
-                  color: darkMode ? "white" : "#0f172a",
-                  marginLeft: "6px",
-                }}
+            const startRideStyle = isPrimary
+              ? {
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "14px",
+                  padding: "20px 38px",
+                  border: "none",
+                  borderRadius: "18px",
+                  cursor: "pointer",
+                  fontSize: "18px",
+                  fontWeight: "600",
+                  color: "#fff",
+                  background: "linear-gradient(135deg,#1F4D3A,#2D6A4F)",
+                  boxShadow: "0 20px 50px rgba(31,77,58,.25)",
+                }
+              : {
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "14px",
+                  padding: "20px 38px",
+                  borderRadius: "18px",
+                  cursor: "pointer",
+                  fontSize: "18px",
+                  fontWeight: "600",
+                  color: darkMode ? "#fff" : "#1D1D1D",
+                  background: darkMode ? "rgba(255,255,255,.05)" : "rgba(255,255,255,.65)",
+                  border: darkMode
+                    ? "1px solid rgba(255,255,255,.08)"
+                    : "1px solid rgba(31,77,58,.15)",
+                  backdropFilter: "blur(30px)",
+                };
+
+            return (
+              <motion.button
+                whileHover={{ scale: 1.04, y: -3 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate("/driver-create-ride")}
+                style={startRideStyle}
               >
-                4.8 (2.3K reviews)
-              </span>
-
-            </div>
-
-          </div>
-
+                Start a Ride
+                <FaArrowRight />
+                <FaCar />
+              </motion.button>
+            );
+          })()}
         </div>
 
-      </motion.div>
+        {/* TRUST SECTION */}
+        <div style={{ display: "flex", alignItems: "center", gap: "20px", marginTop: "55px" }}>
+          <div style={{ display: "flex" }}>
+            {[11, 12, 13].map((imgId) => (
+              <img
+                key={imgId}
+                src={`https://i.pravatar.cc/100?img=${imgId}`}
+                alt=""
+                style={{
+                  width: "54px",
+                  height: "54px",
+                  borderRadius: "50%",
+                  border: `3px solid ${darkMode ? "#171923" : "#F5F1E8"}`,
+                  marginLeft: "-10px",
+                }}
+              />
+            ))}
+          </div>
 
+          <div>
+            <p style={{ color: darkMode ? "#fff" : "#1D1D1D", marginBottom: "8px", fontSize: "17px" }}>
+              Trusted by commuters across the city
+            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#D4AF37" }}>
+              {[1, 2, 3, 4, 5].map((s) => (
+                <FaStar key={s} />
+              ))}
+              <span style={{ color: darkMode ? "#fff" : "#1D1D1D", marginLeft: "5px" }}>
+                Verified ride-sharing platform
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
     </section>
-  )
+  );
 }
 
-export default Hero
+export default Home;

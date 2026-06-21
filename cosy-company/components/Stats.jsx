@@ -1,121 +1,83 @@
-import { motion } from "framer-motion"
-import {
-  FaUsers,
-  FaCar,
-  FaLeaf,
-  FaMapMarkedAlt,
-} from "react-icons/fa"
+// src/components/Stats.jsx
+//
+// REDESIGN NOTES: old version repeated the same glow-card pattern as
+// Features — four nearly-identical cards. Numbers like these are better as
+// a single continuous strip (like a manifest header / ticket counterfoil),
+// divided by hairline rules instead of four separate boxes. This also visually
+// echoes the hero's ticket motif instead of introducing a third unrelated
+// card style.
+
+import { motion } from "framer-motion";
+import { fonts, surface } from "../styles/tokens";
 
 function Stats({ darkMode }) {
+  const s = surface(darkMode);
 
   const stats = [
-    {
-      icon: <FaUsers />,
-      value: "50K+",
-      label: "Active Commuters",
-    },
-    {
-      icon: <FaCar />,
-      value: "120K+",
-      label: "Shared Rides",
-    },
-    {
-      icon: <FaLeaf />,
-      value: "80 Tons",
-      label: "CO₂ Saved",
-    },
-    {
-      icon: <FaMapMarkedAlt />,
-      value: "40+",
-      label: "Smart Routes",
-    },
-  ]
+    { value: "50K+", label: "Active commuters" },
+    { value: "120K+", label: "Shared rides completed" },
+    { value: "80 t", label: "CO\u2082 kept out of the air" },
+    { value: "40+", label: "Smart routes live" },
+  ];
 
   return (
-
     <section
       style={{
-        padding: "120px 80px",
-        position: "relative",
-        zIndex: 5,
+        padding: "0 80px 130px",
+        background: s.bg,
+        fontFamily: fonts.body,
       }}
     >
-
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6 }}
         style={{
+          maxWidth: "1100px",
+          margin: "0 auto",
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "30px",
+          border: `1px solid ${s.line}`,
+          borderRadius: "18px",
+          overflow: "hidden",
         }}
       >
-
         {stats.map((item, index) => (
-
-          <motion.div
-            key={index}
-            whileHover={{
-              y: -10,
-            }}
-            transition={{
-              duration: 0.3,
-            }}
+          <div
+            key={item.label}
             style={{
-              padding: "40px",
-              borderRadius: "28px",
-              background: darkMode
-  ? "linear-gradient(to bottom right, #020617, #050816)"
-  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              backdropFilter: "blur(20px)",
+              padding: "40px 32px",
+              borderRight: index < stats.length - 1 ? `1px solid ${s.line}` : "none",
+              background: s.bgSoft,
             }}
           >
-
-            <div
+            <h3
               style={{
-                width: "70px",
-                height: "70px",
-                borderRadius: "20px",
-                background: darkMode
-  ? "linear-gradient(to bottom right, #020617, #050816)"
-  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#3b82f6",
-                fontSize: "28px",
-                marginBottom: "25px",
-              }}
-            >
-              {item.icon}
-            </div>
-
-            <h1
-              style={{
-                color: darkMode ? "white" : "#0f172a",
-                fontSize: "42px",
+                fontFamily: fonts.display,
+                fontSize: "40px",
+                fontWeight: "600",
+                color: s.text,
                 marginBottom: "10px",
+                letterSpacing: "-0.5px",
               }}
             >
               {item.value}
-            </h1>
-
+            </h3>
             <p
               style={{
-                color: "#94a3b8",
-                fontSize: "17px",
+                color: s.textMuted,
+                fontSize: "14.5px",
+                lineHeight: "1.5",
               }}
             >
               {item.label}
             </p>
-
-          </motion.div>
-
+          </div>
         ))}
-
-      </div>
-
+      </motion.div>
     </section>
-  )
+  );
 }
 
-export default Stats
+export default Stats;

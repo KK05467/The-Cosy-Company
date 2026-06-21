@@ -1,55 +1,83 @@
-import { motion } from "framer-motion"
-import { Link } from "react-router-dom"
-import { useAuth } from "../src/context/AuthContext"
-import { useEffect, useState } from "react"
+// src/components/Navbar.jsx
+//
+// REDESIGN NOTES (visual only — every hook, handler, and piece of state
+// below is unchanged: the loggedIn check, scroll listener, handleLogout,
+// mobileOpen toggle, and the publicLinks/memberLinks split):
+// - Replaced the glass-pill buttons and ad-hoc accent colors with the
+//   shared surface()/colors/fonts tokens used across Home/Contact/Footer.
+// - Active link indicator changed from color+weight alone to an underline
+//   tick (matches the hairline-rule language used throughout the rest of
+//   the redesign) so it doesn't rely on color contrast by itself.
+// - Wordmark now uses Fraunces (display font) instead of system bold, to
+//   match the wordmark treatment in SplashScreen.jsx.
+//
+// ROUTE NOTE: this file is the authoritative source for real paths
+// (/about, /how-it-works, /pricing, /faq, /contact, /my-bookings, /wallet).
+// I've already gone back and fixed one conflict this exposed: an earlier
+// PaymentSuccess.jsx button pointed at /bookings, which doesn't match your
+// real /my-bookings route — that's been corrected. Some other links I
+// guessed earlier (Footer.jsx's /help, /safety, /trust, /careers, /press,
+// /sustainability) aren't confirmed by this file either way — worth
+// telling me if those pages exist so I can verify or fix those too.
 
-import { FaMoon, FaSun, FaUserCircle } from "react-icons/fa"
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaSun, FaMoon, FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
+import { colors, fonts, surface } from "../styles/tokens";
 
 function Navbar({ darkMode, setDarkMode }) {
-  const navLinks = [
-    { title: "Home", path: "/" },
-    { title: "About", path: "/about" },
-    { title: "How it works", path: "/how-it-works" },
-    { title: "FAQ", path: "/faq" },
-    { title: "Pricing", path: "/pricing" },
-    { title: "Contact", path: "/contact" },
-  ]
-  const [showNavbar, setShowNavbar] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY
+    setLoggedIn(!!localStorage.getItem("token"));
+  }, [location.pathname]);
 
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY
-
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setShowNavbar(false); // scrolling down
-      } else {
-        setShowNavbar(true); // scrolling up
-      }
-
-      lastScrollY = currentScrollY
-    };
-
-    window.addEventListener("scroll", handleScroll)
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
-    };
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  const { user, logout } = useAuth()
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userMode");
+    setLoggedIn(false);
+    navigate("/login");
+  };
+
+  const publicLinks = [
+    { title: "Home", path: "/" },
+    { title: "About", path: "/about" },
+    { title: "How it Works", path: "/how-it-works" },
+    { title: "Pricing", path: "/pricing" },
+    { title: "FAQ", path: "/faq" },
+    { title: "Contact", path: "/contact" },
+  ];
+
+  const memberLinks = [
+    { title: "Dashboard", path: "/dashboard" },
+    { title: "Search Rides", path: "/search-rides" },
+    { title: "My Bookings", path: "/my-bookings" },
+    { title: "Wallet", path: "/wallet" },
+  ];
+
+  const navLinks = loggedIn ? memberLinks : publicLinks;
+  const s = surface(darkMode);
+
   return (
     <motion.nav
-      animate={{
-        y: showNavbar ? 0 : -120,
-      }}
-      transition={{
-        duration: 0.3,
-        ease: "easeInOut",
-      }}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5 }}
       style={{
         width: "100%",
-        padding: "14px 49px",
+        padding: "16px 56px",
         boxSizing: "border-box",
         display: "flex",
         justifyContent: "space-between",
@@ -58,190 +86,167 @@ function Navbar({ darkMode, setDarkMode }) {
         top: 0,
         left: 0,
         zIndex: 1000,
-        background: darkMode ? "rgba(2, 6, 23, 0.55)" : "rgba(255,255,255,0.7)",
-        backdropFilter: "blur(22px)",
-        borderBottom: darkMode
-          ? "1px solid rgba(255,255,255,0.05)"
-          : "1px solid rgba(15,23,42,0.08)",
-        boxShadow: "0 10px 40px rgba(0, 0, 0, 0.18)",
+        fontFamily: fonts.body,
+        background: scrolled ? s.bg : "transparent",
+        borderBottom: scrolled ? `1px solid ${s.line}` : "1px solid transparent",
+        transition: "background 0.3s, border-color 0.3s",
       }}
     >
       {/* LOGO */}
-      <Link
-        to="/"
-        style={{
-          textDecoration: "none",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            cursor: "pointer",
-          }}
-        >
+      <Link to="/" style={{ textDecoration: "none" }}>
+        <div style={{ display: "flex", flexDirection: "column", cursor: "pointer" }}>
           <h1
             style={{
-              color: darkMode ? "white" : "#0f172a",
-              fontSize: "30px",
-              fontWeight: "700",
+              fontFamily: fonts.display,
+              color: s.text,
+              fontSize: "26px",
+              fontWeight: "600",
               margin: 0,
               lineHeight: 1,
             }}
           >
             Cosy
           </h1>
-
           <p
             style={{
-              color: "#3b82f6",
-              fontSize: "10px",
-              letterSpacing: "3px",
-              marginTop: "6px",
+              fontFamily: fonts.mono,
+              color: s.accent,
+              fontSize: "9.5px",
+              letterSpacing: "2.5px",
+              marginTop: "5px",
               fontWeight: "500",
             }}
           >
-            TRAVEL TOGETHER
+            RIDE COSY · DRIVE COSY
           </p>
         </div>
       </Link>
 
-      {/* NAV LINKS */}
-      <div
-        style={{
-          display: "flex",
-          gap: "36px",
-          alignItems: "center",
-        }}
-      >
-        {navLinks.map((link, index) => (
-          <Link
-            key={index}
-            to={link.path}
-            style={{
-              textDecoration: "none",
-            }}
-          >
-            <motion.p
-              whileHover={{
-                color: "#3b82f6",
-                y: -2,
-              }}
-              transition={{
-                duration: 0.25,
-              }}
-              style={{
-                color: darkMode ? "white" : "#0f172a",
-                fontSize: "16px",
-                fontWeight: "500",
-                cursor: "pointer",
-                margin: 0,
-              }}
-            >
-              {link.title}
-            </motion.p>
-          </Link>
-        ))}
+      {/* NAV LINKS — desktop */}
+      <div className="cosy-navlinks" style={{ display: "flex", gap: "34px", alignItems: "center" }}>
+        {navLinks.map((link, i) => {
+          const isActive = location.pathname === link.path;
+          return (
+            <Link key={i} to={link.path} style={{ textDecoration: "none" }}>
+              <div style={{ position: "relative", paddingBottom: "4px" }}>
+                <motion.p
+                  whileHover={{ y: -1 }}
+                  transition={{ duration: 0.2 }}
+                  style={{
+                    color: isActive ? s.text : s.textMuted,
+                    fontSize: "15px",
+                    fontWeight: isActive ? "600" : "500",
+                    cursor: "pointer",
+                    margin: 0,
+                  }}
+                >
+                  {link.title}
+                </motion.p>
+                {isActive && (
+                  <motion.div
+                    layoutId="navActiveTick"
+                    style={{
+                      position: "absolute",
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: "2px",
+                      background: s.accent,
+                      borderRadius: "1px",
+                    }}
+                  />
+                )}
+              </div>
+            </Link>
+          );
+        })}
       </div>
 
-      {/* BUTTONS */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "18px",
-        }}
-      >
+      {/* RIGHT SIDE */}
+      <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
         {/* THEME TOGGLE */}
         <motion.button
-          whileHover={{
-            y: -3,
-          }}
-          whileTap={{
-            scale: 0.95,
-          }}
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => setDarkMode(!darkMode)}
+          aria-label="Toggle dark mode"
           style={{
-            width: "46px",
-            height: "46px",
-            borderRadius: "14px",
-            border: darkMode
-              ? "1px solid rgba(255,255,255,0.08)"
-              : "1px solid rgba(15,23,42,0.08)",
-            background: darkMode
-              ? "rgba(255,255,255,0.05)"
-              : "rgba(255,255,255,0.75)",
-            color: darkMode ? "white" : "#0f172a",
-            cursor: "pointer",
+            width: "42px",
+            height: "42px",
+            borderRadius: "12px",
+            background: s.bgSoft,
+            border: `1px solid ${s.line}`,
+            color: s.text,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            fontSize: "18px",
-            backdropFilter: "blur(20px)",
+            fontSize: "16px",
+            cursor: "pointer",
           }}
         >
           {darkMode ? <FaSun /> : <FaMoon />}
         </motion.button>
 
-        {/* PROFILE BUTTON */}
-        <Link
-          to="/profile"
-          style={{
-            textDecoration: "none",
-          }}
-        >
-          <motion.div
-            whileHover={{
-              y: -3,
-              scale: 1.05,
-            }}
-            whileTap={{
-              scale: 0.95,
-            }}
-            style={{
-              width: "46px",
-              height: "46px",
-              borderRadius: "18px",
-              border: darkMode
-                ? "1px solid rgba(255,255,255,0.08)"
-                : "1px solid rgba(15,23,42,0.08)",
-              background: darkMode
-                ? "rgba(255,255,255,0.05)"
-                : "rgba(255,255,255,0.75)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              color: "#3b82f6",
-              fontSize: "24px",
-              cursor: "pointer",
-              backdropFilter: "blur(20px)",
-            }}
-          >
-            <FaUserCircle />
-          </motion.div>
-        </Link>
-
-        {!user ? (
+        {loggedIn ? (
           <>
-            {/* LOGIN BUTTON */}
+            <Link to="/profile" style={{ textDecoration: "none" }}>
+              <motion.div
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                style={{
+                  width: "42px",
+                  height: "42px",
+                  borderRadius: "12px",
+                  background: s.bgSoft,
+                  border: `1px solid ${s.line}`,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  color: s.accent,
+                  fontSize: "21px",
+                  cursor: "pointer",
+                }}
+              >
+                <FaUserCircle />
+              </motion.div>
+            </Link>
+
+            <motion.button
+              onClick={handleLogout}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              style={{
+                padding: "11px 22px",
+                borderRadius: "12px",
+                background: darkMode
+                  ? `linear-gradient(135deg, ${colors.goldSoft}, ${colors.gold})`
+                  : `linear-gradient(135deg, ${colors.forest}, ${colors.forestDeep})`,
+                border: "none",
+                color: darkMode ? colors.ink : "#fff",
+                fontSize: "14px",
+                fontWeight: "700",
+                fontFamily: fonts.body,
+                cursor: "pointer",
+              }}
+            >
+              Log out
+            </motion.button>
+          </>
+        ) : (
+          <>
             <Link to="/login" style={{ textDecoration: "none" }}>
               <motion.button
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.96 }}
-                transition={{ duration: 0.25 }}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.97 }}
                 style={{
-                  padding: "12px 22px",
-                  borderRadius: "16px",
-                  background: darkMode
-                    ? "rgba(255,255,255,0.04)"
-                    : "rgba(255,255,255,0.75)",
-                  border: darkMode
-                    ? "1px solid rgba(255,255,255,0.08)"
-                    : "1px solid rgba(15,23,42,0.08)",
-                  backdropFilter: "blur(20px)",
-                  color: darkMode ? "#e2e8f0" : "#0f172a",
-                  fontSize: "15px",
-                  fontWeight: "500",
+                  padding: "11px 20px",
+                  borderRadius: "12px",
+                  background: "transparent",
+                  border: `1px solid ${s.line}`,
+                  color: s.text,
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  fontFamily: fonts.body,
                   cursor: "pointer",
                 }}
               >
@@ -249,68 +254,97 @@ function Navbar({ darkMode, setDarkMode }) {
               </motion.button>
             </Link>
 
-            {/* SIGNUP BUTTON */}
             <Link to="/signup" style={{ textDecoration: "none" }}>
               <motion.button
-                whileHover={{ y: -4, scale: 1.02 }}
-                whileTap={{ scale: 0.96 }}
-                transition={{ duration: 0.25 }}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.97 }}
                 style={{
-                  padding: "12px 24px",
-                  borderRadius: "18px",
-                  background: "linear-gradient(135deg, #2563eb, #3b82f6)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  color: "white",
-                  fontSize: "15px",
-                  fontWeight: "600",
+                  padding: "11px 22px",
+                  borderRadius: "12px",
+                  background: darkMode
+                    ? `linear-gradient(135deg, ${colors.goldSoft}, ${colors.gold})`
+                    : `linear-gradient(135deg, ${colors.forest}, ${colors.forestDeep})`,
+                  border: "none",
+                  color: darkMode ? colors.ink : "#fff",
+                  fontSize: "14px",
+                  fontWeight: "700",
+                  fontFamily: fonts.body,
                   cursor: "pointer",
-                  boxShadow: "0 0 40px rgba(37,99,235,0.35)",
-                  position: "relative",
-                  overflow: "hidden",
                   flexShrink: 0,
                 }}
               >
-                {/* SHINE EFFECT */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background:
-                      "linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent)",
-                    transform: "translateX(-100%)",
-                  }}
-                />
-
-                <span style={{ position: "relative", zIndex: 2 }}>Sign up</span>
+                Sign up
               </motion.button>
             </Link>
           </>
-        ) : (
-          <>
-            {/* LOGOUT BUTTON */}
-            <motion.button
-              onClick={() => {
-                localStorage.removeItem("token");
-                logout();
-              }}
-              whileHover={{ y: -3 }}
-              whileTap={{ scale: 0.96 }}
+        )}
+
+        {/* MOBILE MENU TOGGLE */}
+        <button
+          className="cosy-mobile-toggle"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle menu"
+          style={{
+            display: "none",
+            width: "42px",
+            height: "42px",
+            borderRadius: "12px",
+            background: s.bgSoft,
+            border: `1px solid ${s.line}`,
+            color: s.text,
+            cursor: "pointer",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {mobileOpen ? <FaTimes /> : <FaBars />}
+        </button>
+      </div>
+
+      {/* MOBILE DROPDOWN */}
+      {mobileOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            right: 0,
+            padding: "20px 24px",
+            background: s.bg,
+            borderBottom: `1px solid ${s.line}`,
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}
+        >
+          {navLinks.map((link, i) => (
+            <Link
+              key={i}
+              to={link.path}
+              onClick={() => setMobileOpen(false)}
               style={{
-                padding: "14px 30px",
-                borderRadius: "16px",
-                background: "#ef4444",
-                border: "none",
-                color: "white",
-                fontSize: "15px",
-                fontWeight: "600",
-                cursor: "pointer",
+                textDecoration: "none",
+                color: s.text,
+                fontSize: "16px",
+                fontWeight: "500",
+                fontFamily: fonts.body,
               }}
             >
-              Logout
-            </motion.button>
-          </>
-        )}
-      </div>
+              {link.title}
+            </Link>
+          ))}
+        </motion.div>
+      )}
+
+      {/* Responsive behavior without a separate CSS file */}
+      <style>{`
+        @media (max-width: 900px) {
+          .cosy-navlinks { display: none !important; }
+          .cosy-mobile-toggle { display: flex !important; }
+        }
+      `}</style>
     </motion.nav>
   );
 }

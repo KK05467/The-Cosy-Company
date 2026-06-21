@@ -1,98 +1,99 @@
-import { motion } from "framer-motion"
+// src/components/Testimonial.jsx
+//
+// REDESIGN NOTES: old version was another glow-card with a giant quote —
+// same visual family as the broken stats/features cards, just bigger. New
+// version reuses the hero's perforated-ticket motif (a quote "torn off" the
+// ticket stub) so the page has one recurring signature element instead of
+// three different card treatments stacked on top of each other.
+
+import { motion } from "framer-motion";
+import { fonts, surface } from "../styles/tokens";
 
 function Testimonial({ darkMode }) {
+  const s = surface(darkMode);
 
   return (
-
-    <section
-      style={{
-        padding: "120px 80px",
-      }}
-    >
-
+    <section style={{ padding: "0 80px 130px", background: s.bg, fontFamily: fonts.body }}>
       <motion.div
-        whileHover={{
-          scale: 1.01,
-        }}
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6 }}
         style={{
-          padding: "70px",
-          borderRadius: "40px",
-         background: darkMode
-  ? "linear-gradient(to bottom right, #020617, #050816)"
-  : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          backdropFilter: "blur(20px)",
+          maxWidth: "1100px",
+          margin: "0 auto",
+          display: "flex",
+          background: s.bgSoft,
+          border: `1px solid ${s.line}`,
+          borderRadius: "20px",
+          overflow: "hidden",
         }}
       >
-
-        <p
-          style={{
-            color: "#3b82f6",
-            letterSpacing: "3px",
-            marginBottom: "30px",
-          }}
-        >
-          TESTIMONIAL
-        </p>
-
-        <h1
-          style={{
-            color: darkMode ? "white" : "#0f172a",
-            fontSize: "52px",
-            lineHeight: "1.4",
-            maxWidth: "1000px",
-            marginBottom: "40px",
-          }}
-        >
-          “Cosy completely changed my daily commute.
-          Affordable, comfortable, and incredibly smooth.”
-        </h1>
-
+        {/* LEFT STUB — rider identity, mirrors hero ticket's left stub */}
         <div
           style={{
+            flex: "0 0 240px",
+            padding: "44px 36px",
             display: "flex",
-            alignItems: "center",
-            gap: "18px",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            borderRight: `1px solid ${s.line}`,
           }}
         >
-
-          <img
-            src="https://i.pravatar.cc/100?img=15"
-            alt=""
-            style={{
-              width: "70px",
-              height: "70px",
-              borderRadius: "50%",
-            }}
-          />
-
           <div>
-
-            <h3
-              style={{
-                color: darkMode ? "white" : "#0f172a",
-                marginBottom: "6px",
-              }}
-            >
-              Aryan Sharma
-            </h3>
-
             <p
               style={{
-                color: "#94a3b8",
+                fontFamily: fonts.mono,
+                fontSize: "11px",
+                letterSpacing: "1.5px",
+                color: s.textMuted,
+                textTransform: "uppercase",
+                marginBottom: "18px",
               }}
             >
-              Product Designer
+              Rider since 2024
             </p>
-
+            <img
+              src="https://i.pravatar.cc/100?img=15"
+              alt=""
+              style={{
+                width: "58px",
+                height: "58px",
+                borderRadius: "50%",
+                marginBottom: "16px",
+              }}
+            />
+            <h4 style={{ color: s.text, fontSize: "17px", fontWeight: "600", marginBottom: "4px" }}>
+              Aryan Sharma
+            </h4>
+            <p style={{ color: s.textMuted, fontSize: "14px" }}>Product Designer</p>
           </div>
 
+          <p style={{ fontFamily: fonts.mono, fontSize: "12px", color: s.textMuted }}>
+            ROUTE: HSR → KORAMANGALA
+          </p>
         </div>
 
+        {/* RIGHT — the quote itself */}
+        <div style={{ flex: "1 1 auto", padding: "52px 56px", display: "flex", alignItems: "center" }}>
+          <p
+            style={{
+              fontFamily: fonts.display,
+              fontSize: "32px",
+              lineHeight: "1.45",
+              fontWeight: "500",
+              color: s.text,
+              letterSpacing: "-0.3px",
+            }}
+          >
+            Cosy turned my worst part of the day into the easiest. I split
+            the cost with someone going the exact same way, every morning —
+            it just makes sense.
+          </p>
+        </div>
       </motion.div>
-
     </section>
-  )
+  );
 }
 
-export default Testimonial
+export default Testimonial;

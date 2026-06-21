@@ -1,218 +1,248 @@
-import { useState } from "react"
-import { motion } from "framer-motion"
-import OtpTimer from "../components/OtpTimer"
+// src/pages/ResetPassword.jsx
+//
+// REDESIGN NOTES:
+// - Replaced the blue glass card with the flat paper/ink ticket surface and
+//   a hairline perforation between the "send OTP" stage and the "reset"
+//   stage — same visual idea as Home's ticket toggle, applied to a 2-step
+//   form instead of a mode switch.
+// - Buttons now use the accent color (gold in dark mode, forest in light)
+//   instead of leftover blue, so this page matches the rest of the system.
+// - Message text color reflects success vs error (previously always blue,
+//   even for error states like "Email required").
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import OtpTimer from "../components/OtpTimer";
+import { colors, fonts, surface } from "../styles/tokens";
 
 export default function ResetPassword({ darkMode }) {
-  const [form, setForm] = useState({
-    email: "",
-    otp: "",
-    newPassword: "",
-  })
+  const s = surface(darkMode);
 
-  const [expiresAt, setExpiresAt] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState("")
-  
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+  const [form, setForm] = useState({ email: "", otp: "", newPassword: "" });
+  const [expiresAt, setExpiresAt] = useState(null);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const sendOtp = async () => {
-    try {
-      setLoading(true)
-      setMessage("")
-
-      const res = await fetch(
-        "http://localhost:5000/api/auth/forgot-password",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: form.email }),
-        }
-      )
-
-      const data = await res.json()
-
-      if (!res.ok) throw new Error(data.message)
-
-      setExpiresAt(data.expiresAt)
-      setMessage("OTP sent successfully ✔")
-    } catch (err) {
-      setMessage(err.message)
-    } finally {
-      setLoading(false)
+    if (!form.email) {
+      setIsError(true);
+      return setMessage("Email required");
     }
-  }
+
+    try {
+      setOtpLoading(true);
+      setMessage("");
+
+      const res = await fetch("http://localhost:5000/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: form.email }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      setExpiresAt(data.expiresAt);
+      setIsError(false);
+      setMessage("OTP sent successfully");
+    } catch (err) {
+      setIsError(true);
+      setMessage(err.message);
+    } finally {
+      setOtpLoading(false);
+    }
+  };
 
   const resetPassword = async () => {
+    if (!form.email) { setIsError(true); return setMessage("Email required"); }
+    if (!form.otp) { setIsError(true); return setMessage("OTP required"); }
+    if (!form.newPassword) { setIsError(true); return setMessage("Password required"); }
+
     try {
-      setLoading(true)
-      setMessage("")
+      setResetLoading(true);
+      setMessage("");
 
-      const res = await fetch(
-        "http://localhost:5000/api/auth/reset-password",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-        }
-      )
+      const res = await fetch("http://localhost:5000/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-      const data = await res.json()
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
 
-      if (!res.ok) throw new Error(data.message)
-
-      setMessage("Password reset successful ✔")
+      setIsError(false);
+      setMessage("Password reset successful");
     } catch (err) {
-      setMessage(err.message)
+      setIsError(true);
+      setMessage(err.message);
     } finally {
-      setLoading(false)
+      setResetLoading(false);
     }
-  }
+  };
+
+  const inputStyle = {
+    width: "100%",
+    padding: "15px 16px",
+    borderRadius: "12px",
+    marginBottom: "12px",
+    background: darkMode ? colors.inkDark : "#fff",
+    border: `1px solid ${s.line}`,
+    color: s.text,
+    outline: "none",
+    fontSize: "14.5px",
+    fontFamily: fonts.body,
+    boxSizing: "border-box",
+  };
+
+  const primaryBtn = (loading) => ({
+    width: "100%",
+    padding: "15px",
+    borderRadius: "12px",
+    border: "none",
+    background: loading ? s.line : (darkMode ? colors.goldSoft : colors.forest),
+    color: darkMode ? colors.ink : "#fff",
+    fontWeight: "600",
+    fontSize: "14.5px",
+    cursor: loading ? "default" : "pointer",
+  });
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 60 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.8 }}
-      style={wrapper(darkMode)}
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "30px",
+        background: s.bg,
+        fontFamily: fonts.body,
+      }}
     >
-      <div style={card}>
-        <h1 style={title}>Reset Password</h1>
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        style={{
+          width: "100%",
+          maxWidth: "460px",
+          borderRadius: "20px",
+          background: s.bgSoft,
+          border: `1px solid ${s.line}`,
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ padding: "40px 38px 30px" }}>
+          <p
+            style={{
+              fontFamily: fonts.mono,
+              color: s.accent,
+              letterSpacing: "2.5px",
+              fontSize: "11px",
+              textTransform: "uppercase",
+              marginBottom: "14px",
+            }}
+          >
+            ACCOUNT RECOVERY
+          </p>
+          <h1
+            style={{
+              fontFamily: fonts.display,
+              color: s.text,
+              fontSize: "32px",
+              fontWeight: "600",
+              marginBottom: "8px",
+            }}
+          >
+            Reset your password
+          </h1>
+          <p style={{ color: s.textMuted, fontSize: "14px" }}>
+            We'll send a one-time code to verify it's you.
+          </p>
+        </div>
 
-        <p style={subtitle}>
-          Verify OTP and set new password
-        </p>
+        {/* STEP 1 — email + send OTP */}
+        <div style={{ padding: "0 38px 28px" }}>
+          <input
+            name="email"
+            placeholder="Email Address"
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={sendOtp}
+            disabled={otpLoading}
+            style={primaryBtn(otpLoading)}
+          >
+            {otpLoading ? "Sending..." : "Send OTP"}
+          </motion.button>
 
-        {/* EMAIL */}
-        <input
-          name="email"
-          placeholder="Email Address"
-          onChange={handleChange}
-          style={input(darkMode)}
-        />
+          {expiresAt && (
+            <div style={{ marginTop: "14px" }}>
+              <OtpTimer expiryTime={expiresAt} />
+            </div>
+          )}
+        </div>
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={sendOtp}
-          style={btnPrimary}
-        >
-          {loading ? "Sending..." : "Send OTP"}
-        </motion.button>
+        {/* PERFORATION DIVIDER */}
+        <div style={{ position: "relative", height: "1px", background: s.line, margin: "0 38px" }}>
+          <div style={{ position: "absolute", top: "-9px", left: "-47px", width: "18px", height: "18px", borderRadius: "50%", background: s.bg }} />
+          <div style={{ position: "absolute", top: "-9px", right: "-47px", width: "18px", height: "18px", borderRadius: "50%", background: s.bg }} />
+        </div>
 
-        {/* TIMER */}
-        {expiresAt && <OtpTimer expiryTime={expiresAt} />}
-  
+        {/* STEP 2 — otp + new password */}
+        <div style={{ padding: "28px 38px 38px" }}>
+          <p
+            style={{
+              fontFamily: fonts.mono,
+              color: s.textMuted,
+              letterSpacing: "1.5px",
+              fontSize: "10px",
+              textTransform: "uppercase",
+              marginBottom: "16px",
+            }}
+          >
+            Verify &amp; reset
+          </p>
 
-        {/* OTP */}
-        <input
-          name="otp"
-          placeholder="Enter OTP"
-          onChange={handleChange}
-          style={input(darkMode)}
-        />
+          <input name="otp" placeholder="Enter OTP" onChange={handleChange} style={inputStyle} />
+          <input
+            name="newPassword"
+            type="password"
+            placeholder="New Password"
+            onChange={handleChange}
+            style={{ ...inputStyle, marginBottom: "20px" }}
+          />
 
-        {/* NEW PASSWORD */}
-        <input
-          name="newPassword"
-          type="password"
-          placeholder="New Password"
-          onChange={handleChange}
-          style={input(darkMode)}
-        />
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={resetPassword}
+            disabled={resetLoading}
+            style={primaryBtn(resetLoading)}
+          >
+            {resetLoading ? "Processing..." : "Reset Password"}
+          </motion.button>
 
-        {/* RESET BUTTON */}
-        <motion.button
-          whileHover={{ scale: 1.02, y: -2 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={resetPassword}
-          style={btnSecondary}
-        >
-          Reset Password
-        </motion.button>
-
-        {/* MESSAGE */}
-        {message && (
-          <p style={msg}>{message}</p>
-        )}
-      </div>
-    </motion.div>
-  )
-}
-
-/* ================= COSY STYLES ================= */
-
-const wrapper = (darkMode) => ({
-  minHeight: "100vh",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  padding: "30px",
-  background: darkMode
-    ? "linear-gradient(to bottom right, #020617, #050816)"
-    : "linear-gradient(to bottom right, #f8fafc, #e2e8f0)",
-})
-
-const card = {
-  width: "100%",
-  maxWidth: "460px",
-  padding: "36px",
-  borderRadius: "24px",
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  backdropFilter: "blur(20px)",
-  boxShadow: "0 0 60px rgba(37,99,235,0.08)",
-}
-
-const title = {
-  color: "white",
-  fontSize: "34px",
-  marginBottom: "10px",
-}
-
-const subtitle = {
-  color: "#94a3b8",
-  fontSize: "14px",
-  marginBottom: "20px",
-}
-
-const input = (darkMode) => ({
-  width: "100%",
-  padding: "14px",
-  borderRadius: "14px",
-  marginBottom: "12px",
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  color: darkMode ? "white" : "#0f172a",
-  outline: "none",
-})
-
-const btnPrimary = {
-  width: "100%",
-  padding: "14px",
-  borderRadius: "14px",
-  border: "none",
-  marginBottom: "10px",
-  background: "linear-gradient(135deg, #2563eb, #3b82f6)",
-  color: "white",
-  fontWeight: "600",
-  cursor: "pointer",
-}
-
-const btnSecondary = {
-  width: "100%",
-  padding: "14px",
-  borderRadius: "14px",
-  border: "1px solid rgba(255,255,255,0.1)",
-  background: "rgba(255,255,255,0.04)",
-  color: "white",
-  fontWeight: "600",
-  cursor: "pointer",
-}
-
-const msg = {
-  marginTop: "12px",
-  color: "#3b82f6",
-  fontSize: "13px",
+          {message && (
+            <p
+              style={{
+                marginTop: "16px",
+                fontSize: "13px",
+                color: isError ? colors.rust : s.accent,
+              }}
+            >
+              {message}
+            </p>
+          )}
+        </div>
+      </motion.div>
+    </div>
+  );
 }

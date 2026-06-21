@@ -1,396 +1,340 @@
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { useLocation } from "react-router-dom"
-import {
-  FaWallet,
-  FaMoneyBillWave,
-  FaGooglePay,
-} from "react-icons/fa"
+// src/pages/PaymentSuccess.jsx
+//
+// CHANGE NOTE: the original version only rendered a static success message.
+// It never read the bookingId/amount passed via navigate("/payments", { state: {...} })
+// from Bookings.jsx, and never told the backend the booking was paid — so a
+// booking's status would stay "confirmed" forever even after this page showed
+// "Payment Successful."
+//
+// ASSUMPTION I HAD TO MAKE (please verify/adjust):
+//   - Endpoint: PATCH /api/bookings/mark-paid/:id
+//   - Body: { } (none needed) — adjust if your backend expects e.g. { amount, paymentId }
+// If your real endpoint is named differently, change MARK_PAID_ENDPOINT below.
 
-function Payment({ darkMode }) {
-  const [method, setMethod] = useState("wallet")
-  const location = useLocation()
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-  const walletBalance = 1250
-  const fare = 450
-  const platformFee = 49
-  const total = fare + platformFee
-   const {
-    bookingId,
-    amount,
-    from,
-    to,
-    driver,
-  } = location.state || {}
+const API_BASE = import.meta.env?.VITE_API_URL || "http://localhost:5000";
 
-  if (!location.state) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          color: darkMode ? "white" : "#0f172a",
-        }}
-      >
-        No booking selected.
-      </div>
-    )
-  }
+function PaymentSuccess({ darkMode }) {
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  const bookingId = location.state?.bookingId;
+  const amount = location.state?.amount;
 
-  const handlePayment = () => {
-    if (method === "wallet") {
-      alert("Wallet Payment Successful ✅")
+  const [status, setStatus] = useState(bookingId ? "confirming" : "missing-state");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    // CHANGE: if someone lands here directly (refresh, back button, bookmarked
+    // link) without bookingId in state, don't pretend payment succeeded.
+    if (!bookingId) {
+      setStatus("missing-state");
+      return;
     }
 
-    if (method === "upi") {
-      alert("Redirecting to UPI Payment ✅")
-    }
+    let cancelled = false;
 
-    if (method === "cash") {
-      alert("Ride Booked - Pay Driver in Cash ✅")
-    }
-  }
+    const markPaid = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          if (!cancelled) {
+            setStatus("error");
+            setErrorMsg("You're not logged in. Please log in again.");
+          }
+          return;
+        }
+
+        const res = await fetch(`${API_BASE}/api/bookings/mark-paid/${bookingId}`, {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        let data;
+        try {
+          data = await res.json();
+        } catch {
+          data = null;
+        }
+
+        if (cancelled) return;
+
+        if (res.ok && (data?.success ?? true)) {
+          setStatus("success");
+        } else {
+          setStatus("error");
+          setErrorMsg(data?.message || `Could not confirm payment (status ${res.status}).`);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error(err);
+          setStatus("error");
+          setErrorMsg("Could not reach the server to confirm payment.");
+        }
+      }
+    };
+
+    markPaid();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [bookingId]);
+
+  const isLoading = status === "confirming";
+  const isError = status === "error" || status === "missing-state";
 
   return (
-    
     <div
       style={{
         minHeight: "100vh",
-        paddingTop: "140px",
-        paddingBottom: "50px",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        padding: "40px",
+        fontFamily: "Inter, sans-serif",
         background: darkMode
-          ? "linear-gradient(to bottom right,#020617,#050816)"
-          : "linear-gradient(to bottom right,#f8fafc,#e2e8f0)",
+          ? "linear-gradient(135deg,#0F1115,#171923)"
+          : "linear-gradient(135deg,#F5F1E8,#EAE3D2)",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 30,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.6,
-        }}
-        style={{
-          width: "100%",
-          maxWidth: "950px",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "30px",
-          padding: "30px",
-        }}
-      >
-        {/* PAYMENT METHODS */}
-        <div
-          style={{
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            backdropFilter: "blur(20px)",
-            borderRadius: "24px",
-            padding: "30px",
-          }}
-        >
-          <h1
-            style={{
-              color: darkMode ? "white" : "#0f172a",
-              marginBottom: "10px",
-            }}
-          >
-            Payment Method
-          </h1>
-
-          <p
-            style={{
-              color: "#94a3b8",
-              marginBottom: "30px",
-            }}
-          >
-            Choose how you want to pay.
-          </p>
-
-          {/* WALLET */}
-          <PaymentOption
-            active={method === "wallet"}
-            onClick={() => setMethod("wallet")}
-            icon={<FaWallet />}
-            title="Wallet"
-            subtitle={`Available Balance ₹${walletBalance}`}
-          />
-
-          {/* UPI */}
-          <PaymentOption
-            active={method === "upi"}
-            onClick={() => setMethod("upi")}
-            icon={<FaGooglePay />}
-            title="UPI Payment"
-            subtitle="Google Pay • PhonePe • Paytm"
-          />
-
-          {/* CASH */}
-          <PaymentOption
-            active={method === "cash"}
-            onClick={() => setMethod("cash")}
-            icon={<FaMoneyBillWave />}
-            title="Cash"
-            subtitle="Pay directly to driver"
-          />
-
-          {method === "upi" && (
-            <div
-              style={{
-                marginTop: "25px",
-              }}
-            >
-              <label
-                style={{
-                  color: "#cbd5e1",
-                  display: "block",
-                  marginBottom: "10px",
-                }}
-              >
-                UPI ID
-              </label>
-
-              <input
-                placeholder="example@oksbi"
-                style={{
-                  width: "100%",
-                  padding: "14px",
-                  borderRadius: "14px",
-                  border:
-                    "1px solid rgba(255,255,255,0.08)",
-                  background:
-                    "rgba(255,255,255,0.04)",
-                  color: "white",
-                  outline: "none",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
-          )}
-
-          <motion.button
-            whileHover={{
-              scale: 1.02,
-            }}
-            whileTap={{
-              scale: 0.98,
-            }}
-            onClick={handlePayment}
-            style={{
-              width: "100%",
-              marginTop: "30px",
-              padding: "16px",
-              borderRadius: "16px",
-              border: "none",
-              cursor: "pointer",
-              color: "white",
-              fontWeight: "600",
-              fontSize: "16px",
-              background:
-                "linear-gradient(135deg,#2563eb,#3b82f6)",
-              boxShadow:
-                "0 0 30px rgba(37,99,235,0.35)",
-            }}
-          >
-            Confirm Payment
-          </motion.button>
-        </div>
-
-        {/* RIDE SUMMARY */}
-        <div
-          style={{
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            backdropFilter: "blur(20px)",
-            borderRadius: "24px",
-            padding: "30px",
-          }}
-        >
-          <h2
-            style={{
-              color: darkMode ? "white" : "#0f172a",
-              marginBottom: "25px",
-            }}
-          >
-            Ride Summary
-          </h2>
-
-          <Summary
-            title="From"
-            value="Bhubaneswar"
-          />
-
-          <Summary
-            title="To"
-            value="Cuttack"
-          />
-
-          <Summary
-            title="Passengers"
-            value="2"
-          />
-
-          <Summary
-            title="Ride Fare"
-            value={`₹${fare}`}
-          />
-
-          <Summary
-            title="Platform Fee"
-            value={`₹${platformFee}`}
-          />
-
-          <hr
-            style={{
-              border: "none",
-              borderTop:
-                "1px solid rgba(255,255,255,0.08)",
-              margin: "20px 0",
-            }}
-          />
-
-          <Summary
-            title="Total"
-            value={`₹${total}`}
-            bold
-          />
-
-          <div
-            style={{
-              marginTop: "30px",
-              padding: "20px",
-              borderRadius: "18px",
-              background:
-                "rgba(37,99,235,0.1)",
-              border:
-                "1px solid rgba(37,99,235,0.2)",
-            }}
-          >
-            <p
-              style={{
-                color: "#93c5fd",
-                margin: 0,
-                lineHeight: 1.7,
-              }}
-            >
-              Wallet payments are instant.
-              <br />
-              UPI supports all major apps.
-              <br />
-              Cash can be paid directly to
-              the driver.
-            </p>
-          </div>
-        </div>
-      </motion.div>
-    </div>
-  )
-}
-
-function PaymentOption({
-  active,
-  onClick,
-  icon,
-  title,
-  subtitle,
-}) {
-  return (
-    <motion.div
-      whileHover={{
-        y: -2,
-      }}
-      onClick={onClick}
-      style={{
-        display: "flex",
-        gap: "16px",
-        alignItems: "center",
-        padding: "18px",
-        marginBottom: "15px",
-        borderRadius: "18px",
-        cursor: "pointer",
-        border: active
-          ? "1px solid #3b82f6"
-          : "1px solid rgba(255,255,255,0.08)",
-        background: active
-          ? "rgba(37,99,235,0.15)"
-          : "rgba(255,255,255,0.03)",
-      }}
-    >
+      {/* GLOW */}
       <div
         style={{
-          color: "#3b82f6",
-          fontSize: "28px",
+          position: "absolute",
+          width: "520px",
+          height: "520px",
+          borderRadius: "50%",
+          background: isError ? "#B0413E" : darkMode ? "#D4AF37" : "#2D6A4F",
+          filter: "blur(160px)",
+          opacity: 0.14,
+          top: "-120px",
+          right: "-120px",
         }}
-      >
-        {icon}
-      </div>
+      />
 
-      <div>
-        <h3
-          style={{
-            color: "white",
-            margin: 0,
-          }}
-        >
-          {title}
-        </h3>
-
-        <p
-          style={{
-            color: "#94a3b8",
-            margin: "5px 0 0",
-            fontSize: "14px",
-          }}
-        >
-          {subtitle}
-        </p>
-      </div>
-    </motion.div>
-  )
-}
-
-function Summary({
-  title,
-  value,
-  bold,
-}) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        marginBottom: "15px",
-      }}
-    >
-      <span
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9 }}
         style={{
-          color: "#94a3b8",
+          width: "100%",
+          maxWidth: "620px",
+          padding: "60px",
+          borderRadius: "34px",
+          textAlign: "center",
+          background: darkMode
+            ? "rgba(23,25,35,0.72)"
+            : "rgba(255,255,255,0.65)",
+          border: darkMode
+            ? "1px solid rgba(212,175,55,0.14)"
+            : "1px solid rgba(31,77,58,0.14)",
+          backdropFilter: "blur(25px)",
+          boxShadow: darkMode
+            ? "0 30px 90px rgba(0,0,0,0.55)"
+            : "0 30px 90px rgba(31,77,58,0.12)",
         }}
       >
-        {title}
-      </span>
+        {isLoading && (
+          <>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              style={{
+                width: "64px",
+                height: "64px",
+                borderRadius: "50%",
+                border: darkMode
+                  ? "4px solid rgba(212,175,55,0.2)"
+                  : "4px solid rgba(31,77,58,0.2)",
+                borderTopColor: darkMode ? "#D4AF37" : "#1F4D3A",
+                margin: "0 auto 30px",
+              }}
+            />
+            <h1
+              style={{
+                color: darkMode ? "#F5F5F5" : "#1D1D1D",
+                fontSize: "32px",
+                fontWeight: "800",
+                marginBottom: "10px",
+              }}
+            >
+              Confirming your payment...
+            </h1>
+            <p style={{ color: darkMode ? "#A1A1AA" : "#4B5563", fontSize: "15px" }}>
+              Please don't close this page.
+            </p>
+          </>
+        )}
 
-      <span
-        style={{
-          color: "white",
-          fontWeight: bold ? "700" : "500",
-        }}
-      >
-        {value}
-      </span>
+        {status === "success" && (
+          <>
+            <motion.div
+              initial={{ scale: 0.6, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.1 }}
+            >
+              <FaCheckCircle
+                style={{
+                  color: darkMode ? "#D4AF37" : "#1F4D3A",
+                  fontSize: "110px",
+                  marginBottom: "26px",
+                  filter: darkMode
+                    ? "drop-shadow(0 0 25px rgba(212,175,55,0.35))"
+                    : "drop-shadow(0 0 25px rgba(31,77,58,0.25))",
+                }}
+              />
+            </motion.div>
+
+            <h1
+              style={{
+                color: darkMode ? "#F5F5F5" : "#1D1D1D",
+                fontSize: "52px",
+                marginBottom: "14px",
+                fontWeight: "800",
+              }}
+            >
+              Payment Successful
+            </h1>
+
+            <p
+              style={{
+                color: darkMode ? "#A1A1AA" : "#4B5563",
+                fontSize: "16px",
+                lineHeight: "1.8",
+                marginBottom: "8px",
+              }}
+            >
+              Your ride has been booked successfully. Sit back and enjoy your journey with Cosy.
+            </p>
+
+            {amount && (
+              <p
+                style={{
+                  color: darkMode ? "#D4AF37" : "#1F4D3A",
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  marginBottom: "30px",
+                }}
+              >
+                ₹{amount} paid
+              </p>
+            )}
+
+            <Link to="/dashboard" style={{ textDecoration: "none" }}>
+              <motion.button
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                style={{
+                  padding: "16px 34px",
+                  borderRadius: "16px",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  marginTop: "20px",
+                  background: darkMode
+                    ? "linear-gradient(135deg,#D4AF37,#A8892F)"
+                    : "linear-gradient(135deg,#1F4D3A,#2D6A4F)",
+                  color: "#fff",
+                  boxShadow: darkMode
+                    ? "0 10px 40px rgba(212,175,55,0.25)"
+                    : "0 10px 40px rgba(31,77,58,0.25)",
+                }}
+              >
+                Go To Dashboard
+              </motion.button>
+            </Link>
+          </>
+        )}
+
+        {isError && (
+          <>
+            <FaExclamationCircle
+              style={{
+                color: "#B0413E",
+                fontSize: "90px",
+                marginBottom: "26px",
+              }}
+            />
+            <h1
+              style={{
+                color: darkMode ? "#F5F5F5" : "#1D1D1D",
+                fontSize: "36px",
+                marginBottom: "14px",
+                fontWeight: "800",
+              }}
+            >
+              {status === "missing-state" ? "Nothing to confirm" : "Payment Confirmation Failed"}
+            </h1>
+            <p
+              style={{
+                color: darkMode ? "#A1A1AA" : "#4B5563",
+                fontSize: "15px",
+                lineHeight: "1.8",
+                marginBottom: "30px",
+              }}
+            >
+              {status === "missing-state"
+                ? "We couldn't find a booking to confirm. If you just paid, please check your bookings page — your payment may still have gone through."
+                : errorMsg}
+            </p>
+
+            <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
+              <motion.button
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate("/bookings")}
+                style={{
+                  padding: "14px 28px",
+                  borderRadius: "14px",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "15px",
+                  fontWeight: "600",
+                  background: darkMode
+                    ? "linear-gradient(135deg,#D4AF37,#A8892F)"
+                    : "linear-gradient(135deg,#1F4D3A,#2D6A4F)",
+                  color: "#fff",
+                }}
+              >
+                View My Bookings
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate("/dashboard")}
+                style={{
+                  padding: "14px 28px",
+                  borderRadius: "14px",
+                  border: darkMode
+                    ? "1px solid rgba(212,175,55,0.3)"
+                    : "1px solid rgba(31,77,58,0.3)",
+                  background: "transparent",
+                  cursor: "pointer",
+                  fontSize: "15px",
+                  fontWeight: "600",
+                  color: darkMode ? "#D4AF37" : "#1F4D3A",
+                }}
+              >
+                Go To Dashboard
+              </motion.button>
+            </div>
+          </>
+        )}
+      </motion.div>
     </div>
-  )
+  );
 }
 
-export default Payment
+export default PaymentSuccess;
