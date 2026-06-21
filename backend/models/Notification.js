@@ -9,7 +9,7 @@ const notificationSchema = new mongoose.Schema(
     },
     bookingId: {
   type: mongoose.Schema.Types.ObjectId,
-  ref: "Booking",required: "true",
+  ref: "Booking",required: "false",
 },
 
     driverId: {
