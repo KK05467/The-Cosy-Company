@@ -104,10 +104,6 @@ rideStatus: {
 
 estimatedDuration: Number,
 
-currentLocation: {
-    lat: Number,
-    lng: Number
-},
   },
   {
     timestamps: true,
