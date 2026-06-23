@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaMapMarkerAlt, FaCalendarAlt, FaClock, FaCar, FaRupeeSign, FaUsers } from "react-icons/fa";
 import { colors, fonts, surface } from "../styles/tokens";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE = import.meta.env?.VITE_API_URL || "http://localhost:5000";
 
@@ -36,8 +37,8 @@ function DriverMyRides({ darkMode }) {
   const [error, setError]           = useState("");
   const [actionError, setActionError] = useState("");
   const [busyId, setBusyId]         = useState(null);
-
   const s = surface(darkMode);
+  const navigate = useNavigate();
 
   useEffect(() => { fetchRides(); }, []);
 
@@ -139,10 +140,33 @@ function DriverMyRides({ darkMode }) {
           <h1 style={{ fontFamily: fonts.display, color: s.text, fontSize: "46px", fontWeight: "600", letterSpacing: "-1px", marginBottom: "10px" }}>
             My rides
           </h1>
+          
           <p style={{ color: s.textMuted, fontSize: "16px" }}>
             {rides.length} ride{rides.length !== 1 ? "s" : ""} created
           </p>
+               <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate("/notifications")}
+            style={{
+              marginTop: "20px",
+              padding: "11px 20px",
+              borderRadius: "10px",
+              border: "none",
+              background: darkMode
+                ? `linear-gradient(135deg, ${colors.goldSoft}, ${colors.gold})`
+                : `linear-gradient(135deg, ${colors.forest}, ${colors.forestDeep})`,
+              color: darkMode ? colors.ink : "#fff",
+              fontWeight: "700",
+              fontSize: "13.5px",
+              fontFamily: fonts.body,
+              cursor: "pointer"
+            }}
+          >
+            Notifications
+          </motion.button>     
         </motion.div>
+        
 
         {error       && <p style={{ color: colors.rust, marginBottom: "20px", fontSize: "14px" }}>{error}</p>}
         {actionError && <p style={{ color: colors.rust, marginBottom: "20px", fontSize: "14px" }}>{actionError}</p>}
