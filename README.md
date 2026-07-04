@@ -227,6 +227,18 @@ Home Page
 
 ---
 
+---
+
+# Future Scopes
+
+* Safety Feature for Rider and Driver
+* Optimization of routes and fares
+* Deployment
+* Scaling
+* Payment experience enhancement
+
+---
+
 # 🔐 Security Features
 
 * JWT Protected Routes
