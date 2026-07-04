@@ -5,7 +5,7 @@ import cloudinary from "../config/cloudinary.js"
 const storage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => ({
-    folder: "Cosy_Profile_Pictures",
+    folder: "Profile_Pictures",
     allowed_formats: ["jpg", "jpeg", "png"],
   }),
 });
