@@ -1,60 +1,291 @@
+# 🚗 Cosy Company Backend
 
-# React + Vite
+A scalable backend for **Cosy Company**, a smart ride-pooling platform that connects drivers and passengers for safe, affordable, and eco-friendly travel. Built using the **MERN stack**, it provides secure authentication, ride management, booking, payments, and user profile management.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+# 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 🔐 JWT Authentication
+- 👤 User Registration & Login
+- 🔑 Forgot Password & Reset Password
+- 📝 User Profile Management
+- 🚘 Create Ride
+- 🔍 Search Available Rides
+- 📋 View Ride Details
+- 🚗 Driver's Ride Dashboard
+- 🎟 Book Ride
+- 📑 View My Bookings
+- 💳 Razorpay Payment Integration
+- 🔒 Protected Routes
+- 📦 MongoDB Database
+- 🌐 REST API Architecture
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# 🛠 Tech Stack
 
-## Expanding the ESLint configuration
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT Authentication
+- Bcrypt
+- Razorpay
+- Dotenv
+- CORS
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# The Cosy Company
+---
 
-The Cosy Company is a full-stack smart ride-pooling platform designed to make urban transportation affordable, efficient, and eco-friendly. The platform connects users traveling in similar directions, helping reduce travel costs, traffic congestion, and carbon emissions.
+# 📂 Folder Structure
 
-Built with a premium modern UI/UX approach, the project focuses on delivering a smooth and seamless ride-sharing experience through real-time technologies and scalable backend architecture.
+```
+backend/
+│
+├── config/
+│   └── db.js
+│
+├── controllers/
+│   ├── authController.js
+│   ├── bookingController.js
+│   ├── paymentController.js
+│   └── rideController.js
+│
+├── middleware/
+│   └── authMiddleware.js
+│
+├── models/
+│   ├── Booking.js
+│   ├── Payment.js
+│   ├── Ride.js
+│   ├── User.js
+│   └── Wallet.js
+│
+├── routes/
+│   ├── authRoutes.js
+│   ├── bookingRoutes.js
+│   ├── paymentRoutes.js
+│   └── rideRoutes.js
+│
+├── .env
+├── package.json
+├── server.js
+└── README.md
+```
 
-## Features
+---
 
-* Secure authentication & authorization
-* Smart ride matching system
-* Real-time ride booking & tracking
-* Interactive maps integration
-* Driver & passenger profiles
-* Ride history & analytics
-* Wallet & payment support
-* Responsive desktop & mobile design
-* Smooth animations and premium interface
+# ⚙️ Installation
 
-## Frontend Stack
+Clone the repository
 
-* React
-* Vite
-* Tailwind CSS
-* Framer Motion
-* React Router
-* Zustand
+```bash
+git clone <repository-url>
+```
 
-## Backend Stack
+Go to backend directory
 
-* Node.js
-* Express.js
-* MongoDB
-* Mongoose
-* JWT Authentication
-* Socket.IO
+```bash
+cd backend
+```
 
-## Vision
+Install dependencies
 
-The goal of The Cosy Company is to create a community-driven mobility platform that improves daily transportation while promoting sustainable travel and reducing traffic problems in densely populated cities.
+```bash
+npm install
+```
 
-Built with ❤️ by Keertan Kumar.
->>>>>>> d46959db4b45aaf8ace2f1a58b647555b04126e6
+---
+
+# ▶️ Run the Server
+
+Development
+
+```bash
+npm run dev
+```
+
+Production
+
+```bash
+npm start
+```
+
+---
+
+# 🔑 Environment Variables
+
+Create a `.env` file inside the backend folder.
+
+```env
+PORT=5000
+
+MONGO_URI=your_mongodb_connection_string
+
+JWT_SECRET=your_secret_key
+
+EMAIL_USER=your_email
+EMAIL_PASS=your_email_password
+
+RAZORPAY_KEY_ID=your_key_id
+RAZORPAY_SECRET=your_secret
+```
+
+---
+
+# 📡 API Endpoints
+
+## Authentication
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/api/auth/signup` | Register User |
+| POST | `/api/auth/login` | Login User |
+| POST | `/api/auth/forgot-password` | Send OTP |
+| POST | `/api/auth/reset-password` | Reset Password |
+| GET | `/api/auth/profile` | Get Profile |
+| PUT | `/api/auth/profile` | Update Profile |
+
+---
+
+## Ride APIs
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/api/rides` | Create Ride |
+| GET | `/api/rides/search` | Search Rides |
+| GET | `/api/rides/my-rides` | Driver's Rides |
+| GET | `/api/rides/:id` | Ride Details |
+
+---
+
+## Booking APIs
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/api/bookings` | Create Booking |
+| GET | `/api/bookings/my` | My Bookings |
+| GET | `/api/bookings/:id` | Booking Details |
+
+---
+
+## Payment APIs
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/api/payment/create-order` | Create Razorpay Order |
+| POST | `/api/payment/verify-payment` | Verify Payment |
+
+---
+
+# 🔐 Authentication
+
+Protected routes require a JWT token.
+
+Example:
+
+```http
+Authorization: Bearer YOUR_JWT_TOKEN
+```
+
+---
+
+# 📌 Project Workflow
+
+```
+User Signup/Login
+        │
+        ▼
+Search Available Rides
+        │
+        ▼
+View Ride Details
+        │
+        ▼
+Book Ride
+        │
+        ▼
+Payment
+        │
+        ▼
+Booking Confirmation
+```
+
+---
+
+# 📷 Core Modules
+
+### Authentication
+
+- JWT Authentication
+- Password Hashing
+- Forgot Password
+- Reset Password
+- Protected APIs
+
+---
+
+### Ride Management
+
+- Publish Ride
+- Search Ride
+- Ride Details
+- Driver Dashboard
+
+---
+
+### Booking System
+
+- Reserve Seats
+- Seat Availability
+- Booking Status
+- Booking History
+
+---
+
+### Payment System
+
+- Razorpay Order Creation
+- Payment Verification
+- Payment Status
+
+---
+
+# 🔒 Security
+
+- JWT Authentication
+- Password Hashing using Bcrypt
+- Protected API Routes
+- Environment Variables
+- MongoDB Validation
+- Secure Payment Verification
+
+---
+
+# 🌱 Future Enhancements
+
+- Live Ride Tracking
+- Google Maps Integration
+- Wallet System
+- Ride Cancellation
+- Driver Verification
+- Reviews & Ratings
+- Notifications
+- Chat Between Driver & Passenger
+- Admin Dashboard
+- AI Ride Recommendations
+
+---
+
+# 👨‍💻 Developer
+
+**Keertan Kumar Singh**
+
+B.Tech Information Technology  
+IIIT Bhubaneswar
+
+---
+
+# 📄 License
+
+This project is developed for educational and portfolio purposes.
