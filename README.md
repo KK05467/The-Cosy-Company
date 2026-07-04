@@ -1,291 +1,285 @@
-# 🚗 Cosy Company Backend
+# 🚗 Cosy Company
 
-A scalable backend for **Cosy Company**, a smart ride-pooling platform that connects drivers and passengers for safe, affordable, and eco-friendly travel. Built using the **MERN stack**, it provides secure authentication, ride management, booking, payments, and user profile management.
+> **A Full-Stack Intelligent Ride Pooling Platform**
 
----
+Cosy Company is a modern ride-sharing platform designed to make daily commuting **more affordable, sustainable, and convenient**. It connects verified drivers and passengers traveling along similar routes, enabling users to share rides, reduce transportation costs, decrease traffic congestion, and contribute to a greener environment.
 
-# 🚀 Features
-
-- 🔐 JWT Authentication
-- 👤 User Registration & Login
-- 🔑 Forgot Password & Reset Password
-- 📝 User Profile Management
-- 🚘 Create Ride
-- 🔍 Search Available Rides
-- 📋 View Ride Details
-- 🚗 Driver's Ride Dashboard
-- 🎟 Book Ride
-- 📑 View My Bookings
-- 💳 Razorpay Payment Integration
-- 🔒 Protected Routes
-- 📦 MongoDB Database
-- 🌐 REST API Architecture
+The project is built using the **MERN Stack** with secure authentication, real-time ride management, booking workflows, and integrated online payments.
 
 ---
 
-# 🛠 Tech Stack
+# 🌟 Key Features
 
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- JWT Authentication
-- Bcrypt
-- Razorpay
-- Dotenv
-- CORS
+### 👤 User Management
+
+* Secure User Registration & Login
+* JWT Authentication
+* Password Reset using OTP
+* User Profile Management
+* Driver & Passenger Roles
 
 ---
 
-# 📂 Folder Structure
+### 🚘 Ride Management
 
-```
-backend/
-│
-├── config/
-│   └── db.js
-│
-├── controllers/
-│   ├── authController.js
-│   ├── bookingController.js
-│   ├── paymentController.js
-│   └── rideController.js
-│
-├── middleware/
-│   └── authMiddleware.js
-│
-├── models/
-│   ├── Booking.js
-│   ├── Payment.js
-│   ├── Ride.js
-│   ├── User.js
-│   └── Wallet.js
-│
-├── routes/
-│   ├── authRoutes.js
-│   ├── bookingRoutes.js
-│   ├── paymentRoutes.js
-│   └── rideRoutes.js
-│
-├── .env
-├── package.json
-├── server.js
-└── README.md
-```
+* Publish a Ride
+* Search Available Rides
+* View Ride Details
+* Driver Ride Dashboard
+* Seat Availability Management
 
 ---
 
-# ⚙️ Installation
+### 🎟 Booking System
 
-Clone the repository
-
-```bash
-git clone <repository-url>
-```
-
-Go to backend directory
-
-```bash
-cd backend
-```
-
-Install dependencies
-
-```bash
-npm install
-```
+* Book Available Seats
+* Booking History
+* Booking Details
+* Booking Status Tracking
+* Automatic Seat Updates
 
 ---
 
-# ▶️ Run the Server
+### 💳 Payment System
 
-Development
-
-```bash
-npm run dev
-```
-
-Production
-
-```bash
-npm start
-```
+* Razorpay Payment Gateway
+* Secure Order Creation
+* Payment Verification
+* Payment Status Management
 
 ---
 
-# 🔑 Environment Variables
+### 📊 Dashboard
 
-Create a `.env` file inside the backend folder.
+* Driver Dashboard
+* Passenger Dashboard
+* Booking Statistics
+* Ride Statistics
 
-```env
-PORT=5000
+---
 
-MONGO_URI=your_mongodb_connection_string
+# 🛠 Technology Stack
 
-JWT_SECRET=your_secret_key
+## Frontend
 
-EMAIL_USER=your_email
-EMAIL_PASS=your_email_password
+* React.js
+* React Router DOM
+* Framer Motion
+* React Icons
+* CSS (Inline Styling)
+* Fetch API
 
-RAZORPAY_KEY_ID=your_key_id
-RAZORPAY_SECRET=your_secret
+---
+
+## Backend
+
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT
+* Bcrypt
+* Razorpay
+* Nodemailer
+* Dotenv
+
+---
+
+## Database
+
+* MongoDB Atlas
+
+---
+
+# 🏗 System Architecture
+
+```text
+                     +----------------------+
+                     |      React Client    |
+                     +----------+-----------+
+                                |
+                                |
+                     REST API Requests
+                                |
+                                ▼
+                    +-----------------------+
+                    |    Express Server     |
+                    +-----------+-----------+
+                                |
+        +-----------------------+------------------------+
+        |                       |                        |
+        ▼                       ▼                        ▼
+ Authentication          Ride Management        Booking Management
+        |                       |                        |
+        +-----------+-----------+-----------+------------+
+                    |                       |
+                    ▼                       ▼
+              MongoDB Database       Razorpay Gateway
 ```
 
 ---
 
-# 📡 API Endpoints
+# 📊 Complete User Flow
 
-## Authentication
-
-| Method | Endpoint | Description |
-|---------|----------|-------------|
-| POST | `/api/auth/signup` | Register User |
-| POST | `/api/auth/login` | Login User |
-| POST | `/api/auth/forgot-password` | Send OTP |
-| POST | `/api/auth/reset-password` | Reset Password |
-| GET | `/api/auth/profile` | Get Profile |
-| PUT | `/api/auth/profile` | Update Profile |
-
----
-
-## Ride APIs
-
-| Method | Endpoint | Description |
-|---------|----------|-------------|
-| POST | `/api/rides` | Create Ride |
-| GET | `/api/rides/search` | Search Rides |
-| GET | `/api/rides/my-rides` | Driver's Rides |
-| GET | `/api/rides/:id` | Ride Details |
-
----
-
-## Booking APIs
-
-| Method | Endpoint | Description |
-|---------|----------|-------------|
-| POST | `/api/bookings` | Create Booking |
-| GET | `/api/bookings/my` | My Bookings |
-| GET | `/api/bookings/:id` | Booking Details |
-
----
-
-## Payment APIs
-
-| Method | Endpoint | Description |
-|---------|----------|-------------|
-| POST | `/api/payment/create-order` | Create Razorpay Order |
-| POST | `/api/payment/verify-payment` | Verify Payment |
-
----
-
-# 🔐 Authentication
-
-Protected routes require a JWT token.
-
-Example:
-
-```http
-Authorization: Bearer YOUR_JWT_TOKEN
+```text
+                 User Visits Website
+                          │
+                          ▼
+               Register / Login Account
+                          │
+                          ▼
+                Search Available Rides
+                          │
+                          ▼
+                  View Ride Details
+                          │
+                          ▼
+                   Select Seat Count
+                          │
+                          ▼
+                    Book the Ride
+                          │
+                          ▼
+               Generate Razorpay Order
+                          │
+                          ▼
+                 Complete Payment
+                          │
+                          ▼
+               Verify Payment Signature
+                          │
+                          ▼
+               Booking Successfully Created
+                          │
+                          ▼
+               View Booking Dashboard
 ```
 
 ---
 
-# 📌 Project Workflow
+# 🗂 Backend Module Flow
 
+```text
+Client Request
+      │
+      ▼
+Express Router
+      │
+      ▼
+Authentication Middleware
+      │
+      ▼
+Controller Layer
+      │
+      ▼
+Business Logic
+      │
+      ▼
+Mongoose Models
+      │
+      ▼
+MongoDB
+      │
+      ▼
+JSON Response
 ```
-User Signup/Login
-        │
-        ▼
-Search Available Rides
-        │
-        ▼
-View Ride Details
-        │
-        ▼
-Book Ride
-        │
-        ▼
-Payment
-        │
-        ▼
-Booking Confirmation
+
+---
+
+# 🧩 Frontend Flow
+
+```text
+Home Page
+     │
+     ├──────────────► Search Rides
+     │                      │
+     │                      ▼
+     │               Ride Results
+     │                      │
+     │                      ▼
+     │               Ride Details
+     │                      │
+     │                      ▼
+     │                Book Ride
+     │                      │
+     │                      ▼
+     │                  Payment
+     │                      │
+     │                      ▼
+     │                My Bookings
+     │
+     ├──────────────► Publish Ride
+     │
+     ├──────────────► Profile
+     │
+     └──────────────► Dashboard
 ```
 
 ---
 
-# 📷 Core Modules
+# 🗄 Database Collections
 
-### Authentication
-
-- JWT Authentication
-- Password Hashing
-- Forgot Password
-- Reset Password
-- Protected APIs
+* Users
+* Rides
+* Bookings
+* Payments
+* Wallets
 
 ---
 
-### Ride Management
+# 🔐 Security Features
 
-- Publish Ride
-- Search Ride
-- Ride Details
-- Driver Dashboard
-
----
-
-### Booking System
-
-- Reserve Seats
-- Seat Availability
-- Booking Status
-- Booking History
+* JWT Protected Routes
+* Password Hashing using Bcrypt
+* Environment Variable Protection
+* Secure Payment Verification
+* MongoDB Validation
+* Authorization Middleware
 
 ---
 
-### Payment System
+# 🚀 Future Scope
 
-- Razorpay Order Creation
-- Payment Verification
-- Payment Status
-
----
-
-# 🔒 Security
-
-- JWT Authentication
-- Password Hashing using Bcrypt
-- Protected API Routes
-- Environment Variables
-- MongoDB Validation
-- Secure Payment Verification
-
----
-
-# 🌱 Future Enhancements
-
-- Live Ride Tracking
-- Google Maps Integration
-- Wallet System
-- Ride Cancellation
-- Driver Verification
-- Reviews & Ratings
-- Notifications
-- Chat Between Driver & Passenger
-- Admin Dashboard
-- AI Ride Recommendations
+* Live GPS Tracking
+* Google Maps Integration
+* Wallet & Cashback System
+* AI Ride Recommendations
+* Ride Chat System
+* Driver Verification
+* Push Notifications
+* Ratings & Reviews
+* Admin Dashboard
+* Analytics Dashboard
+* Ride Scheduling
+* Emergency SOS
+* QR Code Ride Verification
 
 ---
 
-# 👨‍💻 Developer
+# 📈 Project Highlights
+
+* Full Stack MERN Architecture
+* RESTful API Design
+* JWT-Based Authentication
+* Secure Online Payments
+* Responsive Modern UI
+* Modular Code Structure
+* Scalable Backend Design
+* Professional Dashboard
+* Real-World Ride Booking Workflow
+
+---
+
+# 👨‍💻 Developed By
 
 **Keertan Kumar Singh**
 
-B.Tech Information Technology  
-IIIT Bhubaneswar
+**B.Tech in Information Technology**
+
+**Indian Institute of Information Technology (IIIT) Bhubaneswar**
 
 ---
 
 # 📄 License
 
-This project is developed for educational and portfolio purposes.
+This project has been developed for educational, portfolio, and learning purposes.
