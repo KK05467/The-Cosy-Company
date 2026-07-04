@@ -280,6 +280,4 @@ Home Page
 
 ---
 
-# 📄 License
 
-This project has been developed for educational, portfolio, and learning purposes.
