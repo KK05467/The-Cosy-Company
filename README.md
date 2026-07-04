@@ -78,9 +78,9 @@ The project is built using the **MERN Stack** with secure authentication, real-t
 * MongoDB
 * Mongoose
 * JWT
-* Bcrypt
+* Cloudinary
 * Razorpay
-* Nodemailer
+* Resend
 * Dotenv
 
 ---
