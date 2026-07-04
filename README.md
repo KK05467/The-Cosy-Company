@@ -272,11 +272,11 @@ Home Page
 
 # 👨‍💻 Developed By
 
-**Keertan Kumar Singh**
+**Keertan Kumar**
 
 **B.Tech in Information Technology**
 
-**Indian Institute of Information Technology (IIIT) Bhubaneswar**
+**International Institute of Information Technology (IIIT) Bhubaneswar**
 
 ---
 
