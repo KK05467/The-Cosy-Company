@@ -37,7 +37,7 @@ A scalable backend for **Cosy Company**, a smart ride-pooling platform that conn
 
 ---
 
-# 📂 Folder Structur
+# 📂 Folder Structure
 
 ```
 backend/
