@@ -236,6 +236,7 @@ Home Page
 * Deployment
 * Scaling
 * Payment experience enhancement
+* Fare Normalization through bargain for rider and driver
 
 ---
 
