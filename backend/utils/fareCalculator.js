@@ -29,7 +29,7 @@ export const calculateFare = (
   const rainCharge =
     vehicleType === "car" && isRain ? 79 : 0;
 
-  const nightCharge = hour >= 22 ? 49 : 0
+  const nightCharge = hour >= 22 ? 49 : 0;
 
   const totalFare = parseFloat(
     (baseFare + platformCharge + rainCharge + nightCharge).toFixed(2)
