@@ -26,7 +26,7 @@ export const geocodeLocation = async (address) => {
     const data = await response.json();
 
     if (!data || data.length === 0) {
-      console.error(`Nominatim: No results for "${address}"`);
+      console.error(`Nominatim: No results for "${address}"`)
       return null;
     }
 
