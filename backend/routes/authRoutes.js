@@ -27,7 +27,7 @@ router.post("/reset-password", resetPassword);
 
 router.get("/profile", protectRoute, getProfile);
 
-router.put("/profile", protectRoute, updateProfile);
+router.put("/update-profile", protectRoute, updateProfile); //  /profile --> /update-profile
 router.put(
   "/upload-profile-picture",
   protectRoute,
